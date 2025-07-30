@@ -14,7 +14,7 @@ from transformers import Wav2Vec2Processor, Wav2Vec2Model, BertTokenizer, BertMo
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report
 from copy import deepcopy
-import subprocess  # <-- Added for git push
+import matplotlib.pyplot as plt
 
 # ========================== RANDOM SEED ==========================
 def set_seed(seed=42):
@@ -24,6 +24,39 @@ def set_seed(seed=42):
     torch.cuda.manual_seed_all(seed)
 
 set_seed(42)
+
+# ========================== SAVE METRICS LOG ==========================
+def save_detailed_metrics(
+    train_accuracies,
+    train_losses,
+    val_accuracies,
+    val_losses,
+    test_accuracy,
+    test_precision,
+    test_recall,
+    test_f1,
+    best_val_accuracy,
+    log_file_path="results/metrics_log.txt"
+):
+    os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+
+    with open(log_file_path, "w") as f:
+        f.write("====== TRAINING AND VALIDATION METRICS ======\n")
+        for epoch in range(len(train_accuracies)):
+            f.write(
+                f"Epoch {epoch+1}: "
+                f"Train Loss={train_losses[epoch]:.4f}, Train Acc={train_accuracies[epoch]:.4f}, "
+                f"Val Loss={val_losses[epoch]:.4f}, Val Acc={val_accuracies[epoch]:.4f}\n"
+            )
+
+        f.write("\n====== BEST VALIDATION ACCURACY ======\n")
+        f.write(f"{best_val_accuracy:.4f}\n")
+
+        f.write("\n====== FINAL TEST METRICS ======\n")
+        f.write(f"Test Accuracy : {test_accuracy:.4f}\n")
+        f.write(f"Precision     : {test_precision:.4f}\n")
+        f.write(f"Recall        : {test_recall:.4f}\n")
+        f.write(f"F1 Score      : {test_f1:.4f}\n")
 
 # ========================== DATASET ==========================
 class AudioTextDataset(Dataset):
@@ -58,7 +91,6 @@ class AudioTextDataset(Dataset):
             if key in self.turn_lookup:
                 conv, turn = self.turn_lookup[key]
                 dialogue_history = turn.get('dialogue_history', [])
-
                 speaker_text = next((utt['utterance'] for utt in reversed(dialogue_history) if utt['role'] == 'speaker'), "")
                 emotion = turn.get('chain_of_empathy', {}).get('speaker_emotion', 'neutral').lower()
 
@@ -185,34 +217,20 @@ def eval_epoch(model, dataloader, criterion, device, desc="Evaluating"):
 
     return total_loss / total, correct / total
 
-# ========================== GIT PUSH FUNCTION ==========================
-def git_push(files, commit_message):
-    try:
-        subprocess.run(["git", "add"] + files, check=True)
-        subprocess.run(["git", "commit", "-m", commit_message], check=True)
-        subprocess.run(["git", "push"], check=True)
-        print("✅ Git push successful.")
-    except subprocess.CalledProcessError as e:
-        print("❌ Git push failed:", e)
-
 # ========================== MAIN ==========================
 def main():
     json_path = "data/train_audio/audio_v5_0/train.json"
     audio_dir = "data/train_audio/audio_v5_0"
     batch_size = 8
     learning_rate = 3e-5
-    max_audio_len = 16000 * 10
-    max_text_len = 128
+    max_audio_len = 16000 * 30
+    max_text_len = 512
     best_model_path = "best_multimodal_model.pth"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
     full_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len)
-    print(f"Full dataset size: {len(full_dataset)}")
-    print("First audio file name:", os.path.basename(full_dataset.data[0]['audio_path']))
-    print("First text sample:", full_dataset.data[0]['text'])
-
     full_labels = [emotion_labels.get(item['label'], emotion_labels['neutral']) for item in full_dataset.data]
 
     splitter1 = StratifiedShuffleSplit(n_splits=1, test_size=0.3, random_state=42)
@@ -220,10 +238,8 @@ def main():
 
     temp_labels = [full_labels[i] for i in temp_idx]
     splitter2 = StratifiedShuffleSplit(n_splits=1, test_size=0.5, random_state=42)
-    val_idx_rel, test_idx_rel = next(splitter2.split(temp_idx, temp_labels))
-
-    val_idx = [temp_idx[i] for i in val_idx_rel]
-    test_idx = [temp_idx[i] for i in test_idx_rel]
+    val_idx = [temp_idx[i] for i in next(splitter2.split(temp_idx, temp_labels))[0]]
+    test_idx = [temp_idx[i] for i in next(splitter2.split(temp_idx, temp_labels))[1]]
 
     train_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=train_idx)
     val_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=val_idx)
@@ -249,15 +265,20 @@ def main():
     patience = 5
     no_improve = 0
 
+    train_accuracies, train_losses = [], []
+    val_accuracies, val_losses = [], []
+
     for epoch in range(1, 31):
         print(f"\nEpoch {epoch}/30")
-
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion, device)
         val_loss, val_acc = eval_epoch(model, val_loader, criterion, device, desc="Validation")
+        train_losses.append(train_loss)
+        train_accuracies.append(train_acc)
+        val_losses.append(val_loss)
+        val_accuracies.append(val_acc)
 
         print(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f}")
         print(f"Val Loss:   {val_loss:.4f} | Val Acc:   {val_acc:.4f}")
-
         scheduler.step(val_acc)
 
         if val_acc > best_val_acc:
@@ -267,15 +288,11 @@ def main():
             print(f"Saved best model (val acc: {best_val_acc:.4f})")
         else:
             no_improve += 1
-            print(f"No improvement for {no_improve} epochs.")
             if no_improve >= patience:
                 print("Early stopping triggered.")
                 break
 
-    if best_model:
-        torch.save(best_model, best_model_path)
-
-    print("\nLoading best model for testing...")
+    torch.save(best_model, best_model_path)
     model.load_state_dict(torch.load(best_model_path))
     model.eval()
 
@@ -288,23 +305,40 @@ def main():
 
             outputs = model(audio_inputs, text_inputs)
             preds = torch.argmax(outputs, dim=1)
-
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
 
-    print("\nClassification Report:")
     report_str = classification_report(all_labels, all_preds, target_names=emotion_labels.keys(), digits=4)
-    print(report_str)
+    accuracy = accuracy_score(all_labels, all_preds)
+    precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='weighted')
 
-    # Save classification report and best val accuracy to a file
-    results_path = "training_results.txt"
-    with open(results_path, "w") as f:
+    print(report_str)
+    print(f"\nAccuracy:  {accuracy:.4f}\nPrecision: {precision:.4f}\nRecall:    {recall:.4f}\nF1 Score:  {f1:.4f}")
+
+    os.makedirs("results", exist_ok=True)
+    with open("results/training_results.txt", "w") as f:
         f.write(f"Best Val Accuracy: {best_val_acc:.4f}\n")
-        f.write("\nClassification Report:\n")
+        f.write(f"Accuracy:  {accuracy:.4f}\n")
+        f.write(f"Precision: {precision:.4f}\n")
+        f.write(f"Recall:    {recall:.4f}\n")
+        f.write(f"F1 Score:  {f1:.4f}\n\n")
         f.write(report_str)
 
-    # Automatically commit and push model and results file to GitHub
-    git_push([best_model_path, results_path], "Auto commit: Training results and best model")
+    save_detailed_metrics(train_accuracies, train_losses, val_accuracies, val_losses,
+                          accuracy, precision, recall, f1, best_val_acc)
+
+    # Plot metrics bar chart
+    metrics = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
+    values = [accuracy, precision, recall, f1]
+    plt.figure(figsize=(8, 6))
+    plt.bar(metrics, values, color=['skyblue', 'lightgreen', 'salmon', 'orange'])
+    plt.ylim(0, 1)
+    plt.ylabel('Score')
+    plt.title('Evaluation Metrics')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.savefig("results/evaluation_metrics.jpg")
+    plt.close()
 
 if __name__ == "__main__":
     main()

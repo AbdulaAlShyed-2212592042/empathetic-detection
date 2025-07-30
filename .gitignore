@@ -1,0 +1,67 @@
+# ==========================
+# Project-specific ignores
+# ==========================
+
+# Datasets and audio files
+data/
+datasets/
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.json
+
+
+
+# ==========================
+# Python ignores
+# ==========================
+
+# Byte-compiled / cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+*.env
+# ==========================
+# Explicitly track .pth files
+# ==========================
+!*.pth
+
+# Build and packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ==========================
+# Notebooks and IDE ignores
+# ==========================
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# PyCharm settings
+.idea/
+
+# ==========================
+# System / OS files
+# ==========================
+
+.DS_Store
+Thumbs.db
+best_model.pt
+results.json
+results.png
+# Temporary files
+*.tmp   

@@ -25,39 +25,6 @@ def set_seed(seed=42):
 
 set_seed(42)
 
-# ========================== SAVE METRICS LOG ==========================
-def save_detailed_metrics(
-    train_accuracies,
-    train_losses,
-    val_accuracies,
-    val_losses,
-    test_accuracy,
-    test_precision,
-    test_recall,
-    test_f1,
-    best_val_accuracy,
-    log_file_path="results/metrics_log.txt"
-):
-    os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
-
-    with open(log_file_path, "w") as f:
-        f.write("====== TRAINING AND VALIDATION METRICS ======\n")
-        for epoch in range(len(train_accuracies)):
-            f.write(
-                f"Epoch {epoch+1}: "
-                f"Train Loss={train_losses[epoch]:.4f}, Train Acc={train_accuracies[epoch]:.4f}, "
-                f"Val Loss={val_losses[epoch]:.4f}, Val Acc={val_accuracies[epoch]:.4f}\n"
-            )
-
-        f.write("\n====== BEST VALIDATION ACCURACY ======\n")
-        f.write(f"{best_val_accuracy:.4f}\n")
-
-        f.write("\n====== FINAL TEST METRICS ======\n")
-        f.write(f"Test Accuracy : {test_accuracy:.4f}\n")
-        f.write(f"Precision     : {test_precision:.4f}\n")
-        f.write(f"Recall        : {test_recall:.4f}\n")
-        f.write(f"F1 Score      : {test_f1:.4f}\n")
-
 # ========================== DATASET ==========================
 class AudioTextDataset(Dataset):
     def __init__(self, json_path, audio_dir, max_audio_length=16000 * 10, indices=None):
@@ -91,6 +58,7 @@ class AudioTextDataset(Dataset):
             if key in self.turn_lookup:
                 conv, turn = self.turn_lookup[key]
                 dialogue_history = turn.get('dialogue_history', [])
+
                 speaker_text = next((utt['utterance'] for utt in reversed(dialogue_history) if utt['role'] == 'speaker'), "")
                 emotion = turn.get('chain_of_empathy', {}).get('speaker_emotion', 'neutral').lower()
 
@@ -184,7 +152,7 @@ def train_epoch(model, dataloader, optimizer, criterion, device):
         labels = labels.to(device)
 
         optimizer.zero_grad()
-        with torch.cuda.amp.autocast():
+        with torch.amp.autocast('cuda'):
             outputs = model(audio_inputs, text_inputs)
             loss = criterion(outputs, labels)
         loss.backward()
@@ -217,14 +185,41 @@ def eval_epoch(model, dataloader, criterion, device, desc="Evaluating"):
 
     return total_loss / total, correct / total
 
+# ========================== SAVE METRICS & PLOT ==========================
+def save_metrics_plot(metrics, filename="results/training_metrics.jpg"):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    epochs = list(range(1, len(metrics['train_loss']) + 1))
+
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(epochs, metrics['train_loss'], label='Train Loss')
+    plt.plot(epochs, metrics['val_loss'], label='Val Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Loss per Epoch')
+    plt.legend()
+
+    plt.subplot(1, 2, 2)
+    plt.plot(epochs, metrics['train_acc'], label='Train Acc')
+    plt.plot(epochs, metrics['val_acc'], label='Val Acc')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.title('Accuracy per Epoch')
+    plt.legend()
+
+    plt.tight_layout()
+    plt.savefig(filename)
+    plt.close()
+
 # ========================== MAIN ==========================
 def main():
     json_path = "data/train_audio/audio_v5_0/train.json"
     audio_dir = "data/train_audio/audio_v5_0"
     batch_size = 8
     learning_rate = 3e-5
-    max_audio_len = 16000 * 30
-    max_text_len = 512
+    max_audio_len = 16000 * 10
+    max_text_len = 128
     best_model_path = "best_multimodal_model.pth"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -238,8 +233,10 @@ def main():
 
     temp_labels = [full_labels[i] for i in temp_idx]
     splitter2 = StratifiedShuffleSplit(n_splits=1, test_size=0.5, random_state=42)
-    val_idx = [temp_idx[i] for i in next(splitter2.split(temp_idx, temp_labels))[0]]
-    test_idx = [temp_idx[i] for i in next(splitter2.split(temp_idx, temp_labels))[1]]
+    val_idx_rel, test_idx_rel = next(splitter2.split(temp_idx, temp_labels))
+
+    val_idx = [temp_idx[i] for i in val_idx_rel]
+    test_idx = [temp_idx[i] for i in test_idx_rel]
 
     train_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=train_idx)
     val_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=val_idx)
@@ -249,11 +246,14 @@ def main():
     tokenizer_text = BertTokenizer.from_pretrained("bert-base-uncased")
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,
-                              collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
+                              collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len),
+                              num_workers=4, pin_memory=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False,
-                            collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
+                            collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len),
+                            num_workers=4, pin_memory=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False,
-                             collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
+                             collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len),
+                             num_workers=4, pin_memory=True)
 
     model = MultimodalModel(num_classes=num_classes, device=device)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=0.01)
@@ -265,20 +265,27 @@ def main():
     patience = 5
     no_improve = 0
 
-    train_accuracies, train_losses = [], []
-    val_accuracies, val_losses = [], []
+    metrics = {
+        "train_loss": [],
+        "val_loss": [],
+        "train_acc": [],
+        "val_acc": []
+    }
 
     for epoch in range(1, 31):
         print(f"\nEpoch {epoch}/30")
+
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion, device)
         val_loss, val_acc = eval_epoch(model, val_loader, criterion, device, desc="Validation")
-        train_losses.append(train_loss)
-        train_accuracies.append(train_acc)
-        val_losses.append(val_loss)
-        val_accuracies.append(val_acc)
 
         print(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f}")
         print(f"Val Loss:   {val_loss:.4f} | Val Acc:   {val_acc:.4f}")
+
+        metrics["train_loss"].append(train_loss)
+        metrics["val_loss"].append(val_loss)
+        metrics["train_acc"].append(train_acc)
+        metrics["val_acc"].append(val_acc)
+
         scheduler.step(val_acc)
 
         if val_acc > best_val_acc:
@@ -288,11 +295,19 @@ def main():
             print(f"Saved best model (val acc: {best_val_acc:.4f})")
         else:
             no_improve += 1
+            print(f"No improvement for {no_improve} epochs.")
             if no_improve >= patience:
                 print("Early stopping triggered.")
                 break
 
-    torch.save(best_model, best_model_path)
+    # Save best model
+    if best_model:
+        torch.save(best_model, best_model_path)
+
+    # Save metrics plot
+    save_metrics_plot(metrics, filename="results/training_metrics.jpg")
+
+    print("\nLoading best model for testing...")
     model.load_state_dict(torch.load(best_model_path))
     model.eval()
 
@@ -305,40 +320,21 @@ def main():
 
             outputs = model(audio_inputs, text_inputs)
             preds = torch.argmax(outputs, dim=1)
+
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
 
+    print("\nClassification Report:")
     report_str = classification_report(all_labels, all_preds, target_names=emotion_labels.keys(), digits=4)
-    accuracy = accuracy_score(all_labels, all_preds)
-    precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='weighted')
-
     print(report_str)
-    print(f"\nAccuracy:  {accuracy:.4f}\nPrecision: {precision:.4f}\nRecall:    {recall:.4f}\nF1 Score:  {f1:.4f}")
 
-    os.makedirs("results", exist_ok=True)
-    with open("results/training_results.txt", "w") as f:
+    # Save classification report and best val accuracy to a file
+    results_path = "results/training_results.txt"
+    os.makedirs(os.path.dirname(results_path), exist_ok=True)
+    with open(results_path, "w") as f:
         f.write(f"Best Val Accuracy: {best_val_acc:.4f}\n")
-        f.write(f"Accuracy:  {accuracy:.4f}\n")
-        f.write(f"Precision: {precision:.4f}\n")
-        f.write(f"Recall:    {recall:.4f}\n")
-        f.write(f"F1 Score:  {f1:.4f}\n\n")
+        f.write("\nClassification Report:\n")
         f.write(report_str)
-
-    save_detailed_metrics(train_accuracies, train_losses, val_accuracies, val_losses,
-                          accuracy, precision, recall, f1, best_val_acc)
-
-    # Plot metrics bar chart
-    metrics = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
-    values = [accuracy, precision, recall, f1]
-    plt.figure(figsize=(8, 6))
-    plt.bar(metrics, values, color=['skyblue', 'lightgreen', 'salmon', 'orange'])
-    plt.ylim(0, 1)
-    plt.ylabel('Score')
-    plt.title('Evaluation Metrics')
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    plt.tight_layout()
-    plt.savefig("results/evaluation_metrics.jpg")
-    plt.close()
 
 if __name__ == "__main__":
     main()

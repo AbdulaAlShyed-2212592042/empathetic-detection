@@ -224,22 +224,24 @@ def eval_epoch(model, dataloader, criterion, device, desc="Evaluating"):
 
 # MAIN ==========================
 def main():
+    # ===== PATHS AND HYPERPARAMETERS =====
     json_path = "data/train_audio/audio_v5_0/train.json"
     audio_dir = "data/train_audio/audio_v5_0"
     batch_size = 16
     learning_rate = 3e-5
-    max_audio_len = 16000 * 10
+    max_audio_len = 16000 * 10   # 10 seconds max
     max_text_len = 128
     best_model_path = "best_multimodal_model.pth"
 
+    # ===== DEVICE CONFIG =====
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    # Load dataset
+    # ===== LOAD FULL DATASET =====
     full_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len)
     full_labels = [emotion_labels.get(item['label'], emotion_labels['neutral']) for item in full_dataset.data]
 
-    # Split into train/val/test using stratified splits
+    # ===== STRATIFIED SPLITS (70/15/15) =====
     splitter1 = StratifiedShuffleSplit(n_splits=1, test_size=0.3, random_state=42)
     train_idx, temp_idx = next(splitter1.split(full_dataset.data, full_labels))
 
@@ -249,16 +251,16 @@ def main():
     val_idx = [temp_idx[i] for i in val_split]
     test_idx = [temp_idx[i] for i in test_split]
 
-    # Create dataset subsets
+    # ===== CREATE DATASET SUBSETS =====
     train_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=train_idx)
     val_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=val_idx)
     test_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=test_idx)
 
-    # Tokenizers / processors
+    # ===== TOKENIZERS / PROCESSORS =====
     processor_audio = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base")
     tokenizer_text = BertTokenizer.from_pretrained("bert-base-uncased")
 
-    # Dataloaders
+    # ===== DATALOADERS =====
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,
                               collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False,
@@ -266,13 +268,13 @@ def main():
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False,
                              collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
 
-    # Model, optimizer, scheduler
+    # ===== MODEL, OPTIMIZER, SCHEDULER =====
     model = MultimodalModel(num_classes=num_classes, device=device)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=0.01)
     criterion = nn.CrossEntropyLoss()
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2, verbose=True)
 
-    # Training variables
+    # ===== TRAINING VARIABLES =====
     best_val_acc = 0
     best_model = None
     patience = 5
@@ -281,11 +283,12 @@ def main():
     train_accuracies, train_losses = [], []
     val_accuracies, val_losses = [], []
 
-    #  TRAINING LOOP ==========================
+    # ===== TRAINING LOOP =====
     for epoch in range(1, 31):
         print(f"\nEpoch {epoch}/30")
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion, device)
         val_loss, val_acc = eval_epoch(model, val_loader, criterion, device, desc="Validation")
+        
         train_losses.append(train_loss)
         train_accuracies.append(train_acc)
         val_losses.append(val_loss)
@@ -306,12 +309,12 @@ def main():
                 print("Early stopping triggered.")
                 break
 
-    # Save and load best model
+    # ===== SAVE & LOAD BEST MODEL =====
     torch.save(best_model, best_model_path)
     model.load_state_dict(torch.load(best_model_path))
     model.eval()
 
-    #  TEST EVALUATION ==========================
+    # ===== TEST EVALUATION =====
     all_preds, all_labels = [], []
     with torch.no_grad():
         for audio_inputs, text_inputs, labels in tqdm(test_loader, desc="Testing"):
@@ -324,25 +327,25 @@ def main():
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
 
-    # Compute metrics
-    report_str = classification_report(all_labels, all_preds, target_names=list(emotion_labels.keys()), digits=4)
-    print(report_str)
-
-    accuracy = accuracy_score(all_labels, all_preds)
+    # ===== METRICS =====
+    test_accuracy = accuracy_score(all_labels, all_preds)
     precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='weighted')
 
-    print(f"Test Accuracy: {accuracy:.4f}")
-    print(f"Test Precision: {precision:.4f}")
-    print(f"Test Recall: {recall:.4f}")
-    print(f"Test F1 Score: {f1:.4f}")
+    print("\n====== TEST RESULTS ======")
+    print(f"Test Accuracy : {test_accuracy:.4f}")
+    print(f"Precision     : {precision:.4f}")
+    print(f"Recall        : {recall:.4f}")
+    print(f"F1 Score      : {f1:.4f}")
+    print("\nDetailed classification report:")
+    print(classification_report(all_labels, all_preds, target_names=list(emotion_labels.keys())))
 
-    # Save metrics
+    # ===== SAVE DETAILED METRICS LOG =====
     save_detailed_metrics(
         train_accuracies,
         train_losses,
         val_accuracies,
         val_losses,
-        accuracy,
+        test_accuracy,
         precision,
         recall,
         f1,
@@ -352,8 +355,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-# ========================== END OF FILE ==========================
-# This code is designed to be run as a script and will execute the main function when run   directly.
-# Ensure that the necessary directories and files exist before running.             
-# The script will train a multimodal emotion recognition model using audio and text data.
-# It will log training and validation metrics, save the best model, and evaluate on a test

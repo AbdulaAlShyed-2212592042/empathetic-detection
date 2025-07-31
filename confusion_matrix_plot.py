@@ -50,6 +50,23 @@ test_idx = [temp_idx[i] for i in test_split]
 
 test_dataset = AudioTextDataset(json_path, audio_dir, indices=test_idx)
 
+# ===== Save test set audio paths and labels as JSON =====
+test_samples_info = [
+    {
+        "audio_path": sample["audio_path"],
+        "label": emotion_labels.get(sample["label"], "unknown")
+    }
+    for sample in test_dataset.data
+]
+
+os.makedirs("results", exist_ok=True)
+json_output_path = "results/test_set_with_labels.json"
+with open(json_output_path, "w", encoding="utf-8") as f:
+    json.dump(test_samples_info, f, indent=4, ensure_ascii=False)
+
+print(f"Test set info with labels saved to {json_output_path}")
+
+# ===== Prepare DataLoader for test set =====
 test_loader = DataLoader(
     test_dataset,
     batch_size=16,
@@ -89,9 +106,7 @@ plt.figure(figsize=(8, 6))
 disp.plot(cmap="Blues", xticks_rotation=45, values_format='d')
 plt.title("Confusion Matrix")
 plt.tight_layout()
-os.makedirs("results", exist_ok=True)
 plt.savefig(conf_matrix_output, dpi=300)
 plt.show()
 
 print(f"Confusion matrix saved to {conf_matrix_output}")
-# ===== Save Predictions and Labels =====

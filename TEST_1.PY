@@ -304,7 +304,6 @@ def eval_epoch(model, dataloader, criterion, device, desc="Evaluating"):
 
             outputs = model(audio_inputs, text_inputs)
             loss = criterion(outputs, labels)
-
             total_loss += loss.item() * labels.size(0)
             preds = outputs.argmax(dim=1)
             correct += (preds == labels).sum().item()

@@ -151,7 +151,7 @@ def collate_fn(batch, processor_audio, tokenizer_text, max_audio_len=16000 * 10,
 class MultimodalModel(nn.Module):
     def __init__(self, num_classes, device):
         super().__init__()
-        self.wav2vec = Wav2Vec2Model.from_pretrained("facebook/wav2vec2-base")
+        self.wav2vec = Wav2Vec2Model.from_pretrained("facebook/wav2vec2-base", use_safetensors=True)
         self.wav2vec.gradient_checkpointing_enable()
 
         self.bert = BertModel.from_pretrained("bert-base-uncased")

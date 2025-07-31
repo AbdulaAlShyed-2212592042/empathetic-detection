@@ -2,7 +2,7 @@
 
 This project focuses on **multimodal emotion classification** using the **AvaMERG dataset**. It combines audio, video, and text modalities to detect empathetic states with deep learning.
 
----
+----
 
 ## 📁 Dataset
 
@@ -15,7 +15,7 @@ A multimodal emotion recognition dataset including:
 - 📝 Text transcripts  
 - ❤️ Empathy-related emotion labels  
 
----
+----
 
 ## 🎯 Objective
 
@@ -26,7 +26,7 @@ To build a **multimodal neural network** that detects empathy using:
 - Text features extracted via `BERT`  
 - Fusion of all modalities for classification  
 
----
+----
 
 ## 🧠 Model Architecture
 
@@ -36,7 +36,7 @@ To build a **multimodal neural network** that detects empathy using:
 - **Fusion**: Concatenation of embeddings → Fully connected layers → Output classifier  
 - **Output**: Empathy-related emotion classification  
 
----
+----
 
 ## 🛠️ Setup Instructions
 

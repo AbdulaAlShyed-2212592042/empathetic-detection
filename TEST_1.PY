@@ -12,7 +12,7 @@ from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 from transformers import Wav2Vec2Processor, Wav2Vec2Model, BertTokenizer, BertModel
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, classification_report
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from copy import deepcopy
 
 #  RANDOM SEED ==========================
@@ -69,6 +69,7 @@ class AudioTextDataset(Dataset):
 
         pattern = re.compile(r"dia(\d+)utt(\d+)_(\d+)\.wav")
 
+        # Build lookup for conversation-turn matching
         self.turn_lookup = {}
         for conv in conversations:
             conv_id = str(conv["conversation_id"])
@@ -150,10 +151,10 @@ def collate_fn(batch, processor_audio, tokenizer_text, max_audio_len=16000 * 10,
 class MultimodalModel(nn.Module):
     def __init__(self, num_classes, device):
         super().__init__()
-        self.wav2vec = Wav2Vec2Model.from_pretrained("facebook/wav2vec2-base", use_safetensors=True)
+        self.wav2vec = Wav2Vec2Model.from_pretrained("facebook/wav2vec2-base")
         self.wav2vec.gradient_checkpointing_enable()
 
-        self.bert = BertModel.from_pretrained("bert-base-uncased", use_safetensors=True)
+        self.bert = BertModel.from_pretrained("bert-base-uncased")
         self.bert.gradient_checkpointing_enable()
 
         audio_feat_dim = self.wav2vec.config.hidden_size
@@ -231,7 +232,8 @@ def main():
     learning_rate = 3e-5
     max_audio_len = 16000 * 10   # 10 seconds max
     max_text_len = 128
-    best_model_path = "best_multimodal_model.pth"
+    best_model_path = "results/best_multimodal_model.pth"
+    os.makedirs("results", exist_ok=True)
 
     # ===== DEVICE CONFIG =====
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -323,34 +325,31 @@ def main():
             labels = labels.to(device)
 
             outputs = model(audio_inputs, text_inputs)
-            preds = torch.argmax(outputs, dim=1)
+            preds = outputs.argmax(dim=1)
+
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
 
-    # ===== METRICS =====
-    test_accuracy = accuracy_score(all_labels, all_preds)
+    # ===== CALCULATE METRICS =====
+    test_acc = accuracy_score(all_labels, all_preds)
     precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='weighted')
 
-    print("\n====== TEST RESULTS ======")
-    print(f"Test Accuracy : {test_accuracy:.4f}")
-    print(f"Precision     : {precision:.4f}")
-    print(f"Recall        : {recall:.4f}")
-    print(f"F1 Score      : {f1:.4f}")
-    print("\nDetailed classification report:")
-    print(classification_report(all_labels, all_preds, target_names=list(emotion_labels.keys())))
+    print(f"Test Accuracy: {test_acc:.4f}")
+    print(f"Precision:     {precision:.4f}")
+    print(f"Recall:        {recall:.4f}")
+    print(f"F1 Score:      {f1:.4f}")
 
-    # ===== SAVE DETAILED METRICS LOG =====
+    # ===== SAVE METRICS LOG =====
     save_detailed_metrics(
         train_accuracies,
         train_losses,
         val_accuracies,
         val_losses,
-        test_accuracy,
+        test_acc,
         precision,
         recall,
         f1,
-        best_val_acc,
-        log_file_path="results/metrics_log.txt"
+        best_val_acc
     )
 
 if __name__ == "__main__":

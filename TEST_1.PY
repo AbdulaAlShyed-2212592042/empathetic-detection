@@ -15,16 +15,119 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from copy import deepcopy
 
-#  RANDOM SEED ==========================
+# RANDOM SEED ==========================
 def set_seed(seed=42):
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-
 set_seed(42)
 
-#  SAVE METRICS LOG ==========================
+# EMOTION PROJECTION DICTS ==========================
+ed_emotion_projection = {
+    'conflicted': 'anxious',
+    'vulnerability': 'afraid',
+    'helplessness': 'afraid',
+    'sadness': 'sad',
+    'pensive': 'sentimental',
+    'frustration': 'annoyed',
+    'weary': 'tired',
+    'anxiety': 'anxious',
+    'reflective': 'sentimental',
+    'upset': 'disappointed',
+    'worried': 'anxious',
+    'fear': 'afraid',
+    'frustrated': 'sad',
+    'fatigue': 'tired',
+    'lost': 'jealous',
+    'disappointment': 'disappointed',
+    'nostalgia': 'nostalgic',
+    'exhaustion': 'tired',
+    'uneasy': 'anxious',
+    'loneliness': 'lonely',
+    'fragile': 'afraid',
+    'confused': 'jealous',
+    'vulnerable': 'afraid',
+    'thoughtful': 'sentimental',
+    'stressed': 'anxious',
+    'concerned': 'anxious',
+    'tiredness': 'tired',
+    'burdened': 'anxious',
+    'melancholy': 'sad',
+    'overwhelmed': 'anxious',
+    'worry': 'anxious',
+    'heavy-hearted': 'sad',
+    'melancholic': 'sad',
+    'nervous': 'anxious',
+    'fearful': 'afraid',
+    'stress': 'anxious',
+    'confusion': 'anxious',
+    'inadequacy': 'ashamed',
+    'regret': 'guilty',
+    'helpless': 'afraid',
+    'concern': 'anxious',
+    'exhausted': 'tired',
+    'overwhelm': 'anxious',
+    'tired': 'tired',
+    'disappointed': 'sad',
+    'surprised': 'surprised',
+    'excited': 'happy',
+    'angry': 'angry',
+    'proud': 'happy',
+    'annoyed': 'angry',
+    'grateful': 'happy',
+    'lonely': 'sad',
+    'afraid': 'fear',
+    'terrified': 'fear',
+    'guilty': 'sad',
+    'impressed': 'surprised',
+    'disgusted': 'disgusted',
+    'hopeful': 'happy',
+    'confident': 'happy',
+    'furious': 'angry',
+    'anxious': 'sad',
+    'anticipating': 'happy',
+    'joyful': 'happy',
+    'nostalgic': 'sad',
+    'prepared': 'happy',
+    'jealous': 'contempt',
+    'content': 'happy',
+    'devastated': 'surprised',
+    'embarrassed': 'sad',
+    'caring': 'happy',
+    'sentimental': 'sad',
+    'trusting': 'happy',
+    'ashamed': 'sad',
+    'apprehensive': 'fear',
+    'faithful': 'happy'       
+}
+
+emotion_projection = {
+    "happy": 0,
+    "surprised": 1,
+    "angry": 2,
+    "fear": 3,
+    "sad": 4,
+    "disgusted": 5,
+    "contempt": 6
+}
+
+num_classes = len(emotion_projection)
+
+# Reverse map for printing labels
+emotion_labels = {v: k for k, v in emotion_projection.items()}
+
+def map_emotion_to_class(label):
+    label = label.lower()
+    coarse = ed_emotion_projection.get(label, None)
+    if coarse is None:
+        if label in emotion_projection:
+            coarse = label
+        else:
+            coarse = 'happy'  # fallback default
+    return emotion_projection.get(coarse, emotion_projection['happy'])
+
+# SAVE METRICS LOG ==========================
 def save_detailed_metrics(
     train_accuracies,
     train_losses,
@@ -38,7 +141,6 @@ def save_detailed_metrics(
     log_file_path="results/metrics_log.txt"
 ):
     os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
-
     with open(log_file_path, "w") as f:
         f.write("====== TRAINING AND VALIDATION METRICS ======\n")
         for epoch in range(len(train_accuracies)):
@@ -47,17 +149,15 @@ def save_detailed_metrics(
                 f"Train Loss={train_losses[epoch]:.4f}, Train Acc={train_accuracies[epoch]:.4f}, "
                 f"Val Loss={val_losses[epoch]:.4f}, Val Acc={val_accuracies[epoch]:.4f}\n"
             )
-
         f.write("\n====== BEST VALIDATION ACCURACY ======\n")
         f.write(f"{best_val_accuracy:.4f}\n")
-
         f.write("\n====== FINAL TEST METRICS ======\n")
         f.write(f"Test Accuracy : {test_accuracy:.4f}\n")
         f.write(f"Precision     : {test_precision:.4f}\n")
         f.write(f"Recall        : {test_recall:.4f}\n")
         f.write(f"F1 Score      : {test_f1:.4f}\n")
 
-#  DATASET ==========================
+# DATASET ==========================
 class AudioTextDataset(Dataset):
     def __init__(self, json_path, audio_dir, max_audio_length=16000 * 10, indices=None):
         self.audio_dir = audio_dir
@@ -92,12 +192,13 @@ class AudioTextDataset(Dataset):
                 conv, turn = self.turn_lookup[key]
                 dialogue_history = turn.get('dialogue_history', [])
                 speaker_text = next((utt['utterance'] for utt in reversed(dialogue_history) if utt['role'] == 'speaker'), "")
-                emotion = turn.get('chain_of_empathy', {}).get('speaker_emotion', 'neutral').lower()
+                emotion_raw = turn.get('chain_of_empathy', {}).get('speaker_emotion', 'neutral').lower()
+                label = map_emotion_to_class(emotion_raw)
 
                 self.data.append({
                     "audio_path": os.path.join(audio_dir, filename),
                     "text": speaker_text,
-                    "label": emotion
+                    "label": label
                 })
 
         if not self.data:
@@ -112,23 +213,11 @@ class AudioTextDataset(Dataset):
     def __getitem__(self, idx):
         return self.data[idx]
 
-# EMOTION LABELS ==========================
-emotion_labels = {
-    "happy": 0,
-    "sad": 1,
-    "angry": 2,
-    "neutral": 3,
-    "excited": 4,
-    "frustrated": 5,
-    "surprised": 6,
-}
-num_classes = len(emotion_labels)
-
-#  COLLATE FUNCTION ==========================
+# COLLATE FUNCTION ==========================
 def collate_fn(batch, processor_audio, tokenizer_text, max_audio_len=16000 * 10, max_text_len=128):
     audio_paths = [item['audio_path'] for item in batch]
     texts = [item['text'] for item in batch]
-    labels = torch.tensor([emotion_labels.get(item['label'], emotion_labels['neutral']) for item in batch])
+    labels = torch.tensor([item['label'] for item in batch])
 
     # Process audio
     audio_inputs = []
@@ -241,11 +330,13 @@ def main():
 
     # ===== LOAD FULL DATASET =====
     full_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len)
-    full_labels = [emotion_labels.get(item['label'], emotion_labels['neutral']) for item in full_dataset.data]
+
+    # Extract labels (integers) for stratified splitting
+    full_labels = [item['label'] for item in full_dataset.data]
 
     # ===== STRATIFIED SPLITS (70/15/15) =====
     splitter1 = StratifiedShuffleSplit(n_splits=1, test_size=0.3, random_state=42)
-    train_idx, temp_idx = next(splitter1.split(full_dataset.data, full_labels))
+    train_idx, temp_idx = next(splitter1.split(np.arange(len(full_dataset)), full_labels))
 
     temp_labels = [full_labels[i] for i in temp_idx]
     splitter2 = StratifiedShuffleSplit(n_splits=1, test_size=0.5, random_state=42)
@@ -257,6 +348,13 @@ def main():
     train_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=train_idx)
     val_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=val_idx)
     test_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=test_idx)
+
+    # ===== Print First Training Sample =====
+    print("\n====== Sample from Train Dataset ======")
+    sample = train_dataset[0]
+    print(f"Audio Path : {sample['audio_path']}")
+    print(f"Text       : {sample['text']}")
+    print(f"Label      : {sample['label']} ({emotion_labels.get(sample['label'], 'unknown')})")
 
     # ===== TOKENIZERS / PROCESSORS =====
     processor_audio = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base")
@@ -290,7 +388,7 @@ def main():
         print(f"\nEpoch {epoch}/30")
         train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion, device)
         val_loss, val_acc = eval_epoch(model, val_loader, criterion, device, desc="Validation")
-        
+
         train_losses.append(train_loss)
         train_accuracies.append(train_acc)
         val_losses.append(val_loss)
@@ -330,7 +428,7 @@ def main():
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
 
-    # ===== CALCULATE METRICS =====
+        # ===== CALCULATE METRICS =====
     test_acc = accuracy_score(all_labels, all_preds)
     precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='weighted')
 
@@ -354,3 +452,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# END OF TEST_1.PY

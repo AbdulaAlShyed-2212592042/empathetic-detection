@@ -66,3 +66,11 @@ results.png
 # Temporary files
 *.tmp   
 best_multimodal_model.pth
+
+# Logs
+logs/   
+*.log
+# Temporary files
+*.tmp
+# Backup files
+*.bak

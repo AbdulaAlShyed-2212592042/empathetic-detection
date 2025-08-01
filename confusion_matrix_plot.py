@@ -1,5 +1,3 @@
-# confusion_matrix_plot.py
-
 import os
 import torch
 import json
@@ -12,7 +10,7 @@ from transformers import Wav2Vec2Processor, BertTokenizer
 from torch.utils.data import DataLoader
 from sklearn.model_selection import StratifiedShuffleSplit
 
-# Import your definitions from test_1.py
+# Import your definitions from TEST_1.py
 from TEST_1 import (
     AudioTextDataset, collate_fn, MultimodalModel,
     emotion_labels, emotion_projection, num_classes
@@ -36,7 +34,7 @@ print(f"Using device: {device}")
 processor_audio = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base")
 tokenizer_text = BertTokenizer.from_pretrained("bert-base-uncased")
 
-# ===== Load Dataset and Perform Same Stratified Split =====
+# ===== Load Dataset and Perform Stratified Split =====
 full_dataset = AudioTextDataset(json_path, audio_dir)
 full_labels = [item['label'] for item in full_dataset.data]
 
@@ -50,23 +48,7 @@ test_idx = [temp_idx[i] for i in test_split]
 
 test_dataset = AudioTextDataset(json_path, audio_dir, indices=test_idx)
 
-# ===== Save test set audio paths and labels as JSON =====
-test_samples_info = [
-    {
-        "audio_path": sample["audio_path"],
-        "label": emotion_labels.get(sample["label"], "unknown")
-    }
-    for sample in test_dataset.data
-]
-
-os.makedirs("results", exist_ok=True)
-json_output_path = "results/test_set_with_labels.json"
-with open(json_output_path, "w", encoding="utf-8") as f:
-    json.dump(test_samples_info, f, indent=4, ensure_ascii=False)
-
-print(f"Test set info with labels saved to {json_output_path}")
-
-# ===== Prepare DataLoader for test set =====
+# ===== Prepare DataLoader =====
 test_loader = DataLoader(
     test_dataset,
     batch_size=16,
@@ -79,7 +61,7 @@ model = MultimodalModel(num_classes=num_classes, device=device)
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
 
-# ===== Inference on Test Set with tqdm progress bar =====
+# ===== Inference =====
 all_preds, all_labels = [], []
 
 with torch.no_grad():
@@ -94,14 +76,41 @@ with torch.no_grad():
         all_preds.extend(preds.cpu().numpy())
         all_labels.extend(labels.cpu().numpy())
 
-# ===== Generate Confusion Matrix =====
+# ===== Build Detailed Info =====
+detailed_test_samples = []
+for i, sample in enumerate(test_dataset.data):
+    true_label_idx = all_labels[i]
+    pred_label_idx = all_preds[i]
+
+    detailed_test_samples.append({
+        "audio_path": sample["audio_path"],
+        "true_label": emotion_labels[true_label_idx],
+        "predicted_label": emotion_labels[pred_label_idx],
+        "correct": true_label_idx == pred_label_idx
+    })
+
+# ===== Split and Save =====
+os.makedirs("results", exist_ok=True)
+
+correct_preds = [s for s in detailed_test_samples if s["correct"]]
+incorrect_preds = [s for s in detailed_test_samples if not s["correct"]]
+
+with open("results/correct_predictions.json", "w", encoding="utf-8") as f:
+    json.dump(correct_preds, f, indent=4, ensure_ascii=False)
+
+with open("results/incorrect_predictions.json", "w", encoding="utf-8") as f:
+    json.dump(incorrect_preds, f, indent=4, ensure_ascii=False)
+
+print("Saved correct predictions to results/correct_predictions.json")
+print("Saved incorrect predictions to results/incorrect_predictions.json")
+
+# ===== Confusion Matrix =====
 cm = confusion_matrix(all_labels, all_preds)
 disp = ConfusionMatrixDisplay(
     confusion_matrix=cm,
     display_labels=[emotion_labels[i] for i in range(num_classes)]
 )
 
-# ===== Plot and Save =====
 plt.figure(figsize=(8, 6))
 disp.plot(cmap="Blues", xticks_rotation=45, values_format='d')
 plt.title("Confusion Matrix")

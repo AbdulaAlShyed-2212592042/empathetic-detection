@@ -1,3 +1,5 @@
+# confusion_matrix_plot.py
+
 import os
 import torch
 import json
@@ -86,7 +88,7 @@ for i, sample in enumerate(test_dataset.data):
         "audio_path": sample["audio_path"],
         "true_label": emotion_labels[true_label_idx],
         "predicted_label": emotion_labels[pred_label_idx],
-        "correct": true_label_idx == pred_label_idx
+        "correct": bool(true_label_idx == pred_label_idx)  # ✅ FIXED: convert to native bool
     })
 
 # ===== Split and Save =====

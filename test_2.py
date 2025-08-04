@@ -354,7 +354,7 @@ def main():
     audio_dir = "data/train_audio/audio_v5_0"
     batch_size = 16
     learning_rate = 3e-5
-    best_model_path = "results/best_multimodal_model.pth"
+    best_model_path = "results/best_multimodal_model_1.pth"
     os.makedirs("results", exist_ok=True)
 
     # ===== DEVICE CONFIG =====

@@ -23,37 +23,6 @@ def set_seed(seed=42):
     torch.cuda.manual_seed_all(seed)
 set_seed(42)
 
-# AUDIO AUGMENTATION FUNCTION ==========================
-def augment_audio(audio, sr=16000):
-    """Apply random augmentations to the audio signal."""
-    # Random time shift
-    if random.random() < 0.3:
-        shift = int(sr * random.uniform(-0.2, 0.2))  # shift by up to ±0.2 sec
-        audio = np.roll(audio, shift)
-
-    # Random noise addition
-    if random.random() < 0.3:
-        noise = np.random.normal(0, 0.005, audio.shape)
-        audio = audio + noise
-
-    # Random pitch shift
-    if random.random() < 0.3:
-        n_steps = random.uniform(-2, 2)  # shift by ±2 semitones
-        audio = librosa.effects.pitch_shift(audio, sr=sr, n_steps=n_steps)
-
-    # Random speed change
-    if random.random() < 0.3:
-        speed_factor = random.uniform(0.9, 1.1)
-        audio = librosa.effects.time_stretch(audio, rate=speed_factor)
-        # Pad or trim back to original length (10 sec)
-        max_len = sr * 10
-        if len(audio) > max_len:
-            audio = audio[:max_len]
-        else:
-            audio = np.pad(audio, (0, max_len - len(audio)), mode='constant')
-
-    return audio
-
 # EMOTION PROJECTION DICTS ==========================
 ed_emotion_projection = {
     'conflicted': 'anxious',
@@ -144,8 +113,6 @@ emotion_projection = {
 }
 
 num_classes = len(emotion_projection)
-
-# Reverse map for printing labels
 emotion_labels = {v: k for k, v in emotion_projection.items()}
 
 def map_emotion_to_class(label):
@@ -190,11 +157,10 @@ def save_detailed_metrics(
 
 # DATASET ==========================
 class AudioTextDataset(Dataset):
-    def __init__(self, json_path, audio_dir, max_audio_length=16000 * 10, indices=None, augment=False):
+    def __init__(self, json_path, audio_dir, max_audio_length=None, indices=None):
         self.audio_dir = audio_dir
-        self.max_audio_length = max_audio_length
+        self.max_audio_length = max_audio_length  # None means no truncation, full audio
         self.data = []
-        self.augment = augment
 
         with open(json_path, 'r', encoding='utf-8') as f:
             conversations = json.load(f)
@@ -243,36 +209,39 @@ class AudioTextDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        item = self.data[idx]
-        audio_path = item["audio_path"]
-
-        # Load audio here instead of collate_fn
-        speech_array, sr = librosa.load(audio_path, sr=16000)
-
-        # Augment only for training
-        if self.augment:
-            speech_array = augment_audio(speech_array, sr=sr)
-
-        # Truncate or pad
-        if len(speech_array) > self.max_audio_length:
-            speech_array = speech_array[:self.max_audio_length]
-        else:
-            speech_array = np.pad(speech_array, (0, self.max_audio_length - len(speech_array)), mode='constant')
-
-        return {
-            "audio": speech_array,
-            "text": item["text"],
-            "label": item["label"]
-        }
+        return self.data[idx]
 
 # COLLATE FUNCTION ==========================
-def collate_fn(batch, processor_audio, tokenizer_text, max_text_len=128):
-    audio_inputs = [item['audio'] for item in batch]
+def collate_fn(batch, processor_audio, tokenizer_text, max_audio_len=None, max_text_len=None):
+    audio_paths = [item['audio_path'] for item in batch]
     texts = [item['text'] for item in batch]
     labels = torch.tensor([item['label'] for item in batch])
 
+    # Process audio
+    audio_inputs = []
+    for path in audio_paths:
+        speech_array, sr = librosa.load(path, sr=16000)
+        # If max_audio_len is set, truncate; else use full audio
+        if max_audio_len is not None:
+            if len(speech_array) > max_audio_len:
+                speech_array = speech_array[:max_audio_len]
+            else:
+                speech_array = np.pad(speech_array, (0, max_audio_len - len(speech_array)), mode='constant')
+        audio_inputs.append(speech_array)
+
     audio_inputs = processor_audio(audio_inputs, sampling_rate=16000, return_tensors="pt", padding=True).input_values
-    text_inputs = tokenizer_text(texts, padding='max_length', truncation=True, max_length=max_text_len, return_tensors='pt')
+
+    # Process text
+    # If max_text_len is set, truncate; else use full text
+    tokenizer_kwargs = {
+        'padding': 'longest',
+        'truncation': max_text_len is not None,
+    }
+    if max_text_len is not None:
+        tokenizer_kwargs['max_length'] = max_text_len
+    tokenizer_kwargs['return_tensors'] = 'pt'
+
+    text_inputs = tokenizer_text(texts, **tokenizer_kwargs)
 
     return audio_inputs, text_inputs, labels
 
@@ -303,13 +272,13 @@ class MultimodalModel(nn.Module):
 
     def forward(self, audio_inputs, text_inputs):
         audio_inputs = audio_inputs.float()
-        audio_feat = self.wav2vec(audio_inputs).last_hidden_state.mean(dim=1)
+        audio_feat = self.wav2vec(audio_inputs).last_hidden_state.mean(dim=1)  # Mean pooling on time dim
         text_feat = self.bert(**text_inputs).pooler_output
         combined = torch.cat((audio_feat, text_feat), dim=1)
         return self.classifier(combined)
 
 # TRAINING / EVAL ==========================
-def train_epoch(model, dataloader, optimizer, criterion, device):
+def train_epoch(model, dataloader, optimizer, criterion, device, scaler):
     model.train()
     total_loss, correct, total = 0, 0, 0
 
@@ -322,8 +291,9 @@ def train_epoch(model, dataloader, optimizer, criterion, device):
         with torch.cuda.amp.autocast():
             outputs = model(audio_inputs, text_inputs)
             loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
 
         total_loss += loss.item() * labels.size(0)
         preds = outputs.argmax(dim=1)
@@ -358,8 +328,8 @@ def main():
     audio_dir = "data/train_audio/audio_v5_0"
     batch_size = 16
     learning_rate = 3e-5
-    max_audio_len = 16000 * 10   # 10 seconds max
-    max_text_len = 128
+    max_audio_len = None    # None => use full audio length without truncation
+    max_text_len = None     # None => use full text without truncation
     best_model_path = "results/best_multimodal_model.pth"
     os.makedirs("results", exist_ok=True)
 
@@ -370,7 +340,6 @@ def main():
     # ===== LOAD FULL DATASET =====
     full_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len)
 
-    # Extract labels (integers) for stratified splitting
     full_labels = [item['label'] for item in full_dataset.data]
 
     # ===== STRATIFIED SPLITS (70/15/15) =====
@@ -383,16 +352,15 @@ def main():
     val_idx = [temp_idx[i] for i in val_split]
     test_idx = [temp_idx[i] for i in test_split]
 
-    # ===== CREATE DATASET SUBSETS (augment=True for training only) =====
-    train_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=train_idx, augment=True)
-    val_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=val_idx, augment=False)
-    test_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=test_idx, augment=False)
+    # ===== CREATE DATASET SUBSETS =====
+    train_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=train_idx)
+    val_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=val_idx)
+    test_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=test_idx)
 
-    # ===== Print First Training Sample =====
+    # ===== PRINT FIRST TRAIN SAMPLE =====
     print("\n====== Sample from Train Dataset ======")
-    # Print the audio filename from the original data list
-    print(f"Audio File : {train_dataset.data[0]['audio_path']}")
     sample = train_dataset[0]
+    print(f"Audio Path : {sample['audio_path']}")
     print(f"Text       : {sample['text']}")
     print(f"Label      : {sample['label']} ({emotion_labels.get(sample['label'], 'unknown')})")
 
@@ -402,17 +370,18 @@ def main():
 
     # ===== DATALOADERS =====
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,
-                              collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_text_len))
+                              collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False,
-                            collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_text_len))
+                            collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False,
-                             collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_text_len))
+                             collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
 
     # ===== MODEL, OPTIMIZER, SCHEDULER =====
     model = MultimodalModel(num_classes=num_classes, device=device)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=0.01)
     criterion = nn.CrossEntropyLoss()
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2, verbose=True)
+    scaler = torch.cuda.amp.GradScaler()
 
     # ===== TRAINING VARIABLES =====
     best_val_acc = 0
@@ -426,7 +395,7 @@ def main():
     # ===== TRAINING LOOP =====
     for epoch in range(1, 31):
         print(f"\nEpoch {epoch}/30")
-        train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion, device)
+        train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion, device, scaler)
         val_loss, val_acc = eval_epoch(model, val_loader, criterion, device, desc="Validation")
 
         train_losses.append(train_loss)
@@ -435,53 +404,63 @@ def main():
         val_accuracies.append(val_acc)
 
         print(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f}")
-        print(f"Val   Loss: {val_loss:.4f} | Val   Acc: {val_acc:.4f}")
+        print(f"Val Loss:   {val_loss:.4f} | Val Acc:   {val_acc:.4f}")
 
         scheduler.step(val_acc)
 
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             best_model = deepcopy(model.state_dict())
-            torch.save(best_model, best_model_path)
-            print(f"Best model saved with val acc: {best_val_acc:.4f}")
             no_improve = 0
+            print(f"Saved best model (val acc: {best_val_acc:.4f})")
         else:
             no_improve += 1
             if no_improve >= patience:
                 print("Early stopping triggered.")
                 break
 
-    # ===== TESTING =====
+    # ===== SAVE & LOAD BEST MODEL =====
+    torch.save(best_model, best_model_path)
     model.load_state_dict(torch.load(best_model_path))
-    model.to(device)
-    test_loss, test_acc = eval_epoch(model, test_loader, criterion, device, desc="Testing")
-
-    # Collect detailed metrics on test set
     model.eval()
-    all_preds = []
-    all_labels = []
+
+    # ===== TEST EVALUATION =====
+    all_preds, all_labels = [], []
     with torch.no_grad():
-        for audio_inputs, text_inputs, labels in tqdm(test_loader, desc="Testing Details"):
+        for audio_inputs, text_inputs, labels in tqdm(test_loader, desc="Testing"):
             audio_inputs = audio_inputs.to(device)
             text_inputs = {k: v.to(device) for k, v in text_inputs.items()}
             labels = labels.to(device)
 
             outputs = model(audio_inputs, text_inputs)
             preds = outputs.argmax(dim=1)
+
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
 
+    # ===== CALCULATE METRICS =====
+    test_acc = accuracy_score(all_labels, all_preds)
     precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='weighted')
-    print(f"\nTest Accuracy: {test_acc:.4f}")
-    print(f"Test Precision: {precision:.4f}")
-    print(f"Test Recall: {recall:.4f}")
-    print(f"Test F1: {f1:.4f}")
+
+    print(f"Test Accuracy: {test_acc:.4f}")
+    print(f"Precision:     {precision:.4f}")
+    print(f"Recall:        {recall:.4f}")
+    print(f"F1 Score:      {f1:.4f}")
 
     # ===== SAVE METRICS LOG =====
     save_detailed_metrics(
-        train_accuracies, train_losses, val_accuracies, val_losses,
-        test_acc, precision, recall, f1, best_val_acc
+        train_accuracies,
+        train_losses,
+        val_accuracies,
+        val_losses,
+        test_acc,
+        precision,
+        recall,
+        f1,
+        best_val_acc
     )
 
 if __name__ == "__main__":
     main()
+# test_3.py
+# This file is a continuation of the previous script, focusing on testing and evaluation.

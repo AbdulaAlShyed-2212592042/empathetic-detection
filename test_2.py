@@ -113,6 +113,8 @@ emotion_projection = {
 }
 
 num_classes = len(emotion_projection)
+
+# Reverse map for printing labels
 emotion_labels = {v: k for k, v in emotion_projection.items()}
 
 def map_emotion_to_class(label):
@@ -155,11 +157,42 @@ def save_detailed_metrics(
         f.write(f"Recall        : {test_recall:.4f}\n")
         f.write(f"F1 Score      : {test_f1:.4f}\n")
 
+# AUDIO AUGMENTATION ==========================
+def augment_audio(y, sr):
+    # Random time-stretch
+    if random.random() < 0.3:
+        rate = random.uniform(0.9, 1.1)
+        try:
+            y = librosa.effects.time_stretch(y=y, rate=rate)
+        except TypeError:
+            y = librosa.effects.time_stretch(y, rate)
+
+    # Random pitch shift
+    if random.random() < 0.3:
+        steps = random.randint(-2, 2)
+        try:
+            y = librosa.effects.pitch_shift(y=y, sr=sr, n_steps=steps)
+        except TypeError:
+            y = librosa.effects.pitch_shift(y, sr, steps)
+
+    # Random noise injection
+    if random.random() < 0.3:
+        noise = np.random.normal(0, 0.005, y.shape)
+        y = y + noise
+
+    # Random volume scaling
+    if random.random() < 0.3:
+        gain = random.uniform(0.8, 1.2)
+        y = y * gain
+
+    # Normalize
+    y = y / (np.max(np.abs(y)) + 1e-9)
+    return y
+
 # DATASET ==========================
 class AudioTextDataset(Dataset):
-    def __init__(self, json_path, audio_dir, max_audio_length=None, indices=None):
+    def __init__(self, json_path, audio_dir, indices=None):
         self.audio_dir = audio_dir
-        self.max_audio_length = max_audio_length  # None means no truncation, full audio
         self.data = []
 
         with open(json_path, 'r', encoding='utf-8') as f:
@@ -169,14 +202,14 @@ class AudioTextDataset(Dataset):
 
         # Build lookup for conversation-turn matching
         self.turn_lookup = {}
-        for conv in conversations:
+        for conv in tqdm(conversations, desc="Building conversation lookup"):
             conv_id = str(conv["conversation_id"])
             speaker_id = str(conv["speaker_profile"]["ID"])
             for turn in conv["turns"]:
                 turn_id = str(turn["turn_id"])
                 self.turn_lookup[(conv_id, turn_id, speaker_id)] = (conv, turn)
 
-        for filename in os.listdir(audio_dir):
+        for filename in tqdm(os.listdir(audio_dir), desc="Loading audio file metadata"):
             if not filename.endswith('.wav'):
                 continue
             m = pattern.match(filename)
@@ -212,38 +245,29 @@ class AudioTextDataset(Dataset):
         return self.data[idx]
 
 # COLLATE FUNCTION ==========================
-def collate_fn(batch, processor_audio, tokenizer_text, max_audio_len=None, max_text_len=None):
+def collate_fn(batch, processor_audio, tokenizer_text, augment=False):
     audio_paths = [item['audio_path'] for item in batch]
     texts = [item['text'] for item in batch]
     labels = torch.tensor([item['label'] for item in batch])
 
-    # Process audio
-    audio_inputs = []
+    audio_inputs_list = []
     for path in audio_paths:
-        speech_array, sr = librosa.load(path, sr=16000)
-        # If max_audio_len is set, truncate; else use full audio
-        if max_audio_len is not None:
-            if len(speech_array) > max_audio_len:
-                speech_array = speech_array[:max_audio_len]
-            else:
-                speech_array = np.pad(speech_array, (0, max_audio_len - len(speech_array)), mode='constant')
-        audio_inputs.append(speech_array)
+        y, sr = librosa.load(path, sr=16000)
+        if augment:
+            y = augment_audio(y, sr)
+        audio_inputs_list.append(y)
 
-    audio_inputs = processor_audio(audio_inputs, sampling_rate=16000, return_tensors="pt", padding=True).input_values
+    audio_inputs = processor_audio(audio_inputs_list, sampling_rate=16000, return_tensors="pt", padding=True)
+    
+    if not hasattr(audio_inputs, "attention_mask"):
+        attention_mask = torch.ones(audio_inputs.input_values.shape, dtype=torch.long)
+    else:
+        attention_mask = audio_inputs.attention_mask
 
-    # Process text
-    # If max_text_len is set, truncate; else use full text
-    tokenizer_kwargs = {
-        'padding': 'longest',
-        'truncation': max_text_len is not None,
-    }
-    if max_text_len is not None:
-        tokenizer_kwargs['max_length'] = max_text_len
-    tokenizer_kwargs['return_tensors'] = 'pt'
+    text_inputs = tokenizer_text(texts, padding=True, truncation=False, return_tensors="pt")
 
-    text_inputs = tokenizer_text(texts, **tokenizer_kwargs)
+    return audio_inputs.input_values, attention_mask, text_inputs, labels
 
-    return audio_inputs, text_inputs, labels
 
 # MODEL ==========================
 class MultimodalModel(nn.Module):
@@ -270,9 +294,9 @@ class MultimodalModel(nn.Module):
 
         self.to(device)
 
-    def forward(self, audio_inputs, text_inputs):
+    def forward(self, audio_inputs, audio_attention_mask, text_inputs):
         audio_inputs = audio_inputs.float()
-        audio_feat = self.wav2vec(audio_inputs).last_hidden_state.mean(dim=1)  # Mean pooling on time dim
+        audio_feat = self.wav2vec(audio_inputs, attention_mask=audio_attention_mask).last_hidden_state.mean(dim=1)
         text_feat = self.bert(**text_inputs).pooler_output
         combined = torch.cat((audio_feat, text_feat), dim=1)
         return self.classifier(combined)
@@ -282,14 +306,15 @@ def train_epoch(model, dataloader, optimizer, criterion, device, scaler):
     model.train()
     total_loss, correct, total = 0, 0, 0
 
-    for audio_inputs, text_inputs, labels in tqdm(dataloader, desc="Training", leave=False):
+    for audio_inputs, audio_attention_mask, text_inputs, labels in tqdm(dataloader, desc="Training", leave=False):
         audio_inputs = audio_inputs.to(device)
+        audio_attention_mask = audio_attention_mask.to(device)
         text_inputs = {k: v.to(device) for k, v in text_inputs.items()}
         labels = labels.to(device)
 
         optimizer.zero_grad()
-        with torch.cuda.amp.autocast():
-            outputs = model(audio_inputs, text_inputs)
+        with torch.amp.autocast(device_type='cuda'):
+            outputs = model(audio_inputs, audio_attention_mask, text_inputs)
             loss = criterion(outputs, labels)
         scaler.scale(loss).backward()
         scaler.step(optimizer)
@@ -307,12 +332,13 @@ def eval_epoch(model, dataloader, criterion, device, desc="Evaluating"):
     total_loss, correct, total = 0, 0, 0
 
     with torch.no_grad():
-        for audio_inputs, text_inputs, labels in tqdm(dataloader, desc=desc, leave=False):
+        for audio_inputs, audio_attention_mask, text_inputs, labels in tqdm(dataloader, desc=desc, leave=False):
             audio_inputs = audio_inputs.to(device)
+            audio_attention_mask = audio_attention_mask.to(device)
             text_inputs = {k: v.to(device) for k, v in text_inputs.items()}
             labels = labels.to(device)
 
-            outputs = model(audio_inputs, text_inputs)
+            outputs = model(audio_inputs, audio_attention_mask, text_inputs)
             loss = criterion(outputs, labels)
             total_loss += loss.item() * labels.size(0)
             preds = outputs.argmax(dim=1)
@@ -328,8 +354,6 @@ def main():
     audio_dir = "data/train_audio/audio_v5_0"
     batch_size = 16
     learning_rate = 3e-5
-    max_audio_len = None    # None => use full audio length without truncation
-    max_text_len = None     # None => use full text without truncation
     best_model_path = "results/best_multimodal_model.pth"
     os.makedirs("results", exist_ok=True)
 
@@ -338,11 +362,14 @@ def main():
     print(f"Using device: {device}")
 
     # ===== LOAD FULL DATASET =====
-    full_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len)
+    print("Loading full dataset...")
+    full_dataset = AudioTextDataset(json_path, audio_dir)
 
+    # Extract labels (integers) for stratified splitting
     full_labels = [item['label'] for item in full_dataset.data]
 
     # ===== STRATIFIED SPLITS (70/15/15) =====
+    print("Performing stratified split...")
     splitter1 = StratifiedShuffleSplit(n_splits=1, test_size=0.3, random_state=42)
     train_idx, temp_idx = next(splitter1.split(np.arange(len(full_dataset)), full_labels))
 
@@ -353,11 +380,11 @@ def main():
     test_idx = [temp_idx[i] for i in test_split]
 
     # ===== CREATE DATASET SUBSETS =====
-    train_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=train_idx)
-    val_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=val_idx)
-    test_dataset = AudioTextDataset(json_path, audio_dir, max_audio_length=max_audio_len, indices=test_idx)
+    train_dataset = AudioTextDataset(json_path, audio_dir, indices=train_idx)
+    val_dataset = AudioTextDataset(json_path, audio_dir, indices=val_idx)
+    test_dataset = AudioTextDataset(json_path, audio_dir, indices=test_idx)
 
-    # ===== PRINT FIRST TRAIN SAMPLE =====
+    # ===== Print First Training Sample =====
     print("\n====== Sample from Train Dataset ======")
     sample = train_dataset[0]
     print(f"Audio Path : {sample['audio_path']}")
@@ -365,18 +392,26 @@ def main():
     print(f"Label      : {sample['label']} ({emotion_labels.get(sample['label'], 'unknown')})")
 
     # ===== TOKENIZERS / PROCESSORS =====
+    print("Loading tokenizers and processors...")
     processor_audio = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base")
     tokenizer_text = BertTokenizer.from_pretrained("bert-base-uncased")
 
     # ===== DATALOADERS =====
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,
-                              collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False,
-                            collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False,
-                             collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, max_audio_len, max_text_len))
+    train_loader = DataLoader(
+        train_dataset, batch_size=batch_size, shuffle=True,
+        collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, augment=True)
+    )
+    val_loader = DataLoader(
+        val_dataset, batch_size=batch_size, shuffle=False,
+        collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, augment=False)
+    )
+    test_loader = DataLoader(
+        test_dataset, batch_size=batch_size, shuffle=False,
+        collate_fn=lambda b: collate_fn(b, processor_audio, tokenizer_text, augment=False)
+    )
 
     # ===== MODEL, OPTIMIZER, SCHEDULER =====
+    print("Initializing model...")
     model = MultimodalModel(num_classes=num_classes, device=device)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=0.01)
     criterion = nn.CrossEntropyLoss()
@@ -404,63 +439,55 @@ def main():
         val_accuracies.append(val_acc)
 
         print(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f}")
-        print(f"Val Loss:   {val_loss:.4f} | Val Acc:   {val_acc:.4f}")
+        print(f"Val Loss  : {val_loss:.4f} | Val Acc  : {val_acc:.4f}")
 
         scheduler.step(val_acc)
 
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             best_model = deepcopy(model.state_dict())
+            torch.save(best_model, best_model_path)
             no_improve = 0
-            print(f"Saved best model (val acc: {best_val_acc:.4f})")
+            print("Best model saved.")
         else:
             no_improve += 1
             if no_improve >= patience:
-                print("Early stopping triggered.")
+                print("Early stopping due to no improvement.")
                 break
 
-    # ===== SAVE & LOAD BEST MODEL =====
-    torch.save(best_model, best_model_path)
+    # ===== LOAD BEST MODEL AND TEST =====
     model.load_state_dict(torch.load(best_model_path))
-    model.eval()
+    test_loss, test_acc = eval_epoch(model, test_loader, criterion, device, desc="Test")
 
-    # ===== TEST EVALUATION =====
-    all_preds, all_labels = [], []
+    print(f"\nTest Loss: {test_loss:.4f} | Test Acc: {test_acc:.4f}")
+
+    # Get detailed test metrics
+    all_preds = []
+    all_labels = []
+
+    model.eval()
     with torch.no_grad():
-        for audio_inputs, text_inputs, labels in tqdm(test_loader, desc="Testing"):
+        for audio_inputs, audio_attention_mask, text_inputs, labels in tqdm(test_loader, desc="Test metrics"):
             audio_inputs = audio_inputs.to(device)
+            audio_attention_mask = audio_attention_mask.to(device)
             text_inputs = {k: v.to(device) for k, v in text_inputs.items()}
             labels = labels.to(device)
 
-            outputs = model(audio_inputs, text_inputs)
+            outputs = model(audio_inputs, audio_attention_mask, text_inputs)
             preds = outputs.argmax(dim=1)
 
-            all_preds.extend(preds.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
+            all_preds.extend(preds.cpu().tolist())
+            all_labels.extend(labels.cpu().tolist())
 
-    # ===== CALCULATE METRICS =====
-    test_acc = accuracy_score(all_labels, all_preds)
     precision, recall, f1, _ = precision_recall_fscore_support(all_labels, all_preds, average='weighted')
+    accuracy = accuracy_score(all_labels, all_preds)
 
-    print(f"Test Accuracy: {test_acc:.4f}")
-    print(f"Precision:     {precision:.4f}")
-    print(f"Recall:        {recall:.4f}")
-    print(f"F1 Score:      {f1:.4f}")
+    print(f"Test Accuracy: {accuracy:.4f}")
+    print(f"Precision   : {precision:.4f}")
+    print(f"Recall      : {recall:.4f}")
+    print(f"F1 Score    : {f1:.4f}")
 
-    # ===== SAVE METRICS LOG =====
-    save_detailed_metrics(
-        train_accuracies,
-        train_losses,
-        val_accuracies,
-        val_losses,
-        test_acc,
-        precision,
-        recall,
-        f1,
-        best_val_acc
-    )
+    save_detailed_metrics(train_accuracies, train_losses, val_accuracies, val_losses, accuracy, precision, recall, f1, best_val_acc)
 
 if __name__ == "__main__":
     main()
-# test_3.py
-# This file is a continuation of the previous script, focusing on testing and evaluation.

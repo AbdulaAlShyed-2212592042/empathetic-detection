@@ -352,7 +352,7 @@ def main():
     # ===== PATHS AND HYPERPARAMETERS =====
     json_path = "data/train_audio/audio_v5_0/train.json"
     audio_dir = "data/train_audio/audio_v5_0"
-    batch_size = 16
+    batch_size = 8
     learning_rate = 3e-5
     best_model_path = "results/best_multimodal_model_1.pth"
     os.makedirs("results", exist_ok=True)

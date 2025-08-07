@@ -235,7 +235,7 @@ def test_model(json_path, audio_dir, model_path, batch_size=8, save_dir="results
     os.makedirs(save_dir, exist_ok=True)
 
     # Save metrics to a text file
-    metrics_path = os.path.join(save_dir, "metrics.txt")
+    metrics_path = os.path.join(save_dir, "metrics_1.txt")
     with open(metrics_path, "w") as f:
         f.write(f"Accuracy: {acc:.4f}\n")
         f.write(f"Precision: {precision:.4f}\n")
@@ -243,7 +243,7 @@ def test_model(json_path, audio_dir, model_path, batch_size=8, save_dir="results
         f.write(f"F1 Score: {f1:.4f}\n")
 
     # Save detailed predictions: audio filename, true label, predicted label
-    pred_path = os.path.join(save_dir, "predictions.txt")
+    pred_path = os.path.join(save_dir, "predictions_1.txt")
     with open(pred_path, "w", encoding="utf-8") as f:
         f.write("AudioFile\tTrueLabel\tPredLabel\n")
         for audio_path, true_label, pred_label in zip(audio_names, y_true, y_pred):
@@ -273,13 +273,13 @@ def test_model(json_path, audio_dir, model_path, batch_size=8, save_dir="results
                     color="white" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
-    cm_path = os.path.join(save_dir, "confusion_matrix.jpg")
+    cm_path = os.path.join(save_dir, "confusion_matrix_1.jpg")
     plt.savefig(cm_path)
     plt.close(fig)
 
 if __name__ == "__main__":
     json_path = "data/audio_test/test_audio/test.json"
     audio_dir = "data/audio_test/test_audio"
-    model_path = "results/best_multimodal_model_1.pth"
+    model_path = "results/best_multimodal_model.pth"
 
     test_model(json_path, audio_dir, model_path)

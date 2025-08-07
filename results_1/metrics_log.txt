@@ -1,0 +1,18 @@
+====== TRAINING AND VALIDATION METRICS ======
+Epoch 1: Train Loss=0.7898, Train Acc=0.7509, Val Loss=0.6592, Val Acc=0.7870
+Epoch 2: Train Loss=0.5574, Train Acc=0.8269, Val Loss=0.6198, Val Acc=0.8092
+Epoch 3: Train Loss=0.4290, Train Acc=0.8692, Val Loss=0.5937, Val Acc=0.8082
+Epoch 4: Train Loss=0.3285, Train Acc=0.9009, Val Loss=0.6474, Val Acc=0.8046
+Epoch 5: Train Loss=0.2685, Train Acc=0.9179, Val Loss=0.7130, Val Acc=0.8148
+Epoch 6: Train Loss=0.2088, Train Acc=0.9372, Val Loss=0.8100, Val Acc=0.8022
+Epoch 7: Train Loss=0.1809, Train Acc=0.9450, Val Loss=0.8233, Val Acc=0.8104
+Epoch 8: Train Loss=0.1578, Train Acc=0.9519, Val Loss=0.8829, Val Acc=0.8069
+
+====== BEST VALIDATION ACCURACY ======
+0.8148
+
+====== FINAL TEST METRICS ======
+Test Accuracy : 0.8207
+Precision     : 0.8118
+Recall        : 0.8207
+F1 Score      : 0.8131

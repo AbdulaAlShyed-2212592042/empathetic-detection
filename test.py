@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 from transformers import BertTokenizer, Wav2Vec2Processor
 import json
 import numpy as np
+import librosa
 from train import MultimodalEmpathyDataset, MultimodalEmpathyModel, EMOTION_MAP, ED_EMOTION_PROJECTION, META_MAP
 
 class MultimodalEmpathyDataset(torch.utils.data.Dataset):
@@ -26,14 +27,22 @@ class MultimodalEmpathyDataset(torch.utils.data.Dataset):
         text_inputs = self.tokenizer(text, padding='max_length', truncation=True, max_length=self.max_length, return_tensors='pt')
         # Audio: load and process audio file for the last utterance in the turn
         audio_name = item['turn']['dialogue'][-1]['audio_name']
-        audio_path = os.path.join(self.audio_dir, audio_name.replace('.wav', '.npy'))
-        # Handle missing audio files gracefully
-        audio_array = None
+        audio_path = os.path.join(self.audio_dir, audio_name)
+        audio_missing = False
         try:
-            audio_array = np.load(audio_path)
+            audio_array, sr = librosa.load(audio_path, sr=16000, mono=True)
+            # Pad or trim to 16000 samples
+            if len(audio_array) < 16000:
+                audio_array = np.pad(audio_array, (0, 16000 - len(audio_array)), mode='constant')
+            else:
+                audio_array = audio_array[:16000]
+            audio_array = audio_array.astype(np.float32)
+            max_abs = np.max(np.abs(audio_array))
+            if max_abs > 1.01:
+                audio_array = audio_array / (max_abs + 1e-8)
         except Exception:
-            # If missing, return zeros of expected shape for Wav2Vec2 (16000,)
             audio_array = np.zeros((16000,), dtype=np.float32)
+            audio_missing = True
         audio_inputs = self.processor(audio_array, sampling_rate=16000, return_tensors='pt')
         # Metadata: age, gender, timbre (as integers)
         age = META_MAP['age'][item['listener_profile']['age']]
@@ -79,8 +88,9 @@ def main():
     test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)
     num_classes = 7
     model = MultimodalEmpathyModel(num_classes).to(device)
-    # Load your trained model weights here if you saved them
-    # model.load_state_dict(torch.load('path_to_checkpoint.pt'))
+    # Load the best model weights
+    model.load_state_dict(torch.load('best_model.pt', map_location=device))
+    print('Loaded best model weights from best_model.pt')
     evaluate(model, test_loader, device)
 
 if __name__ == '__main__':

@@ -1,3 +1,26 @@
+def save_mapped_data_for_multimodal(conversations, output_path):
+    """
+    Save mapped data in the format expected by multimodal_empathetic_dialogue class.
+    Each item contains: conversation_id, last turn, speaker_profile, listener_profile, topic
+    """
+    mapped_data = []
+    for conv in conversations:
+        # Use the last turn for each conversation
+        turns = conv.get('turns', [])
+        if not turns:
+            continue
+        last_turn = turns[-1]
+        mapped_item = {
+            'conversation_id': conv.get('conversation_id'),
+            'turn': last_turn,
+            'speaker_profile': conv.get('speaker_profile', {}),
+            'listener_profile': conv.get('listener_profile', {}),
+            'topic': conv.get('topic', '')
+        }
+        mapped_data.append(mapped_item)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(mapped_data, f, ensure_ascii=False, indent=2)
+    print(f"Saved mapped data for multimodal_empathetic_dialogue to {output_path}")
 import os
 import json
 import random
@@ -191,6 +214,45 @@ def print_conversation(conv):
                 print(f"      >>> This is the GOAL OF RESPONSE for this turn <<<")
         print(f"Chain of empathy: {turn['chain_of_empathy']}\n")
 
+def save_dataset_splits(train_set, test_set, val_set, output_dir="json"):
+    # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Save each split to a separate JSON file
+    splits = {
+        "train": train_set,
+        "test": test_set,
+        "val": val_set
+    }
+
+    for split_name, data in splits.items():
+        output_path = os.path.join(output_dir, f"{split_name}_data.json")
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        print(f"Saved {split_name} set to {output_path}")
+
+    # Save a summary file with dataset statistics
+    summary = {
+        "dataset_stats": {
+            "train_conversations": len(train_set),
+            "test_conversations": len(test_set),
+            "val_conversations": len(val_set),
+            "train_labeled_audio": len(set(audio for c in train_set for audio in c["labeled_audio_names"])),
+            "test_labeled_audio": len(set(audio for c in test_set for audio in c["labeled_audio_names"])),
+            "val_labeled_audio": len(set(audio for c in val_set for audio in c["labeled_audio_names"])),
+            "emotion_distribution": {
+                "train": dict(Counter(c["speaker_emotion"] for c in train_set)),
+                "test": dict(Counter(c["speaker_emotion"] for c in test_set)),
+                "val": dict(Counter(c["speaker_emotion"] for c in val_set))
+            }
+        }
+    }
+
+    summary_path = os.path.join(output_dir, "dataset_summary.json")
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump(summary, f, ensure_ascii=False, indent=2)
+    print(f"Saved dataset summary to {summary_path}")
+
 if __name__ == "__main__":
     json_path = "data/train_audio/audio_v5_0/train.json"
     audio_dir = "data/train_audio/audio_v5_0"
@@ -198,6 +260,15 @@ if __name__ == "__main__":
     all_data = map_and_reconstruct_all(json_path, audio_dir)
     train_set, test_set, val_set = split_dataset(all_data)
 
+    # Save the dataset splits and summary
+    save_dataset_splits(train_set, test_set, val_set)
+
+    # Save mapped data for multimodal_empathetic_dialogue (example: train set)
+    save_mapped_data_for_multimodal(train_set, os.path.join('json', 'mapped_train_data.json'))
+    save_mapped_data_for_multimodal(test_set, os.path.join('json', 'mapped_test_data.json'))
+    save_mapped_data_for_multimodal(val_set, os.path.join('json', 'mapped_val_data.json'))
+
+    # Print sample conversations
     if train_set:
         print("\n### First and Last conversation in TRAIN set ###")
         print_conversation(train_set[0])

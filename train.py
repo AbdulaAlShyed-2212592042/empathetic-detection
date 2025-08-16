@@ -417,6 +417,7 @@ def main():
         val_dataset, batch_size=batch_size, shuffle=False,
         num_workers=0, pin_memory=(device.type == "cuda")
     )
+    # ...existing code...
     test_loader = DataLoader(
         test_dataset, batch_size=batch_size, shuffle=False,
         num_workers=0, pin_memory=(device.type == "cuda")

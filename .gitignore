@@ -1,0 +1,84 @@
+# ==========================
+# Project-specific ignores
+# ==========================
+
+# Raw data and audio files
+data/
+datasets/
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.json       # raw JSON datasets
+
+# Checkpoints / temporary model states
+checkpoints/
+last_epoch.pt
+*.ckpt       # optional if you use other checkpoint extensions
+
+# ==========================
+# Python ignores
+# ==========================
+
+# Byte-compiled / cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+*.env
+
+# ==========================
+# Explicitly track certain model files
+# ==========================
+!best_model.pt
+!best_multimodal_model.pth
+
+# ==========================
+# Build and packaging
+# ==========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ==========================
+# Notebooks and IDE ignores
+# ==========================
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# PyCharm settings
+.idea/
+
+# ==========================
+# System / OS files
+# ==========================
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Logs & temporary files
+# ==========================
+logs/
+*.log
+*.tmp
+*.bak
+*.npy
+
+# ==========================
+# Optional: Large ML files tracked separately (use Git LFS)
+# ==========================
+# *.pt
+# *.pth
+# *.ckpt

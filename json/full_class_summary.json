@@ -1,0 +1,89 @@
+{
+  "train": {
+    "emotion_counts": {
+      "happy": 3449,
+      "surprised": 1055,
+      "angry": 1239,
+      "fear": 850,
+      "sad": 7605,
+      "disgusted": 299,
+      "contempt": 320,
+      "other": 0
+    },
+    "age_counts": {
+      "child": 1859,
+      "young": 7985,
+      "middle-aged": 3196,
+      "elderly": 1777
+    },
+    "gender_counts": {
+      "male": 11772,
+      "female": 3045
+    },
+    "timbre_counts": {
+      "high": 1808,
+      "mid": 9658,
+      "low": 3351
+    }
+  },
+  "test": {
+    "emotion_counts": {
+      "happy": 1150,
+      "surprised": 361,
+      "angry": 399,
+      "fear": 297,
+      "sad": 2536,
+      "disgusted": 89,
+      "contempt": 107,
+      "other": 0
+    },
+    "age_counts": {
+      "child": 613,
+      "young": 2670,
+      "middle-aged": 1086,
+      "elderly": 570
+    },
+    "gender_counts": {
+      "male": 3920,
+      "female": 1019
+    },
+    "timbre_counts": {
+      "high": 617,
+      "mid": 3157,
+      "low": 1165
+    }
+  },
+  "val": {
+    "emotion_counts": {
+      "happy": 1134,
+      "surprised": 347,
+      "angry": 402,
+      "fear": 289,
+      "sad": 2555,
+      "disgusted": 123,
+      "contempt": 90,
+      "other": 0
+    },
+    "age_counts": {
+      "child": 618,
+      "young": 2641,
+      "middle-aged": 1069,
+      "elderly": 612
+    },
+    "gender_counts": {
+      "male": 3950,
+      "female": 990
+    },
+    "timbre_counts": {
+      "high": 559,
+      "mid": 3248,
+      "low": 1133
+    }
+  },
+  "train_conversations": 14817,
+  "test_conversations": 4939,
+  "val_conversations": 4940,
+  "train_labeled_audio": 67937,
+  "test_labeled_audio": 22606,
+  "val_labeled_audio": 22698
+}

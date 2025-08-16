@@ -1,3 +1,14 @@
+import copy
+import os
+import re
+import torch
+import numpy as np
+import json
+import phonemizer
+from torch.utils.data import Dataset, DataLoader
+from tqdm import tqdm
+import pandas as pd
+
 def save_mapped_data_for_multimodal(conversations, output_path):
     """
     Save mapped data in the format expected by multimodal_empathetic_dialogue class.
@@ -149,15 +160,20 @@ def split_dataset(conversations, train_ratio=0.6, test_ratio=0.2, val_ratio=0.2,
     test_ids = set(unique_conv_ids[n_train:n_train + n_test])
     val_ids = set(unique_conv_ids[n_train + n_test:])
 
-    train_set, test_set, val_set = [], [], []
 
-    for conv_id, convs in conv_id_to_convs.items():
-        if conv_id in train_ids:
-            train_set.extend(convs)
-        elif conv_id in test_ids:
-            test_set.extend(convs)
-        elif conv_id in val_ids:
-            val_set.extend(convs)
+    # Remove any overlapping conversation IDs from all splits except the first one they appear in
+    assigned_ids = set()
+    train_set, test_set, val_set = [], [], []
+    for conv_id in unique_conv_ids:
+        if conv_id in train_ids and conv_id not in assigned_ids:
+            train_set.extend(conv_id_to_convs[conv_id])
+            assigned_ids.add(conv_id)
+        elif conv_id in test_ids and conv_id not in assigned_ids:
+            test_set.extend(conv_id_to_convs[conv_id])
+            assigned_ids.add(conv_id)
+        elif conv_id in val_ids and conv_id not in assigned_ids:
+            val_set.extend(conv_id_to_convs[conv_id])
+            assigned_ids.add(conv_id)
 
     # ✅ Count unique labeled audio per split
     train_labeled_audio = len(set(audio for c in train_set for audio in c["labeled_audio_names"]))
@@ -253,6 +269,371 @@ def save_dataset_splits(train_set, test_set, val_set, output_dir="json"):
         json.dump(summary, f, ensure_ascii=False, indent=2)
     print(f"Saved dataset summary to {summary_path}")
 
+def save_class_distribution(self, output_path):
+        """
+        Count and save the number of entries per emotion class to a JSON file, and print each class entry.
+        """
+        class_counts = {emotion: 0 for emotion in self.emotion_projection.keys()}
+        for item in self.data:
+            emotion = item['turn']['chain_of_empathy'].get('speaker_emotion', None)
+            if emotion in class_counts:
+                class_counts[emotion] += 1
+            else:
+                # If emotion not in projection, count as 'other'
+                class_counts.setdefault('other', 0)
+                class_counts['other'] += 1
+        # Print each class and its entry count
+        print("Class distribution:")
+        for emotion, count in class_counts.items():
+            print(f"{emotion}: {count}")
+        # Save to JSON
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(class_counts, f, ensure_ascii=False, indent=2)
+        print(f"Saved class distribution to {output_path}")
+
+class multimodal_empathetic_dialogue(Dataset):
+    def __init__(self, args):
+        super(multimodal_empathetic_dialogue, self).__init__()
+        self.args = args
+        self.age_projection = {
+            "child": 0,
+            "young": 1,
+            "middle-aged": 2,
+            "elderly": 3
+        }
+        self.gender_projection = {
+            "male": 0,
+            "female": 1
+        }
+        self.timbre_projection = {
+            "high": 0,
+            "mid": 1,
+            "low": 2
+        }
+
+        combinations = []
+        self.profile_projection = {}
+        label = 0
+        for age in self.age_projection.keys():
+            for gender in self.gender_projection.keys():
+                for  timbre in self.timbre_projection.keys():
+                    combination = f"{age}_{gender}_{timbre}"
+                    combinations.append(combination)
+                    self.profile_projection[combination] = label
+                    label += 1
+
+        self.ed_emotion_projection = {
+            'conflicted': 'anxious',
+            'vulnerability': 'afraid',
+            'helplessness': 'afraid',
+            'sadness': 'sad',
+            'pensive': 'sentimental',
+            'frustration': 'annoyed',
+            'weary': 'tired',
+            'anxiety': 'anxious',
+            'reflective': 'sentimental',
+            'upset': 'disappointed',
+            'worried': 'anxious',
+            'fear': 'afraid',
+            'frustrated': 'sad',
+            'fatigue': 'tired',
+            'lost': 'jealous',
+            'disappointment': 'disappointed',
+            'nostalgia': 'nostalgic',
+            'exhaustion': 'tired',
+            'uneasy': 'anxious',
+            'loneliness': 'lonely',
+            'fragile': 'afraid',
+            'confused': 'jealous',
+            'vulnerable': 'afraid',
+            'thoughtful': 'sentimental',
+            'stressed': 'anxious',
+            'concerned': 'anxious',
+            'tiredness': 'tired',
+            'burdened': 'anxious',
+            'melancholy': 'sad',
+            'overwhelmed': 'anxious',
+            'worry': 'anxious',
+            'heavy-hearted': 'sad',
+            'melancholic': 'sad',
+            'nervous': 'anxious',
+            'fearful': 'afraid',
+            'stress': 'anxious',
+            'confusion': 'anxious',
+            'inadequacy': 'ashamed',
+            'regret': 'guilty',
+            'helpless': 'afraid',
+            'concern': 'anxious',
+            'exhausted': 'tired',
+            'overwhelm': 'anxious',
+            'tired': 'tired',
+            'disappointed': 'sad',
+            'surprised': 'surprised',
+            'excited': 'happy',
+            'angry': 'angry',
+            'proud': 'happy',
+            'annoyed': 'angry',
+            'grateful': 'happy',
+            'lonely': 'sad',
+            'afraid': 'fear',
+            'terrified': 'fear',
+            'guilty': 'sad',
+            'impressed': 'surprised',
+            'disgusted': 'disgusted',
+            'hopeful': 'happy',
+            'confident': 'happy',
+            'furious': 'angry',
+            'anxious': 'sad',
+            'anticipating': 'happy',
+            'joyful': 'happy',
+            'nostalgic': 'sad',
+            'prepared': 'happy',
+            'jealous': 'contempt',
+            'content': 'happy',
+            'devastated': 'surprised',
+            'embarrassed': 'sad',
+            'caring': 'happy',
+            'sentimental': 'sad',
+            'trusting': 'happy',
+            'ashamed': 'sad',
+            'apprehensive': 'fear',
+            'faithful': 'happy'       
+        }
+
+        self.emotion_projection = {
+            "happy":0,
+            "surprised":1,
+            "angry":2,
+            "fear":3,
+            "sad":4,
+            "disgusted":5,
+            "contempt":6
+        }
+
+        with open(os.path.join(args['data_path'], args['mode']+'.json'), 'r', encoding='utf-8') as f:
+            self.raw_data = json.load(f)
+        print(f"Loaded {len(self.raw_data)} items from {os.path.join(args['data_path'], args['mode']+'.json')}")
+
+    def save_full_class_summary(self, output_path):
+        # Use self.data if available, else self.raw_data
+        data_source = getattr(self, 'data', None)
+        if data_source is None:
+            data_source = getattr(self, 'raw_data', [])
+
+        # Emotion class counts
+        emotion_counts = {emotion: 0 for emotion in self.emotion_projection.keys()}
+        emotion_counts['other'] = 0
+        # Age, gender, timbre counts
+        age_counts = {age: 0 for age in self.age_projection.keys()}
+        gender_counts = {gender: 0 for gender in self.gender_projection.keys()}
+        timbre_counts = {timbre: 0 for timbre in self.timbre_projection.keys()}
+
+        for item in data_source:
+            listener_profile = item.get('listener_profile', {})
+            age = listener_profile.get('age', None)
+            if age in age_counts:
+                age_counts[age] += 1
+            gender = listener_profile.get('gender', None)
+            if gender in gender_counts:
+                gender_counts[gender] += 1
+            timbre = listener_profile.get('timbre', None)
+            if timbre in timbre_counts:
+                timbre_counts[timbre] += 1
+            # Loop through all turns
+            turns = item.get('turns', [])
+            if not turns:
+                # fallback for single turn format
+                turns = [item.get('turn', {})]
+            for turn in turns:
+                chain_of_empathy = turn.get('chain_of_empathy', {})
+                raw_emotion = chain_of_empathy.get('speaker_emotion', None)
+                # Map to main class using ed_emotion_projection
+                mapped_emotion = self.ed_emotion_projection.get(raw_emotion, raw_emotion)
+                if mapped_emotion in self.emotion_projection:
+                    emotion_counts[mapped_emotion] += 1
+                else:
+                    emotion_counts['other'] += 1
+
+        print("Emotion class distribution:")
+        for emotion in self.emotion_projection.keys():
+            print(f"{emotion}: {emotion_counts[emotion]}")
+        print(f"other: {emotion_counts['other']}")
+
+        print("\nAge group distribution:")
+        for age in self.age_projection.keys():
+            print(f"{age}: {age_counts[age]}")
+
+        print("\nGender distribution:")
+        for gender in self.gender_projection.keys():
+            print(f"{gender}: {gender_counts[gender]}")
+
+        print("\nTimbre distribution:")
+        for timbre in self.timbre_projection.keys():
+            print(f"{timbre}: {timbre_counts[timbre]}")
+
+        # Save all to JSON
+        summary = {
+            "emotion_counts": emotion_counts,
+            "age_counts": age_counts,
+            "gender_counts": gender_counts,
+            "timbre_counts": timbre_counts
+        }
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(summary, f, ensure_ascii=False, indent=2)
+        print(f"Saved full class summary to {output_path}")
+
+ed_emotion_projection = {
+    'conflicted': 'anxious',
+    'vulnerability': 'afraid',
+    'helplessness': 'afraid',
+    'sadness': 'sad',
+    'pensive': 'sentimental',
+    'frustration': 'annoyed',
+    'weary': 'tired',
+    'anxiety': 'anxious',
+    'reflective': 'sentimental',
+    'upset': 'disappointed',
+    'worried': 'anxious',
+    'fear': 'afraid',
+    'frustrated': 'sad',
+    'fatigue': 'tired',
+    'lost': 'jealous',
+    'disappointment': 'disappointed',
+    'nostalgia': 'nostalgic',
+    'exhaustion': 'tired',
+    'uneasy': 'anxious',
+    'loneliness': 'lonely',
+    'fragile': 'afraid',
+    'confused': 'jealous',
+    'vulnerable': 'afraid',
+    'thoughtful': 'sentimental',
+    'stressed': 'anxious',
+    'concerned': 'anxious',
+    'tiredness': 'tired',
+    'burdened': 'anxious',
+    'melancholy': 'sad',
+    'overwhelmed': 'anxious',
+    'worry': 'anxious',
+    'heavy-hearted': 'sad',
+    'melancholic': 'sad',
+    'nervous': 'anxious',
+    'fearful': 'afraid',
+    'stress': 'anxious',
+    'confusion': 'anxious',
+    'inadequacy': 'ashamed',
+    'regret': 'guilty',
+    'helpless': 'afraid',
+    'concern': 'anxious',
+    'exhausted': 'tired',
+    'overwhelm': 'anxious',
+    'tired': 'tired',
+    'disappointed': 'sad',
+    'surprised': 'surprised',
+    'excited': 'happy',
+    'angry': 'angry',
+    'proud': 'happy',
+    'annoyed': 'angry',
+    'grateful': 'happy',
+    'lonely': 'sad',
+    'afraid': 'fear',
+    'terrified': 'fear',
+    'guilty': 'sad',
+    'impressed': 'surprised',
+    'disgusted': 'disgusted',
+    'hopeful': 'happy',
+    'confident': 'happy',
+    'furious': 'angry',
+    'anxious': 'sad',
+    'anticipating': 'happy',
+    'joyful': 'happy',
+    'nostalgic': 'sad',
+    'prepared': 'happy',
+    'jealous': 'contempt',
+    'content': 'happy',
+    'devastated': 'surprised',
+    'embarrassed': 'sad',
+    'caring': 'happy',
+    'sentimental': 'sad',
+    'trusting': 'happy',
+    'ashamed': 'sad',
+    'apprehensive': 'fear',
+    'faithful': 'happy'       
+}
+
+def compute_class_distribution(data, age_projection, gender_projection, timbre_projection, ed_emotion_projection, emotion_projection):
+    emotion_counts = {emotion: 0 for emotion in emotion_projection.keys()}
+    emotion_counts['other'] = 0
+    age_counts = {age: 0 for age in age_projection.keys()}
+    gender_counts = {gender: 0 for gender in gender_projection.keys()}
+    timbre_counts = {timbre: 0 for timbre in timbre_projection.keys()}
+    for item in data:
+        listener_profile = item.get('listener_profile', {})
+        age = listener_profile.get('age', None)
+        if age in age_counts:
+            age_counts[age] += 1
+        gender = listener_profile.get('gender', None)
+        if gender in gender_counts:
+            gender_counts[gender] += 1
+        timbre = listener_profile.get('timbre', None)
+        if timbre in timbre_counts:
+            timbre_counts[timbre] += 1
+        turns = item.get('turns', [])
+        if not turns:
+            turns = [item.get('turn', {})]
+        for turn in turns:
+            chain_of_empathy = turn.get('chain_of_empathy', {})
+            raw_emotion = chain_of_empathy.get('speaker_emotion', None)
+            mapped_emotion = ed_emotion_projection.get(raw_emotion, raw_emotion)
+            if mapped_emotion in emotion_projection:
+                emotion_counts[mapped_emotion] += 1
+            else:
+                emotion_counts['other'] += 1
+    return {
+        "emotion_counts": emotion_counts,
+        "age_counts": age_counts,
+        "gender_counts": gender_counts,
+        "timbre_counts": timbre_counts
+    }
+
+def save_full_dataset_summary():
+    import json
+    # Load projections from class definition
+    age_projection = {"child": 0, "young": 1, "middle-aged": 2, "elderly": 3}
+    gender_projection = {"male": 0, "female": 1}
+    timbre_projection = {"high": 0, "mid": 1, "low": 2}
+    emotion_projection = {"happy":0, "surprised":1, "angry":2, "fear":3, "sad":4, "disgusted":5, "contempt":6}
+    # use ed_emotion_projection directly
+    # Load splits
+    with open('json/mapped_train_data.json', 'r', encoding='utf-8') as f:
+        train_data = json.load(f)
+    with open('json/mapped_test_data.json', 'r', encoding='utf-8') as f:
+        test_data = json.load(f)
+    with open('json/mapped_val_data.json', 'r', encoding='utf-8') as f:
+        val_data = json.load(f)
+    # Compute distributions
+    train_stats = compute_class_distribution(train_data, age_projection, gender_projection, timbre_projection, ed_emotion_projection, emotion_projection)
+    test_stats = compute_class_distribution(test_data, age_projection, gender_projection, timbre_projection, ed_emotion_projection, emotion_projection)
+    val_stats = compute_class_distribution(val_data, age_projection, gender_projection, timbre_projection, ed_emotion_projection, emotion_projection)
+    # Get conversation and labeled audio counts
+    with open('json/dataset_summary.json', 'r', encoding='utf-8') as f:
+        summary = json.load(f)["dataset_stats"]
+    # Save all to one file
+    full_summary = {
+        "train": train_stats,
+        "test": test_stats,
+        "val": val_stats,
+        "train_conversations": summary["train_conversations"],
+        "test_conversations": summary["test_conversations"],
+        "val_conversations": summary["val_conversations"],
+        "train_labeled_audio": summary["train_labeled_audio"],
+        "test_labeled_audio": summary["test_labeled_audio"],
+        "val_labeled_audio": summary["val_labeled_audio"]
+    }
+    with open('json/full_class_summary.json', 'w', encoding='utf-8') as f:
+        json.dump(full_summary, f, ensure_ascii=False, indent=2)
+    print("Saved full class summary for train, test, val splits to json/full_class_summary.json")
+# Call this function in your main block after all splits are saved
+
 if __name__ == "__main__":
     json_path = "data/train_audio/audio_v5_0/train.json"
     audio_dir = "data/train_audio/audio_v5_0"
@@ -268,6 +649,12 @@ if __name__ == "__main__":
     save_mapped_data_for_multimodal(test_set, os.path.join('json', 'mapped_test_data.json'))
     save_mapped_data_for_multimodal(val_set, os.path.join('json', 'mapped_val_data.json'))
 
+    # Save class summary for train set
+    from torch.utils.data import Dataset
+    class_args = {'data_path': 'json', 'mode': 'mapped_train_data'}
+    dataset = multimodal_empathetic_dialogue(class_args)
+    dataset.save_full_class_summary(os.path.join('json', 'full_class_summary.json'))
+
     # Print sample conversations
     if train_set:
         print("\n### First and Last conversation in TRAIN set ###")
@@ -281,3 +668,6 @@ if __name__ == "__main__":
         print("\n### First and Last conversation in VALIDATION set ###")
         print_conversation(val_set[0])
         print_conversation(val_set[-1])
+
+    # Save full dataset summary
+    save_full_dataset_summary()

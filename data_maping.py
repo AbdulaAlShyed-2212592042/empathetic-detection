@@ -56,7 +56,7 @@ def map_and_reconstruct_all(json_path, audio_dir):
         lst_id = conv.get("listener_profile", {}).get("ID")
 
         reconstructed_turns = []
-        conv_labeled_audio = set()  # track labeled audio in this conversation
+        conv_labeled_audio = set()  
 
         for turn in conv.get("turns", []):
             dialogue_history = turn.get("dialogue_history", [])

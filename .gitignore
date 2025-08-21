@@ -10,7 +10,7 @@ datasets/
 *.flac
 *.ogg
 *.json       # raw JSON datasets
-
+*.mp4
 # Checkpoints / temporary model states
 checkpoints/
 last_epoch.pt

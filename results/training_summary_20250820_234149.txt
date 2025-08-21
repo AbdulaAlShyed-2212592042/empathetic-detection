@@ -1,0 +1,48 @@
+============================================================
+MULTIMODAL EMPATHETIC EMOTION DETECTION - TRAINING SUMMARY
+============================================================
+Training completed: 2025-08-20 23:41:49
+
+MODEL CONFIGURATION:
+--------------------
+model_type               : Multimodal LSTM
+hidden_size              : 256
+num_layers               : 2
+dropout_rate             : 0.2
+learning_rate            : 1e-05
+batch_size               : 6
+num_epochs               : 25
+use_focal_loss           : True
+focal_alpha              : 1.0
+focal_gamma              : 2.0
+gradient_accumulation_steps: 2
+device                   : cuda
+Model Parameters         : 211,803,672
+
+TRAINING RESULTS:
+--------------------
+Best Validation Accuracy : 0.6559 (65.59%)
+Best Epoch               : 10
+Final Training Accuracy  : 0.8572 (85.72%)
+Final Validation Accuracy: 0.6530 (65.30%)
+Final Training Loss      : 0.1947
+Final Validation Loss    : 1.2454
+Total Epochs Trained     : 11
+Total Training Time      : 26016.56 seconds
+Average Time per Epoch   : 2365.14 seconds
+
+EPOCH-BY-EPOCH DETAILS:
+----------------------------------------
+Epoch  Train Loss   Val Loss   Train Acc   Val Acc   Time(s) 
+------------------------------------------------------------
+1      2.5185       2.0527     0.2847      0.3745    2297.67 
+2      1.8609       1.6215     0.3879      0.4389    2415.49 
+3      1.4263       1.2268     0.4728      0.5326    2408.85 
+4      1.0576       1.0257     0.5543      0.6089    2386.08 
+5      0.7771       0.9637     0.6319      0.6300    2470.56 
+6      0.5748       0.9612     0.6933      0.6468    2377.26 
+7      0.4618       0.9813     0.7392      0.6543    2357.55 
+8      0.3580       1.0311     0.7838      0.6530    2366.29 
+9      0.2861       1.1561     0.8121      0.6443    2295.42 
+10     0.2299       1.1601     0.8456      0.6559    2306.40 
+11     0.1947       1.2454     0.8572      0.6530    2334.98 

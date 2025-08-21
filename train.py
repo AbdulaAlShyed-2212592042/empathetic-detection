@@ -15,10 +15,8 @@ from transformers import (
     Wav2Vec2FeatureExtractor, Wav2Vec2Model,
     get_linear_schedule_with_warmup
 )
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.utils.class_weight import compute_class_weight
-import matplotlib.pyplot as plt
-import seaborn as sns
 from tqdm import tqdm
 from tqdm import tqdm
 import warnings
@@ -48,45 +46,94 @@ class MultimodalSequentialDataset(Dataset):
         self.sample_rate = sample_rate
         
         # Emotion mapping from data_mapping.py
-        # Emotion mapping to EmpatheticDialogues 32 emotions
+        # Emotion mapping to 7 basic emotion classes
         self.ed_emotion_projection = {
-            'conflicted': 'anxious', 'vulnerability': 'afraid', 'helplessness': 'afraid',
-            'sadness': 'sad', 'pensive': 'sentimental', 'frustration': 'annoyed',
-            'weary': 'tired', 'anxiety': 'anxious', 'reflective': 'sentimental',
-            'upset': 'disappointed', 'worried': 'anxious', 'fear': 'afraid',
-            'frustrated': 'annoyed', 'fatigue': 'tired', 'lost': 'lonely',
-            'disappointment': 'disappointed', 'nostalgia': 'nostalgic', 'exhaustion': 'tired',
-            'uneasy': 'anxious', 'loneliness': 'lonely', 'fragile': 'afraid',
-            'confused': 'surprised', 'vulnerable': 'afraid', 'thoughtful': 'sentimental',
-            'stressed': 'anxious', 'concerned': 'anxious', 'tiredness': 'tired',
-            'burdened': 'anxious', 'melancholy': 'sad', 'overwhelmed': 'anxious',
-            'worry': 'anxious', 'heavy-hearted': 'sad', 'melancholic': 'sad',
-            'nervous': 'anxious', 'fearful': 'afraid', 'stress': 'anxious',
-            'confusion': 'surprised', 'inadequacy': 'ashamed', 'regret': 'guilty',
-            'helpless': 'afraid', 'concern': 'anxious', 'exhausted': 'tired',
-            'overwhelm': 'anxious', 'tired': 'tired', 'disappointed': 'disappointed',
-            'surprised': 'surprised', 'excited': 'excited', 'angry': 'angry',
-            'proud': 'proud', 'annoyed': 'annoyed', 'grateful': 'grateful',
-            'lonely': 'lonely', 'afraid': 'afraid', 'terrified': 'terrified',
-            'guilty': 'guilty', 'impressed': 'impressed', 'disgusted': 'disgusted',
-            'hopeful': 'hopeful', 'confident': 'confident', 'furious': 'furious',
-            'anxious': 'anxious', 'anticipating': 'anticipating', 'joyful': 'joyful',
-            'nostalgic': 'nostalgic', 'prepared': 'prepared', 'jealous': 'jealous',
-            'content': 'content', 'devastated': 'devastated', 'embarrassed': 'embarrassed',
-            'caring': 'caring', 'sentimental': 'sentimental', 'trusting': 'trusting',
-            'ashamed': 'ashamed', 'apprehensive': 'apprehensive', 'faithful': 'faithful'
+            'conflicted': 'anxious',
+            'vulnerability': 'afraid',
+            'helplessness': 'afraid',
+            'sadness': 'sad',
+            'pensive': 'sentimental',
+            'frustration': 'annoyed',
+            'weary': 'tired',
+            'anxiety': 'anxious',
+            'reflective': 'sentimental',
+            'upset': 'disappointed',
+            'worried': 'anxious',
+            'fear': 'afraid',
+            'frustrated': 'sad',
+            'fatigue': 'tired',
+            'lost': 'jealous',
+            'disappointment': 'disappointed',
+            'nostalgia': 'nostalgic',
+            'exhaustion': 'tired',
+            'uneasy': 'anxious',
+            'loneliness': 'lonely',
+            'fragile': 'afraid',
+            'confused': 'jealous',
+            'vulnerable': 'afraid',
+            'thoughtful': 'sentimental',
+            'stressed': 'anxious',
+            'concerned': 'anxious',
+            'tiredness': 'tired',
+            'burdened': 'anxious',
+            'melancholy': 'sad',
+            'overwhelmed': 'anxious',
+            'worry': 'anxious',
+            'heavy-hearted': 'sad',
+            'melancholic': 'sad',
+            'nervous': 'anxious',
+            'fearful': 'afraid',
+            'stress': 'anxious',
+            'confusion': 'anxious',
+            'inadequacy': 'ashamed',
+            'regret': 'guilty',
+            'helpless': 'afraid',
+            'concern': 'anxious',
+            'exhausted': 'tired',
+            'overwhelm': 'anxious',
+            'tired': 'tired',
+            'disappointed': 'sad',
+            'surprised': 'surprised',
+            'excited': 'happy',
+            'angry': 'angry',
+            'proud': 'happy',
+            'annoyed': 'angry',
+            'grateful': 'happy',
+            'lonely': 'sad',
+            'afraid': 'fear',
+            'terrified': 'fear',
+            'guilty': 'sad',
+            'impressed': 'surprised',
+            'disgusted': 'disgusted',
+            'hopeful': 'happy',
+            'confident': 'happy',
+            'furious': 'angry',
+            'anxious': 'sad',
+            'anticipating': 'happy',
+            'joyful': 'happy',
+            'nostalgic': 'sad',
+            'prepared': 'happy',
+            'jealous': 'contempt',
+            'content': 'happy',
+            'devastated': 'surprised',
+            'embarrassed': 'sad',
+            'caring': 'happy',
+            'sentimental': 'sad',
+            'trusting': 'happy',
+            'ashamed': 'sad',
+            'apprehensive': 'fear',
+            'faithful': 'happy'       
         }
-        
-        # EmpatheticDialogues 32 emotion classes
+
+        # 7 basic emotion classes
         self.emotion_to_id = {
-            'afraid': 0, 'angry': 1, 'annoyed': 2, 'anticipating': 3, 
-            'anxious': 4, 'apprehensive': 5, 'ashamed': 6, 'caring': 7, 
-            'confident': 8, 'content': 9, 'devastated': 10, 'disappointed': 11, 
-            'disgusted': 12, 'embarrassed': 13, 'excited': 14, 'faithful': 15, 
-            'furious': 16, 'grateful': 17, 'guilty': 18, 'hopeful': 19, 
-            'impressed': 20, 'jealous': 21, 'joyful': 22, 'lonely': 23, 
-            'nostalgic': 24, 'prepared': 25, 'proud': 26, 'sad': 27, 
-            'sentimental': 28, 'surprised': 29, 'terrified': 30, 'trusting': 31
+            "happy": 0,
+            "surprised": 1,
+            "angry": 2,
+            "fear": 3,
+            "sad": 4,
+            "disgusted": 5,
+            "contempt": 6
         }
         
         # Profile mappings
@@ -251,7 +298,7 @@ class MultimodalSequentialDataset(Dataset):
         # Get emotion label (conversation-level)
         raw_emotion = chain_of_empathy.get('speaker_emotion', None)
         mapped_emotion = self.ed_emotion_projection.get(raw_emotion, raw_emotion)
-        emotion_label = self.emotion_to_id.get(mapped_emotion, 0)  # Default to 'afraid'
+        emotion_label = self.emotion_to_id.get(mapped_emotion, 0)  # Default to 'happy'
         
         # Extract dialogue sequence (all utterances in conversation)
         dialogue = turn.get('dialogue', [])
@@ -403,7 +450,7 @@ class MultimodalSequentialDataset(Dataset):
         }
 
 class MultimodalLSTMModel(nn.Module):
-    def __init__(self, dataset, num_classes=32, hidden_size=256, num_layers=2, dropout_rate=0.3, use_wav2vec=False):
+    def __init__(self, dataset, num_classes=7, hidden_size=256, num_layers=2, dropout_rate=0.3, use_wav2vec=False):
         super(MultimodalLSTMModel, self).__init__()
         
         self.hidden_size = hidden_size
@@ -645,7 +692,7 @@ class EarlyStopping:
 
 class FocalLoss(nn.Module):
     """Focal Loss for handling class imbalance"""
-    def __init__(self, alpha=1.0, gamma=1.0, num_classes=32):
+    def __init__(self, alpha=1.0, gamma=1.0, num_classes=7):
         super(FocalLoss, self).__init__()
         self.alpha = alpha
         self.gamma = gamma
@@ -691,7 +738,7 @@ def validate_initial_loss(model, dataloader, criterion, device, num_batches=10):
             batch_count += 1
     
     avg_loss = total_loss / batch_count
-    expected_loss = np.log(32)  # -log(1/32) for 32 emotion classes
+    expected_loss = np.log(7)  # -log(1/7) for 7 emotion classes
     
     print(f"Initial loss validation:")
     print(f"  Average loss: {avg_loss:.4f}")
@@ -707,122 +754,7 @@ def validate_initial_loss(model, dataloader, criterion, device, num_batches=10):
     model.train()
     return avg_loss
 
-def plot_confusion_matrix(y_true, y_pred, class_names, save_path):
-    """Plot and save confusion matrix"""
-    cm = confusion_matrix(y_true, y_pred)
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-                xticklabels=class_names, yticklabels=class_names)
-    plt.title('Confusion Matrix')
-    plt.ylabel('True Label')
-    plt.xlabel('Predicted Label')
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    plt.close()
-
-def plot_training_history(history, save_dir='results'):
-    """Plot and save training history graphs"""
-    os.makedirs(save_dir, exist_ok=True)
-    
-    # Create timestamp for unique filenames
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
-    # 1. Loss Graph
-    plt.figure(figsize=(12, 8))
-    plt.subplot(2, 2, 1)
-    plt.plot(history['epoch'], history['train_loss'], 'b-', label='Training Loss', linewidth=2)
-    plt.plot(history['epoch'], history['val_loss'], 'r-', label='Validation Loss', linewidth=2)
-    plt.title('Training and Validation Loss', fontsize=14, fontweight='bold')
-    plt.xlabel('Epoch', fontsize=12)
-    plt.ylabel('Loss', fontsize=12)
-    plt.legend(fontsize=11)
-    plt.grid(True, alpha=0.3)
-    
-    # 2. Accuracy Graph
-    plt.subplot(2, 2, 2)
-    plt.plot(history['epoch'], [acc*100 for acc in history['train_accuracy']], 'b-', label='Training Accuracy', linewidth=2)
-    plt.plot(history['epoch'], [acc*100 for acc in history['val_accuracy']], 'r-', label='Validation Accuracy', linewidth=2)
-    plt.title('Training and Validation Accuracy', fontsize=14, fontweight='bold')
-    plt.xlabel('Epoch', fontsize=12)
-    plt.ylabel('Accuracy (%)', fontsize=12)
-    plt.legend(fontsize=11)
-    plt.grid(True, alpha=0.3)
-    
-    # 3. F1 Score Graph
-    plt.subplot(2, 2, 3)
-    plt.plot(history['epoch'], [f1*100 for f1 in history['train_f1']], 'b-', label='Training F1', linewidth=2)
-    plt.plot(history['epoch'], [f1*100 for f1 in history['val_f1']], 'r-', label='Validation F1', linewidth=2)
-    plt.title('Training and Validation F1 Score', fontsize=14, fontweight='bold')
-    plt.xlabel('Epoch', fontsize=12)
-    plt.ylabel('F1 Score (%)', fontsize=12)
-    plt.legend(fontsize=11)
-    plt.grid(True, alpha=0.3)
-    
-    # 4. Learning Rate (if available)
-    plt.subplot(2, 2, 4)
-    if 'learning_rate' in history and history['learning_rate']:
-        plt.plot(history['epoch'], history['learning_rate'], 'g-', linewidth=2)
-        plt.title('Learning Rate Schedule', fontsize=14, fontweight='bold')
-        plt.xlabel('Epoch', fontsize=12)
-        plt.ylabel('Learning Rate', fontsize=12)
-        plt.yscale('log')
-        plt.grid(True, alpha=0.3)
-    else:
-        # Show epoch time instead
-        plt.plot(history['epoch'], history['epoch_time'], 'g-', linewidth=2)
-        plt.title('Training Time per Epoch', fontsize=14, fontweight='bold')
-        plt.xlabel('Epoch', fontsize=12)
-        plt.ylabel('Time (seconds)', fontsize=12)
-        plt.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    
-    # Save the combined plot
-    combined_path = os.path.join(save_dir, f'training_history_{timestamp}.jpg')
-    plt.savefig(combined_path, dpi=300, bbox_inches='tight', format='jpg')
-    plt.close()
-    print(f"📊 Training history saved: {combined_path}")
-    
-    # Save individual plots
-    
-    # Individual Loss Plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(history['epoch'], history['train_loss'], 'b-', label='Training Loss', linewidth=3, marker='o', markersize=6)
-    plt.plot(history['epoch'], history['val_loss'], 'r-', label='Validation Loss', linewidth=3, marker='s', markersize=6)
-    plt.title('Training and Validation Loss Over Time', fontsize=16, fontweight='bold')
-    plt.xlabel('Epoch', fontsize=14)
-    plt.ylabel('Loss', fontsize=14)
-    plt.legend(fontsize=12)
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    
-    loss_path = os.path.join(save_dir, f'loss_graph_{timestamp}.jpg')
-    plt.savefig(loss_path, dpi=300, bbox_inches='tight', format='jpg')
-    plt.close()
-    print(f"📈 Loss graph saved: {loss_path}")
-    
-    # Individual Accuracy Plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(history['epoch'], [acc*100 for acc in history['train_accuracy']], 'b-', 
-             label='Training Accuracy', linewidth=3, marker='o', markersize=6)
-    plt.plot(history['epoch'], [acc*100 for acc in history['val_accuracy']], 'r-', 
-             label='Validation Accuracy', linewidth=3, marker='s', markersize=6)
-    plt.title('Training and Validation Accuracy Over Time', fontsize=16, fontweight='bold')
-    plt.xlabel('Epoch', fontsize=14)
-    plt.ylabel('Accuracy (%)', fontsize=14)
-    plt.legend(fontsize=12)
-    plt.grid(True, alpha=0.3)
-    plt.ylim(0, 100)
-    plt.tight_layout()
-    
-    accuracy_path = os.path.join(save_dir, f'accuracy_graph_{timestamp}.jpg')
-    plt.savefig(accuracy_path, dpi=300, bbox_inches='tight', format='jpg')
-    plt.close()
-    print(f"🎯 Accuracy graph saved: {accuracy_path}")
-    
-    return combined_path, loss_path, accuracy_path
-
-def save_training_summary(history, config, model_info, save_dir='results'):
+def save_training_summary(history, config, model_info, save_dir='result_1'):
     """Save a comprehensive training summary"""
     os.makedirs(save_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -1015,7 +947,7 @@ def main():
         print("GPU not available, using CPU")
     
     # Create directories
-    os.makedirs('results', exist_ok=True)
+    os.makedirs('result_1', exist_ok=True)
     os.makedirs('checkpoints', exist_ok=True)
     
     # Initialize tokenizer (BERT-base)
@@ -1047,15 +979,6 @@ def main():
         max_dialogue_length=config['max_dialogue_length']
     )
     
-    test_dataset = MultimodalSequentialDataset(
-        'json/mapped_test_data.json',
-        'data/train_audio/audio_v5_0',
-        tokenizer,
-        wav2vec_feature_extractor=wav2vec_processor,
-        max_length=config['max_length'],
-        max_dialogue_length=config['max_dialogue_length']
-    )
-    
     # Create data loaders (reduced workers for Windows compatibility)
     print("Creating data loaders...")
     train_loader = DataLoader(
@@ -1068,14 +991,6 @@ def main():
     
     val_loader = DataLoader(
         val_dataset, 
-        batch_size=config['batch_size'], 
-        shuffle=False,
-        num_workers=0,  # Reduced for Windows stability
-        pin_memory=True
-    )
-    
-    test_loader = DataLoader(
-        test_dataset, 
         batch_size=config['batch_size'], 
         shuffle=False,
         num_workers=0,  # Reduced for Windows stability
@@ -1097,7 +1012,7 @@ def main():
     print("Initializing model...")
     model = MultimodalLSTMModel(
         train_dataset,
-        num_classes=32, 
+        num_classes=7, 
         hidden_size=config['hidden_size'],
         num_layers=config['num_layers'],
         dropout_rate=config['dropout_rate'],
@@ -1130,7 +1045,7 @@ def main():
         criterion = FocalLoss(
             alpha=config.get('focal_alpha', 1.0),
             gamma=config.get('focal_gamma', 1.0),
-            num_classes=32
+            num_classes=7
         )
         print(f"Using Focal Loss (alpha={config['focal_alpha']}, gamma={config['focal_gamma']})")
     else:
@@ -1211,26 +1126,44 @@ def main():
         # Save best model
         if val_acc > best_val_accuracy:
             best_val_accuracy = val_acc
+            # Create descriptive model name with timestamp and accuracy
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            model_name = f'best_7class_emotion_model_{timestamp}_acc{val_acc:.4f}.pth'
             torch.save({
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'val_accuracy': val_acc,
                 'epoch': epoch + 1,
-                'config': config
-            }, 'checkpoints/best_model.pth')
-            print(f"New best model saved with validation accuracy: {val_acc:.4f}")
+                'config': config,
+                'emotion_classes': 7,
+                'model_type': 'multimodal_lstm_7class'
+            }, f'checkpoints/{model_name}')
+            
+            # Also save with generic name for easy loading
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'val_accuracy': val_acc,
+                'epoch': epoch + 1,
+                'config': config,
+                'emotion_classes': 7,
+                'model_type': 'multimodal_lstm_7class'
+            }, 'checkpoints/best_7class_model.pth')
+            
+            print(f"New best model saved: {model_name}")
+            print(f"Validation accuracy: {val_acc:.4f} ({val_acc*100:.2f}%)")
         
         # Save epoch history
-        with open('results/training_history.json', 'w') as f:
+        with open('result_1/training_history.json', 'w') as f:
             json.dump(history, f, indent=2)
         
         # Save graphs every 5 epochs and at the last epoch
         if (epoch + 1) % 5 == 0 or epoch == config['num_epochs'] - 1:
             try:
-                combined_path, loss_path, accuracy_path = plot_training_history(history)
-                print(f"📊 Training graphs saved at epoch {epoch + 1}")
+                # Just save training history JSON, plots are handled by separate test.py
+                print(f"📊 Training history saved at epoch {epoch + 1}")
             except Exception as e:
-                print(f"⚠️ Warning: Could not save training graphs - {e}")
+                print(f"⚠️ Warning: Could not save training history - {e}")
         
         # Early stopping
         if early_stopping(val_loss, model):
@@ -1261,58 +1194,11 @@ def main():
             'parameters': sum(p.numel() for p in model.parameters() if p.requires_grad)
         }
         
-        combined_path, loss_path, accuracy_path = plot_training_history(history)
         summary_path = save_training_summary(history, model_config, model_info)
-        print(f"📈 Final training visualizations and summary saved!")
+        print(f"📈 Final training summary saved!")
         print(f"📊 Best validation accuracy achieved: {best_val_accuracy:.4f}")
     except Exception as e:
-        print(f"⚠️ Warning: Could not save final graphs/summary - {e}")
-    
-    # Load best model for testing
-    print("Loading best model for testing...")
-    checkpoint = torch.load('checkpoints/best_model.pth')
-    model.load_state_dict(checkpoint['model_state_dict'])
-    
-    # Test evaluation
-    print("Evaluating on test set...")
-    test_loss, test_acc, test_prec, test_rec, test_f1, test_predictions, test_labels = validate_epoch(
-        model, test_loader, criterion, device
-    )
-    
-    # Save test results
-    test_results = {
-        'test_accuracy': test_acc,
-        'test_precision': test_prec,
-        'test_recall': test_rec,
-        'test_f1': test_f1,
-        'test_loss': test_loss,
-        'total_test_samples': len(test_dataset),
-        'evaluation_date': datetime.now().isoformat(),
-        'best_epoch': checkpoint['epoch'],
-        'best_val_accuracy': checkpoint['val_accuracy']
-    }
-    
-    with open('results/test_results.json', 'w') as f:
-        json.dump(test_results, f, indent=2)
-    
-    print(f"Test Results:")
-    print(f"Accuracy: {test_acc:.4f}")
-    print(f"Precision: {test_prec:.4f}")
-    print(f"Recall: {test_rec:.4f}")
-    print(f"F1 Score: {test_f1:.4f}")
-    
-    # Generate and save confusion matrix
-    plot_confusion_matrix(
-        test_labels, 
-        test_predictions, 
-        class_names, 
-        'results/confusion_matrix.png'
-    )
-    
-    print("Confusion matrix saved to results/confusion_matrix.png")
-    print("Training history saved to results/training_history.json")
-    print("Test results saved to results/test_results.json")
-    print("Best model saved to checkpoints/best_model.pth")
+        print(f"⚠️ Warning: Could not save final summary - {e}")
 
 if __name__ == "__main__":
     main()

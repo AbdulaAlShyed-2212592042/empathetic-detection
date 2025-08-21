@@ -26,12 +26,9 @@ from train import (
     compute_metrics
 )
 
-# Emotion labels for EmpatheticDialogues
+# Emotion labels for 7 basic emotion classes
 EMOTION_LABELS = [
-    'surprised', 'excited', 'annoyed', 'proud', 'angry', 'sad', 'grateful', 'lonely',
-    'impressed', 'afraid', 'disgusted', 'confident', 'terrified', 'hopeful', 'anxious', 'disappointed',
-    'joyful', 'prepared', 'guilty', 'furious', 'nostalgic', 'jealous', 'anticipating', 'embarrassed',
-    'content', 'devastated', 'sentimental', 'caring', 'trusting', 'ashamed', 'apprehensive', 'faithful'
+    'happy', 'surprised', 'angry', 'fear', 'sad', 'disgusted', 'contempt'
 ]
 
 def load_best_model(checkpoint_path, device, test_dataset):
@@ -44,7 +41,7 @@ def load_best_model(checkpoint_path, device, test_dataset):
     # Initialize model with correct parameters using the provided dataset
     model = MultimodalLSTMModel(
         dataset=test_dataset,
-        num_classes=32,
+        num_classes=7,
         hidden_size=256,
         num_layers=2,
         dropout_rate=0.2,
@@ -118,7 +115,7 @@ def evaluate_model(model, test_loader, device):
     all_probabilities = []
     
     total_loss = 0.0
-    criterion = FocalLoss(alpha=1.0, gamma=2.0, num_classes=32)
+    criterion = FocalLoss(alpha=1.0, gamma=2.0, num_classes=7)
     
     print("Evaluating model on test set...")
     
@@ -200,7 +197,7 @@ def plot_confusion_matrix(labels, predictions, save_path):
     cm = confusion_matrix(labels, predictions)
     
     # Create figure
-    plt.figure(figsize=(16, 14))
+    plt.figure(figsize=(10, 8))
     
     # Create heatmap
     sns.heatmap(
@@ -318,7 +315,7 @@ def main():
     print("=" * 50)
     
     # Create results directory
-    os.makedirs('results', exist_ok=True)
+    os.makedirs('result_1', exist_ok=True)
     
     # Generate timestamp for file naming
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -338,18 +335,29 @@ def main():
         print(f"❌ Checkpoint directory not found: {checkpoint_dir}")
         return
     
-    # Look for the best model file
-    best_model_path = os.path.join(checkpoint_dir, 'best_model.pth')
+    # Look for the best model file (try new naming convention first)
+    best_model_path = os.path.join(checkpoint_dir, 'best_7class_model.pth')
     if not os.path.exists(best_model_path):
-        print(f"❌ Best model not found: {best_model_path}")
-        # Try to find any checkpoint file
-        checkpoint_files = [f for f in os.listdir(checkpoint_dir) if f.endswith('.pth')]
-        if checkpoint_files:
-            best_model_path = os.path.join(checkpoint_dir, checkpoint_files[0])
-            print(f"Using checkpoint: {best_model_path}")
-        else:
-            print("❌ No checkpoint files found!")
-            return
+        # Fallback to old naming convention
+        best_model_path = os.path.join(checkpoint_dir, 'best_model.pth')
+        if not os.path.exists(best_model_path):
+            print(f"❌ Best model not found: {best_model_path}")
+            # Try to find any 7-class checkpoint file
+            checkpoint_files = [f for f in os.listdir(checkpoint_dir) 
+                              if f.endswith('.pth') and ('7class' in f or 'best' in f)]
+            if not checkpoint_files:
+                # Fallback to any checkpoint file
+                checkpoint_files = [f for f in os.listdir(checkpoint_dir) if f.endswith('.pth')]
+            if checkpoint_files:
+                # Use the most recent file
+                checkpoint_files.sort(reverse=True)
+                best_model_path = os.path.join(checkpoint_dir, checkpoint_files[0])
+                print(f"📁 Using checkpoint: {checkpoint_files[0]}")
+            else:
+                print(f"❌ No checkpoint files found in {checkpoint_dir}")
+                return
+    else:
+        print(f"📁 Found 7-class model: best_7class_model.pth")
     
     try:
         # Create training vocabulary dataset for model initialization
@@ -381,19 +389,19 @@ def main():
         print("\n📈 Creating visualizations...")
         
         # Confusion matrix
-        cm_path = f'results/confusion_matrix_{timestamp}.png'
+        cm_path = f'result_1/confusion_matrix_{timestamp}.png'
         cm = plot_confusion_matrix(labels, predictions, cm_path)
         
         # Per-class metrics
-        metrics_path = f'results/per_class_metrics_{timestamp}.png'
+        metrics_path = f'result_1/per_class_metrics_{timestamp}.png'
         plot_per_class_metrics(metrics, metrics_path)
         
         # Save detailed results
-        results_path = f'results/test_results_{timestamp}.json'
+        results_path = f'result_1/test_results_{timestamp}.json'
         detailed_results = save_detailed_results(metrics, cm, probabilities, predictions, labels, results_path)
         
         print(f"\n✅ Testing completed successfully!")
-        print(f"📁 Results saved in 'results/' directory:")
+        print(f"📁 Results saved in 'result_1/' directory:")
         print(f"   • Test metrics: {results_path}")
         print(f"   • Confusion matrix: {cm_path}")
         print(f"   • Per-class metrics: {metrics_path}")

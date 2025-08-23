@@ -1,0 +1,282 @@
+[
+  {
+    "conversation_id": "49002",
+    "turn": {
+      "turn_id": "1",
+      "context": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+          "video_name": "dia49002utt0_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49002utt0_69.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "earthquakes are so scary! are you okay now?",
+          "video_name": "dia49002utt1_72.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49002utt1_72.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It's scary, unless you are prepared, you're wondering how to live life without it.",
+          "video_name": "dia49002utt2_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49002utt2_69.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "at least you made it through safely, that's what matters",
+          "video_name": "dia49002utt3_72.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49002utt3_72.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "terrified",
+        "event_scenario": "Experiencing a major earthquake.",
+        "emotion_cause": "Experiencing fear and uncertainty due to experiencing a major earthquake.",
+        "goal_to_response": "Providing comfort and sharing similar experiences to reduce fear."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 69
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 72
+    },
+    "topic": "Relationships"
+  },
+  {
+    "conversation_id": "85048",
+    "turn": {
+      "turn_id": "1",
+      "context": "I've been stuck in this traffic for 2 hours and I'm missing everything!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I've been stuck in this traffic for 2 hours and I'm missing everything!",
+          "video_name": "dia85048utt0_43.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85048utt0_43.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's the worst! did you have it backed up anywhere?",
+          "video_name": "dia85048utt1_80.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85048utt1_80.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I just needed one more hour to finish everything properly!",
+          "video_name": "dia85048utt2_43.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85048utt2_43.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "that's incredibly frustrating! i feel for you",
+          "video_name": "dia85048utt3_80.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85048utt3_80.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Being stuck in traffic during emergency.",
+        "emotion_cause": "Experiencing anger and helplessness due to being stuck in traffic during emergency.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 43
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 80
+    },
+    "topic": "Education"
+  },
+  {
+    "conversation_id": "16722",
+    "turn": {
+      "turn_id": "1",
+      "context": "My family surprised me with a visit when I was feeling really lonely!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My family surprised me with a visit when I was feeling really lonely!",
+          "video_name": "dia16722utt0_27.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia16722utt0_27.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's fantastic! education is such an important investment!",
+          "video_name": "dia16722utt1_99.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia16722utt1_99.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I don't know what I would have done without their help.",
+          "video_name": "dia16722utt2_27.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia16722utt2_27.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "it's wonderful when people show such kindness",
+          "video_name": "dia16722utt3_99.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia16722utt3_99.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Receiving unexpected financial assistance.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for receiving unexpected financial assistance.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 27
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 99
+    },
+    "topic": "Hobbies & Interests"
+  },
+  {
+    "conversation_id": "92978",
+    "turn": {
+      "turn_id": "1",
+      "context": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+          "video_name": "dia92978utt0_36.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92978utt0_36.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that must have been traumatic! did anyone get hurt?",
+          "video_name": "dia92978utt1_27.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92978utt1_27.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "The worst part was not knowing when it would come back on.",
+          "video_name": "dia92978utt2_36.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92978utt2_36.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "at least you made it through safely, that's what matters",
+          "video_name": "dia92978utt3_27.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92978utt3_27.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "terrified",
+        "event_scenario": "Experiencing a major earthquake.",
+        "emotion_cause": "Experiencing fear and uncertainty due to experiencing a major earthquake.",
+        "goal_to_response": "Providing comfort and sharing similar experiences to reduce fear."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 36
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 27
+    },
+    "topic": "Education"
+  },
+  {
+    "conversation_id": "56158",
+    "turn": {
+      "turn_id": "1",
+      "context": "The earthquake was so strong, I thought the building would collapse!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "The earthquake was so strong, I thought the building would collapse!",
+          "video_name": "dia56158utt0_12.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia56158utt0_12.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "getting lost is one of my worst fears! did you find your way back?",
+          "video_name": "dia56158utt1_30.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia56158utt1_30.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "We had to melt snow for water and use candles for light.",
+          "video_name": "dia56158utt2_12.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia56158utt2_12.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "that sounds like a real survival situation!",
+          "video_name": "dia56158utt3_30.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia56158utt3_30.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "terrified",
+        "event_scenario": "Being stuck in an elevator for hours.",
+        "emotion_cause": "Experiencing fear and uncertainty due to being stuck in an elevator for hours.",
+        "goal_to_response": "Providing comfort and sharing similar experiences to reduce fear."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 12
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 30
+    },
+    "topic": "Work & Career"
+  }
+]

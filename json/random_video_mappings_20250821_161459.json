@@ -1,0 +1,2802 @@
+[
+  {
+    "conversation_id": "54869",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm so excited! I just got accepted to my dream university!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm so excited! I just got accepted to my dream university!",
+          "video_name": "dia54869utt0_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia54869utt0_69.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's such a huge milestone! you must be so proud!",
+          "video_name": "dia54869utt1_33.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia54869utt1_33.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "All the hard work and preparation finally paid off!",
+          "video_name": "dia54869utt2_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia54869utt2_69.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you should celebrate! this is a huge achievement!",
+          "video_name": "dia54869utt3_33.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia54869utt3_33.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Receiving a job promotion after years of hard work.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from receiving a job promotion after years of hard work.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 69
+    },
+    "listener_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 33
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "32232",
+    "turn": {
+      "turn_id": "1",
+      "context": "We just bought our first house! I can barely contain my excitement!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "We just bought our first house! I can barely contain my excitement!",
+          "video_name": "dia32232utt0_80.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32232utt0_80.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "wow that's fantastic! you really deserve it after all your hard work!",
+          "video_name": "dia32232utt1_67.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32232utt1_67.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm still pinching myself to make sure it's real!",
+          "video_name": "dia32232utt2_80.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32232utt2_80.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you should celebrate! this is a huge achievement!",
+          "video_name": "dia32232utt3_67.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32232utt3_67.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Planning a surprise wedding proposal.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from planning a surprise wedding proposal.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 80
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 67
+    },
+    "topic": "Education"
+  },
+  {
+    "conversation_id": "49990",
+    "turn": {
+      "turn_id": "1",
+      "context": "My car broke down right when I needed to get to the hospital!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My car broke down right when I needed to get to the hospital!",
+          "video_name": "dia49990utt0_6.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49990utt0_6.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "traffic jams are the absolute worst! can you take a different route?",
+          "video_name": "dia49990utt1_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49990utt1_69.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I just needed one more hour to finish everything properly!",
+          "video_name": "dia49990utt2_6.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49990utt2_6.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "hopefully things will work out better next time",
+          "video_name": "dia49990utt3_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia49990utt3_69.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Waiting hours for delayed flight at airport.",
+        "emotion_cause": "Experiencing anger and helplessness due to waiting hours for delayed flight at airport.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 6
+    },
+    "listener_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 69
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "83876",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+          "video_name": "dia83876utt0_7.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia83876utt0_7.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's incredible! your photos are always so beautiful!",
+          "video_name": "dia83876utt1_2.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia83876utt1_2.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm still pinching myself to make sure it's real!",
+          "video_name": "dia83876utt2_7.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia83876utt2_7.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you should celebrate! this is a huge achievement!",
+          "video_name": "dia83876utt3_2.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia83876utt3_2.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Winning a major competition or award.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from winning a major competition or award.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 7
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 2
+    },
+    "topic": "Work & Career"
+  },
+  {
+    "conversation_id": "89030",
+    "turn": {
+      "turn_id": "1",
+      "context": "I won first place in the photography competition! I'm over the moon!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I won first place in the photography competition! I'm over the moon!",
+          "video_name": "dia89030utt0_48.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89030utt0_48.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "congratulations! that's amazing news! which university?",
+          "video_name": "dia89030utt1_39.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89030utt1_39.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm still pinching myself to make sure it's real!",
+          "video_name": "dia89030utt2_48.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89030utt2_48.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "this is just the beginning of great things for you!",
+          "video_name": "dia89030utt3_39.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89030utt3_39.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Buying first house or apartment.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from buying first house or apartment.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 48
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 39
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "10016",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+          "video_name": "dia10016utt0_26.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10016utt0_26.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's such a huge milestone! you must be so proud!",
+          "video_name": "dia10016utt1_57.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10016utt1_57.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I can't wait to start this new chapter of my life!",
+          "video_name": "dia10016utt2_26.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10016utt2_26.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you should celebrate! this is a huge achievement!",
+          "video_name": "dia10016utt3_57.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10016utt3_57.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Getting accepted to dream university.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from getting accepted to dream university.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 26
+    },
+    "listener_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 57
+    },
+    "topic": "Sports"
+  },
+  {
+    "conversation_id": "47206",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm so excited! I just got accepted to my dream university!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm so excited! I just got accepted to my dream university!",
+          "video_name": "dia47206utt0_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia47206utt0_84.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's incredible! your photos are always so beautiful!",
+          "video_name": "dia47206utt1_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia47206utt1_81.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I can't wait to start this new chapter of my life!",
+          "video_name": "dia47206utt2_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia47206utt2_84.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "this is just the beginning of great things for you!",
+          "video_name": "dia47206utt3_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia47206utt3_81.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Winning a major competition or award.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from winning a major competition or award.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 84
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 81
+    },
+    "topic": "Food & Cooking"
+  },
+  {
+    "conversation_id": "33223",
+    "turn": {
+      "turn_id": "1",
+      "context": "My friends have been so supportive during my recovery, I'm truly grateful!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My friends have been so supportive during my recovery, I'm truly grateful!",
+          "video_name": "dia33223utt0_89.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia33223utt0_89.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's wonderful! it's amazing how kind strangers can be!",
+          "video_name": "dia33223utt1_1.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia33223utt1_1.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It made me realize how blessed I am to have such support.",
+          "video_name": "dia33223utt2_89.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia33223utt2_89.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "those are the moments that remind us there's still good in the world",
+          "video_name": "dia33223utt3_1.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia33223utt3_1.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting mentorship for career development.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting mentorship for career development.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 89
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 1
+    },
+    "topic": "Health & Wellness"
+  },
+  {
+    "conversation_id": "31068",
+    "turn": {
+      "turn_id": "1",
+      "context": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+          "video_name": "dia31068utt0_82.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31068utt0_82.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that must have been traumatic! did anyone get hurt?",
+          "video_name": "dia31068utt1_73.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31068utt1_73.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "The worst part was not knowing when it would come back on.",
+          "video_name": "dia31068utt2_82.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31068utt2_82.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i know thats right, i dont know how they survived without electric",
+          "video_name": "dia31068utt3_73.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31068utt3_73.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "terrified",
+        "event_scenario": "Witnessing a serious car accident.",
+        "emotion_cause": "Experiencing fear and uncertainty due to witnessing a serious car accident.",
+        "goal_to_response": "Providing comfort and sharing similar experiences to reduce fear."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 82
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 73
+    },
+    "topic": "Health & Wellness"
+  },
+  {
+    "conversation_id": "96846",
+    "turn": {
+      "turn_id": "1",
+      "context": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I got stuck in an elevator for 6 hours and I was absolutely terrified!",
+          "video_name": "dia96846utt0_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia96846utt0_84.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "earthquakes are so scary! are you okay now?",
+          "video_name": "dia96846utt1_90.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia96846utt1_90.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "The worst part was not knowing when it would come back on.",
+          "video_name": "dia96846utt2_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia96846utt2_84.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i know thats right, i dont know how they survived without electric",
+          "video_name": "dia96846utt3_90.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia96846utt3_90.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "terrified",
+        "event_scenario": "Getting lost in a forest during a hiking trip.",
+        "emotion_cause": "Experiencing fear and uncertainty due to getting lost in a forest during a hiking trip.",
+        "goal_to_response": "Providing comfort and sharing similar experiences to reduce fear."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 84
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 90
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "81465",
+    "turn": {
+      "turn_id": "1",
+      "context": "I received an unexpected scholarship that will help pay for my education!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I received an unexpected scholarship that will help pay for my education!",
+          "video_name": "dia81465utt0_56.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81465utt0_56.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "good mentors are invaluable! what advice have they given you?",
+          "video_name": "dia81465utt1_83.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81465utt1_83.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It really restored my faith in humanity.",
+          "video_name": "dia81465utt2_56.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81465utt2_56.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "having that support makes all the difference",
+          "video_name": "dia81465utt3_83.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81465utt3_83.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Receiving help from stranger during difficult time.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for receiving help from stranger during difficult time.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 56
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 83
+    },
+    "topic": "Hobbies & Interests"
+  },
+  {
+    "conversation_id": "98591",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm so grateful for the stranger who helped me when my car broke down!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm so grateful for the stranger who helped me when my car broke down!",
+          "video_name": "dia98591utt0_74.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia98591utt0_74.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "having good friends makes such a difference! how are you feeling now?",
+          "video_name": "dia98591utt1_98.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia98591utt1_98.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I want to pay it forward and help others when I can.",
+          "video_name": "dia98591utt2_74.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia98591utt2_74.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "those are the moments that remind us there's still good in the world",
+          "video_name": "dia98591utt3_98.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia98591utt3_98.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting mentorship for career development.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting mentorship for career development.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 74
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 98
+    },
+    "topic": "Social Issues"
+  },
+  {
+    "conversation_id": "64956",
+    "turn": {
+      "turn_id": "1",
+      "context": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+          "video_name": "dia64956utt0_2.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64956utt0_2.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's so annoying! can you switch to mobile data?",
+          "video_name": "dia64956utt1_9.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64956utt1_9.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I just needed one more hour to finish everything properly!",
+          "video_name": "dia64956utt2_2.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64956utt2_2.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "technology can be so unreliable when you need it most",
+          "video_name": "dia64956utt3_9.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64956utt3_9.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Computer crashing while working on important project.",
+        "emotion_cause": "Experiencing anger and helplessness due to computer crashing while working on important project.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 2
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 9
+    },
+    "topic": "Hobbies & Interests"
+  },
+  {
+    "conversation_id": "23444",
+    "turn": {
+      "turn_id": "1",
+      "context": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+          "video_name": "dia23444utt0_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23444utt0_84.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "oh no! did you manage to get there another way?",
+          "video_name": "dia23444utt1_4.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23444utt1_4.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm trying to stay calm but it's really testing my patience.",
+          "video_name": "dia23444utt2_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23444utt2_84.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "hopefully things will work out better next time",
+          "video_name": "dia23444utt3_4.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23444utt3_4.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Waiting hours for delayed flight at airport.",
+        "emotion_cause": "Experiencing anger and helplessness due to waiting hours for delayed flight at airport.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 84
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 4
+    },
+    "topic": "Life Events"
+  },
+  {
+    "conversation_id": "21662",
+    "turn": {
+      "turn_id": "1",
+      "context": "I can't believe it - I got the promotion I've been working towards for years!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I can't believe it - I got the promotion I've been working towards for years!",
+          "video_name": "dia21662utt0_12.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21662utt0_12.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's such a huge milestone! you must be so proud!",
+          "video_name": "dia21662utt1_19.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21662utt1_19.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I've been dreaming about this moment for so long!",
+          "video_name": "dia21662utt2_12.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21662utt2_12.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "this is just the beginning of great things for you!",
+          "video_name": "dia21662utt3_19.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21662utt3_19.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Receiving a job promotion after years of hard work.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from receiving a job promotion after years of hard work.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 12
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 19
+    },
+    "topic": "Work & Career"
+  },
+  {
+    "conversation_id": "41028",
+    "turn": {
+      "turn_id": "1",
+      "context": "My family surprised me with a visit when I was feeling really lonely!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My family surprised me with a visit when I was feeling really lonely!",
+          "video_name": "dia41028utt0_38.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41028utt0_38.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's wonderful! it's amazing how kind strangers can be!",
+          "video_name": "dia41028utt1_74.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41028utt1_74.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It made me realize how blessed I am to have such support.",
+          "video_name": "dia41028utt2_38.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41028utt2_38.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "those are the moments that remind us there's still good in the world",
+          "video_name": "dia41028utt3_74.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41028utt3_74.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting mentorship for career development.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting mentorship for career development.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 38
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 74
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "93955",
+    "turn": {
+      "turn_id": "1",
+      "context": "My mentor has been guiding me through this career transition, I'm so thankful!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My mentor has been guiding me through this career transition, I'm so thankful!",
+          "video_name": "dia93955utt0_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia93955utt0_81.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's fantastic! education is such an important investment!",
+          "video_name": "dia93955utt1_22.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia93955utt1_22.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It really restored my faith in humanity.",
+          "video_name": "dia93955utt2_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia93955utt2_81.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "it's wonderful when people show such kindness",
+          "video_name": "dia93955utt3_22.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia93955utt3_22.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Receiving help from stranger during difficult time.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for receiving help from stranger during difficult time.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 81
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 22
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "88399",
+    "turn": {
+      "turn_id": "1",
+      "context": "I can't believe it - I got the promotion I've been working towards for years!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I can't believe it - I got the promotion I've been working towards for years!",
+          "video_name": "dia88399utt0_75.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia88399utt0_75.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "congratulations! that's amazing news! which university?",
+          "video_name": "dia88399utt1_89.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia88399utt1_89.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm still pinching myself to make sure it's real!",
+          "video_name": "dia88399utt2_75.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia88399utt2_75.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you should celebrate! this is a huge achievement!",
+          "video_name": "dia88399utt3_89.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia88399utt3_89.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Buying first house or apartment.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from buying first house or apartment.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 75
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 89
+    },
+    "topic": "Education"
+  },
+  {
+    "conversation_id": "22274",
+    "turn": {
+      "turn_id": "1",
+      "context": "My car broke down right when I needed to get to the hospital!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My car broke down right when I needed to get to the hospital!",
+          "video_name": "dia22274utt0_59.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia22274utt0_59.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "airport delays are so frustrating! any idea when it might leave?",
+          "video_name": "dia22274utt1_75.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia22274utt1_75.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I just needed one more hour to finish everything properly!",
+          "video_name": "dia22274utt2_59.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia22274utt2_59.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "these kinds of setbacks are so stressful",
+          "video_name": "dia22274utt3_75.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia22274utt3_75.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Computer crashing while working on important project.",
+        "emotion_cause": "Experiencing anger and helplessness due to computer crashing while working on important project.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 59
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 75
+    },
+    "topic": "Family"
+  },
+  {
+    "conversation_id": "31647",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+          "video_name": "dia31647utt0_96.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31647utt0_96.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "wow that's fantastic! you really deserve it after all your hard work!",
+          "video_name": "dia31647utt1_76.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31647utt1_76.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I can't wait to start this new chapter of my life!",
+          "video_name": "dia31647utt2_96.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31647utt2_96.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i'm so happy for you! you're going to do amazing!",
+          "video_name": "dia31647utt3_76.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia31647utt3_76.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Getting accepted to dream university.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from getting accepted to dream university.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 96
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 76
+    },
+    "topic": "Food & Cooking"
+  },
+  {
+    "conversation_id": "11029",
+    "turn": {
+      "turn_id": "1",
+      "context": "I was terrified when we had a major ice storm, our electricity was out for weeks!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I was terrified when we had a major ice storm, our electricity was out for weeks!",
+          "video_name": "dia11029utt0_4.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11029utt0_4.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that must have been traumatic! did anyone get hurt?",
+          "video_name": "dia11029utt1_95.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11029utt1_95.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It's scary, unless you are prepared, you're wondering how to live life without it.",
+          "video_name": "dia11029utt2_4.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11029utt2_4.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i know thats right, i dont know how they survived without electric",
+          "video_name": "dia11029utt3_95.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11029utt3_95.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "terrified",
+        "event_scenario": "A prolonged power outage during a severe ice storm.",
+        "emotion_cause": "Experiencing fear and uncertainty due to a prolonged power outage during a severe ice storm.",
+        "goal_to_response": "Providing comfort and sharing similar experiences to reduce fear."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 4
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 95
+    },
+    "topic": "Relationships"
+  },
+  {
+    "conversation_id": "21353",
+    "turn": {
+      "turn_id": "1",
+      "context": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+          "video_name": "dia21353utt0_11.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21353utt0_11.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "airport delays are so frustrating! any idea when it might leave?",
+          "video_name": "dia21353utt1_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21353utt1_81.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm trying to stay calm but it's really testing my patience.",
+          "video_name": "dia21353utt2_11.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21353utt2_11.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "hopefully things will work out better next time",
+          "video_name": "dia21353utt3_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia21353utt3_81.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Car breaking down during an important trip.",
+        "emotion_cause": "Experiencing anger and helplessness due to car breaking down during an important trip.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 11
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 81
+    },
+    "topic": "Food & Cooking"
+  },
+  {
+    "conversation_id": "63666",
+    "turn": {
+      "turn_id": "1",
+      "context": "My car broke down right when I needed to get to the hospital!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My car broke down right when I needed to get to the hospital!",
+          "video_name": "dia63666utt0_41.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63666utt0_41.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "airport delays are so frustrating! any idea when it might leave?",
+          "video_name": "dia63666utt1_80.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63666utt1_80.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "Technology is supposed to make our lives easier, not harder!",
+          "video_name": "dia63666utt2_41.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63666utt2_41.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "hopefully things will work out better next time",
+          "video_name": "dia63666utt3_80.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63666utt3_80.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Car breaking down during an important trip.",
+        "emotion_cause": "Experiencing anger and helplessness due to car breaking down during an important trip.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 41
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 80
+    },
+    "topic": "Education"
+  },
+  {
+    "conversation_id": "97228",
+    "turn": {
+      "turn_id": "1",
+      "context": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+          "video_name": "dia97228utt0_19.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia97228utt0_19.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's the worst! did you have it backed up anywhere?",
+          "video_name": "dia97228utt1_8.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia97228utt1_8.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I just needed one more hour to finish everything properly!",
+          "video_name": "dia97228utt2_19.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia97228utt2_19.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "hopefully things will work out better next time",
+          "video_name": "dia97228utt3_8.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia97228utt3_8.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Car breaking down during an important trip.",
+        "emotion_cause": "Experiencing anger and helplessness due to car breaking down during an important trip.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 19
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 8
+    },
+    "topic": "Education"
+  },
+  {
+    "conversation_id": "28170",
+    "turn": {
+      "turn_id": "1",
+      "context": "I received an unexpected scholarship that will help pay for my education!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I received an unexpected scholarship that will help pay for my education!",
+          "video_name": "dia28170utt0_23.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia28170utt0_23.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "having good friends makes such a difference! how are you feeling now?",
+          "video_name": "dia28170utt1_68.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia28170utt1_68.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I want to pay it forward and help others when I can.",
+          "video_name": "dia28170utt2_23.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia28170utt2_23.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "having that support makes all the difference",
+          "video_name": "dia28170utt3_68.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia28170utt3_68.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting support from friends during illness.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting support from friends during illness.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 23
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 68
+    },
+    "topic": "Technology"
+  },
+  {
+    "conversation_id": "86618",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm so frustrated! My internet keeps cutting out during this important meeting!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm so frustrated! My internet keeps cutting out during this important meeting!",
+          "video_name": "dia86618utt0_92.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia86618utt0_92.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "airport delays are so frustrating! any idea when it might leave?",
+          "video_name": "dia86618utt1_57.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia86618utt1_57.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "Why does this always happen at the worst possible time?",
+          "video_name": "dia86618utt2_92.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia86618utt2_92.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "technology can be so unreliable when you need it most",
+          "video_name": "dia86618utt3_57.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia86618utt3_57.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Being stuck in traffic during emergency.",
+        "emotion_cause": "Experiencing anger and helplessness due to being stuck in traffic during emergency.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 92
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 57
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "94850",
+    "turn": {
+      "turn_id": "1",
+      "context": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+          "video_name": "dia94850utt0_83.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia94850utt0_83.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "traffic jams are the absolute worst! can you take a different route?",
+          "video_name": "dia94850utt1_10.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia94850utt1_10.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I just needed one more hour to finish everything properly!",
+          "video_name": "dia94850utt2_83.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia94850utt2_83.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "technology can be so unreliable when you need it most",
+          "video_name": "dia94850utt3_10.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia94850utt3_10.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Waiting hours for delayed flight at airport.",
+        "emotion_cause": "Experiencing anger and helplessness due to waiting hours for delayed flight at airport.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 83
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 10
+    },
+    "topic": "Entertainment"
+  },
+  {
+    "conversation_id": "63167",
+    "turn": {
+      "turn_id": "1",
+      "context": "My friends have been so supportive during my recovery, I'm truly grateful!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My friends have been so supportive during my recovery, I'm truly grateful!",
+          "video_name": "dia63167utt0_73.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63167utt0_73.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "having good friends makes such a difference! how are you feeling now?",
+          "video_name": "dia63167utt1_77.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63167utt1_77.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It really restored my faith in humanity.",
+          "video_name": "dia63167utt2_73.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63167utt2_73.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "having that support makes all the difference",
+          "video_name": "dia63167utt3_77.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia63167utt3_77.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting mentorship for career development.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting mentorship for career development.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 73
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 77
+    },
+    "topic": "Sports"
+  },
+  {
+    "conversation_id": "82030",
+    "turn": {
+      "turn_id": "1",
+      "context": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+          "video_name": "dia82030utt0_8.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia82030utt0_8.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's the worst! did you have it backed up anywhere?",
+          "video_name": "dia82030utt1_25.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia82030utt1_25.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm trying to stay calm but it's really testing my patience.",
+          "video_name": "dia82030utt2_8.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia82030utt2_8.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "that's incredibly frustrating! i feel for you",
+          "video_name": "dia82030utt3_25.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia82030utt3_25.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Computer crashing while working on important project.",
+        "emotion_cause": "Experiencing anger and helplessness due to computer crashing while working on important project.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 8
+    },
+    "listener_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 25
+    },
+    "topic": "Relationships"
+  },
+  {
+    "conversation_id": "17253",
+    "turn": {
+      "turn_id": "1",
+      "context": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+          "video_name": "dia17253utt0_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia17253utt0_84.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's so annoying! can you switch to mobile data?",
+          "video_name": "dia17253utt1_49.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia17253utt1_49.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "Why does this always happen at the worst possible time?",
+          "video_name": "dia17253utt2_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia17253utt2_84.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "that's incredibly frustrating! i feel for you",
+          "video_name": "dia17253utt3_49.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia17253utt3_49.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Computer crashing while working on important project.",
+        "emotion_cause": "Experiencing anger and helplessness due to computer crashing while working on important project.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 84
+    },
+    "listener_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 49
+    },
+    "topic": "Work & Career"
+  },
+  {
+    "conversation_id": "81806",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+          "video_name": "dia81806utt0_70.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81806utt0_70.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's incredible! your photos are always so beautiful!",
+          "video_name": "dia81806utt1_55.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81806utt1_55.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm still pinching myself to make sure it's real!",
+          "video_name": "dia81806utt2_70.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81806utt2_70.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you should celebrate! this is a huge achievement!",
+          "video_name": "dia81806utt3_55.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia81806utt3_55.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Buying first house or apartment.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from buying first house or apartment.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 70
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 55
+    },
+    "topic": "Personal Growth"
+  },
+  {
+    "conversation_id": "78120",
+    "turn": {
+      "turn_id": "1",
+      "context": "I won first place in the photography competition! I'm over the moon!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I won first place in the photography competition! I'm over the moon!",
+          "video_name": "dia78120utt0_26.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia78120utt0_26.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's incredible! your photos are always so beautiful!",
+          "video_name": "dia78120utt1_66.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia78120utt1_66.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I've been dreaming about this moment for so long!",
+          "video_name": "dia78120utt2_26.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia78120utt2_26.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i'm so happy for you! you're going to do amazing!",
+          "video_name": "dia78120utt3_66.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia78120utt3_66.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Winning a major competition or award.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from winning a major competition or award.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 26
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 66
+    },
+    "topic": "Family"
+  },
+  {
+    "conversation_id": "23295",
+    "turn": {
+      "turn_id": "1",
+      "context": "My mentor has been guiding me through this career transition, I'm so thankful!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My mentor has been guiding me through this career transition, I'm so thankful!",
+          "video_name": "dia23295utt0_99.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23295utt0_99.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's fantastic! education is such an important investment!",
+          "video_name": "dia23295utt1_73.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23295utt1_73.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I want to pay it forward and help others when I can.",
+          "video_name": "dia23295utt2_99.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23295utt2_99.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "having that support makes all the difference",
+          "video_name": "dia23295utt3_73.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23295utt3_73.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Receiving unexpected financial assistance.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for receiving unexpected financial assistance.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 99
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 73
+    },
+    "topic": "Health & Wellness"
+  },
+  {
+    "conversation_id": "85681",
+    "turn": {
+      "turn_id": "1",
+      "context": "We just bought our first house! I can barely contain my excitement!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "We just bought our first house! I can barely contain my excitement!",
+          "video_name": "dia85681utt0_37.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85681utt0_37.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "oh my gosh that's so exciting! how are you going to propose?",
+          "video_name": "dia85681utt1_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85681utt1_69.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm still pinching myself to make sure it's real!",
+          "video_name": "dia85681utt2_37.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85681utt2_37.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you've worked so hard for this, enjoy every moment!",
+          "video_name": "dia85681utt3_69.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia85681utt3_69.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Buying first house or apartment.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from buying first house or apartment.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 37
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 69
+    },
+    "topic": "Sports"
+  },
+  {
+    "conversation_id": "41721",
+    "turn": {
+      "turn_id": "1",
+      "context": "I won first place in the photography competition! I'm over the moon!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I won first place in the photography competition! I'm over the moon!",
+          "video_name": "dia41721utt0_41.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41721utt0_41.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "oh my gosh that's so exciting! how are you going to propose?",
+          "video_name": "dia41721utt1_6.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41721utt1_6.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "All the hard work and preparation finally paid off!",
+          "video_name": "dia41721utt2_41.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41721utt2_41.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i'm so happy for you! you're going to do amazing!",
+          "video_name": "dia41721utt3_6.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia41721utt3_6.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Getting accepted to dream university.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from getting accepted to dream university.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 41
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 6
+    },
+    "topic": "Education"
+  },
+  {
+    "conversation_id": "59118",
+    "turn": {
+      "turn_id": "1",
+      "context": "I can't believe it - I got the promotion I've been working towards for years!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I can't believe it - I got the promotion I've been working towards for years!",
+          "video_name": "dia59118utt0_34.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia59118utt0_34.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's such a huge milestone! you must be so proud!",
+          "video_name": "dia59118utt1_55.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia59118utt1_55.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I can't wait to start this new chapter of my life!",
+          "video_name": "dia59118utt2_34.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia59118utt2_34.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "this is just the beginning of great things for you!",
+          "video_name": "dia59118utt3_55.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia59118utt3_55.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Getting accepted to dream university.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from getting accepted to dream university.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 34
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 55
+    },
+    "topic": "Health & Wellness"
+  },
+  {
+    "conversation_id": "10458",
+    "turn": {
+      "turn_id": "1",
+      "context": "I've been stuck in this traffic for 2 hours and I'm missing everything!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I've been stuck in this traffic for 2 hours and I'm missing everything!",
+          "video_name": "dia10458utt0_86.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10458utt0_86.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "traffic jams are the absolute worst! can you take a different route?",
+          "video_name": "dia10458utt1_95.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10458utt1_95.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "Why does this always happen at the worst possible time?",
+          "video_name": "dia10458utt2_86.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10458utt2_86.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "hopefully things will work out better next time",
+          "video_name": "dia10458utt3_95.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia10458utt3_95.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Dealing with slow internet during important video call.",
+        "emotion_cause": "Experiencing anger and helplessness due to dealing with slow internet during important video call.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 86
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 95
+    },
+    "topic": "Life Events"
+  },
+  {
+    "conversation_id": "99224",
+    "turn": {
+      "turn_id": "1",
+      "context": "My friends have been so supportive during my recovery, I'm truly grateful!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My friends have been so supportive during my recovery, I'm truly grateful!",
+          "video_name": "dia99224utt0_82.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia99224utt0_82.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's wonderful! it's amazing how kind strangers can be!",
+          "video_name": "dia99224utt1_90.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia99224utt1_90.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I don't know what I would have done without their help.",
+          "video_name": "dia99224utt2_82.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia99224utt2_82.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "those are the moments that remind us there's still good in the world",
+          "video_name": "dia99224utt3_90.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia99224utt3_90.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Having family visit during lonely period.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for having family visit during lonely period.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 82
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 90
+    },
+    "topic": "Technology"
+  },
+  {
+    "conversation_id": "79167",
+    "turn": {
+      "turn_id": "1",
+      "context": "I can't believe it - I got the promotion I've been working towards for years!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I can't believe it - I got the promotion I've been working towards for years!",
+          "video_name": "dia79167utt0_20.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia79167utt0_20.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's incredible! your photos are always so beautiful!",
+          "video_name": "dia79167utt1_19.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia79167utt1_19.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I've been dreaming about this moment for so long!",
+          "video_name": "dia79167utt2_20.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia79167utt2_20.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i'm so happy for you! you're going to do amazing!",
+          "video_name": "dia79167utt3_19.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia79167utt3_19.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Winning a major competition or award.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from winning a major competition or award.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 20
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 19
+    },
+    "topic": "Life Events"
+  },
+  {
+    "conversation_id": "64781",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm planning to propose to my girlfriend next week and I'm so excited!",
+          "video_name": "dia64781utt0_16.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64781utt0_16.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's such a huge milestone! you must be so proud!",
+          "video_name": "dia64781utt1_74.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64781utt1_74.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I can't wait to start this new chapter of my life!",
+          "video_name": "dia64781utt2_16.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64781utt2_16.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "this is just the beginning of great things for you!",
+          "video_name": "dia64781utt3_74.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64781utt3_74.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Planning a surprise wedding proposal.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from planning a surprise wedding proposal.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 16
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 74
+    },
+    "topic": "Social Issues"
+  },
+  {
+    "conversation_id": "61815",
+    "turn": {
+      "turn_id": "1",
+      "context": "My mentor has been guiding me through this career transition, I'm so thankful!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My mentor has been guiding me through this career transition, I'm so thankful!",
+          "video_name": "dia61815utt0_49.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia61815utt0_49.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's fantastic! education is such an important investment!",
+          "video_name": "dia61815utt1_43.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia61815utt1_43.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I want to pay it forward and help others when I can.",
+          "video_name": "dia61815utt2_49.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia61815utt2_49.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "those are the moments that remind us there's still good in the world",
+          "video_name": "dia61815utt3_43.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia61815utt3_43.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting support from friends during illness.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting support from friends during illness.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 49
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 43
+    },
+    "topic": "Food & Cooking"
+  },
+  {
+    "conversation_id": "89933",
+    "turn": {
+      "turn_id": "1",
+      "context": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My flight has been delayed for 4 hours with no explanation! This is ridiculous!",
+          "video_name": "dia89933utt0_46.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89933utt0_46.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's so annoying! can you switch to mobile data?",
+          "video_name": "dia89933utt1_96.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89933utt1_96.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "Why does this always happen at the worst possible time?",
+          "video_name": "dia89933utt2_46.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89933utt2_46.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "that's incredibly frustrating! i feel for you",
+          "video_name": "dia89933utt3_96.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia89933utt3_96.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Being stuck in traffic during emergency.",
+        "emotion_cause": "Experiencing anger and helplessness due to being stuck in traffic during emergency.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 46
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 96
+    },
+    "topic": "Hobbies & Interests"
+  },
+  {
+    "conversation_id": "95431",
+    "turn": {
+      "turn_id": "1",
+      "context": "I received an unexpected scholarship that will help pay for my education!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I received an unexpected scholarship that will help pay for my education!",
+          "video_name": "dia95431utt0_57.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia95431utt0_57.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "family support is so important! that must have meant a lot!",
+          "video_name": "dia95431utt1_93.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia95431utt1_93.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I want to pay it forward and help others when I can.",
+          "video_name": "dia95431utt2_57.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia95431utt2_57.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "those are the moments that remind us there's still good in the world",
+          "video_name": "dia95431utt3_93.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia95431utt3_93.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Receiving help from stranger during difficult time.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for receiving help from stranger during difficult time.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 57
+    },
+    "listener_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 93
+    },
+    "topic": "Entertainment"
+  },
+  {
+    "conversation_id": "11057",
+    "turn": {
+      "turn_id": "1",
+      "context": "My family surprised me with a visit when I was feeling really lonely!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My family surprised me with a visit when I was feeling really lonely!",
+          "video_name": "dia11057utt0_55.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11057utt0_55.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's fantastic! education is such an important investment!",
+          "video_name": "dia11057utt1_25.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11057utt1_25.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I don't know what I would have done without their help.",
+          "video_name": "dia11057utt2_55.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11057utt2_55.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "those are the moments that remind us there's still good in the world",
+          "video_name": "dia11057utt3_25.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia11057utt3_25.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting support from friends during illness.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting support from friends during illness.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 55
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "female",
+      "timbre": "mid",
+      "ID": 25
+    },
+    "topic": "Travel & Adventure"
+  },
+  {
+    "conversation_id": "23265",
+    "turn": {
+      "turn_id": "1",
+      "context": "My family surprised me with a visit when I was feeling really lonely!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My family surprised me with a visit when I was feeling really lonely!",
+          "video_name": "dia23265utt0_18.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23265utt0_18.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's fantastic! education is such an important investment!",
+          "video_name": "dia23265utt1_59.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23265utt1_59.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It really restored my faith in humanity.",
+          "video_name": "dia23265utt2_18.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23265utt2_18.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "you deserve all the good things coming your way",
+          "video_name": "dia23265utt3_59.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia23265utt3_59.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Having family visit during lonely period.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for having family visit during lonely period.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 18
+    },
+    "listener_profile": {
+      "age": "child",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 59
+    },
+    "topic": "Entertainment"
+  },
+  {
+    "conversation_id": "68705",
+    "turn": {
+      "turn_id": "1",
+      "context": "I won first place in the photography competition! I'm over the moon!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I won first place in the photography competition! I'm over the moon!",
+          "video_name": "dia68705utt0_15.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia68705utt0_15.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "oh my gosh that's so exciting! how are you going to propose?",
+          "video_name": "dia68705utt1_47.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia68705utt1_47.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "All the hard work and preparation finally paid off!",
+          "video_name": "dia68705utt2_15.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia68705utt2_15.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "this is just the beginning of great things for you!",
+          "video_name": "dia68705utt3_47.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia68705utt3_47.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Planning a surprise wedding proposal.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from planning a surprise wedding proposal.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 15
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "female",
+      "timbre": "high",
+      "ID": 47
+    },
+    "topic": "Relationships"
+  },
+  {
+    "conversation_id": "32371",
+    "turn": {
+      "turn_id": "1",
+      "context": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "My computer crashed and I lost 3 hours of work! I'm so frustrated!",
+          "video_name": "dia32371utt0_9.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32371utt0_9.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "airport delays are so frustrating! any idea when it might leave?",
+          "video_name": "dia32371utt1_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32371utt1_81.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "Technology is supposed to make our lives easier, not harder!",
+          "video_name": "dia32371utt2_9.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32371utt2_9.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "that's incredibly frustrating! i feel for you",
+          "video_name": "dia32371utt3_81.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia32371utt3_81.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "frustrated",
+        "event_scenario": "Being stuck in traffic during emergency.",
+        "emotion_cause": "Experiencing anger and helplessness due to being stuck in traffic during emergency.",
+        "goal_to_response": "Offering support and understanding during a difficult situation."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 9
+    },
+    "listener_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 81
+    },
+    "topic": "Relationships"
+  },
+  {
+    "conversation_id": "92005",
+    "turn": {
+      "turn_id": "1",
+      "context": "The earthquake was so strong, I thought the building would collapse!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "The earthquake was so strong, I thought the building would collapse!",
+          "video_name": "dia92005utt0_59.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92005utt0_59.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that must have been traumatic! did anyone get hurt?",
+          "video_name": "dia92005utt1_22.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92005utt1_22.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "It's scary, unless you are prepared, you're wondering how to live life without it.",
+          "video_name": "dia92005utt2_59.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92005utt2_59.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i know thats right, i dont know how they survived without electric",
+          "video_name": "dia92005utt3_22.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia92005utt3_22.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "terrified",
+        "event_scenario": "Getting lost in a forest during a hiking trip.",
+        "emotion_cause": "Experiencing fear and uncertainty due to getting lost in a forest during a hiking trip.",
+        "goal_to_response": "Providing comfort and sharing similar experiences to reduce fear."
+      }
+    },
+    "speaker_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 59
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "low",
+      "ID": 22
+    },
+    "topic": "Technology"
+  },
+  {
+    "conversation_id": "38154",
+    "turn": {
+      "turn_id": "1",
+      "context": "I'm so grateful for the stranger who helped me when my car broke down!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "I'm so grateful for the stranger who helped me when my car broke down!",
+          "video_name": "dia38154utt0_30.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia38154utt0_30.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "that's wonderful! it's amazing how kind strangers can be!",
+          "video_name": "dia38154utt1_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia38154utt1_84.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I want to pay it forward and help others when I can.",
+          "video_name": "dia38154utt2_30.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia38154utt2_30.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "having that support makes all the difference",
+          "video_name": "dia38154utt3_84.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia38154utt3_84.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "grateful",
+        "event_scenario": "Getting mentorship for career development.",
+        "emotion_cause": "Feeling deep appreciation and thankfulness for getting mentorship for career development.",
+        "goal_to_response": "Acknowledging the positive experience and reinforcing good feelings."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 30
+    },
+    "listener_profile": {
+      "age": "elderly",
+      "gender": "male",
+      "timbre": "mid",
+      "ID": 84
+    },
+    "topic": "Hobbies & Interests"
+  },
+  {
+    "conversation_id": "64893",
+    "turn": {
+      "turn_id": "1",
+      "context": "We just bought our first house! I can barely contain my excitement!",
+      "dialogue": [
+        {
+          "index": 0,
+          "role": "speaker",
+          "text": "We just bought our first house! I can barely contain my excitement!",
+          "video_name": "dia64893utt0_53.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64893utt0_53.mp4"
+        },
+        {
+          "index": 1,
+          "role": "listener",
+          "text": "congratulations! that's amazing news! which university?",
+          "video_name": "dia64893utt1_44.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64893utt1_44.mp4"
+        },
+        {
+          "index": 2,
+          "role": "speaker",
+          "text": "I'm still pinching myself to make sure it's real!",
+          "video_name": "dia64893utt2_53.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64893utt2_53.mp4"
+        },
+        {
+          "index": 3,
+          "role": "listener_response",
+          "text": "i'm so happy for you! you're going to do amazing!",
+          "video_name": "dia64893utt3_44.mp4",
+          "video_path": "data/train_video/video_v5_0\\dia64893utt3_44.mp4"
+        }
+      ],
+      "chain_of_empathy": {
+        "speaker_emotion": "excited",
+        "event_scenario": "Planning a surprise wedding proposal.",
+        "emotion_cause": "Feeling overwhelming joy and anticipation from planning a surprise wedding proposal.",
+        "goal_to_response": "Sharing in the joy and celebrating the positive news together."
+      }
+    },
+    "speaker_profile": {
+      "age": "young",
+      "gender": "female",
+      "timbre": "low",
+      "ID": 53
+    },
+    "listener_profile": {
+      "age": "middle-aged",
+      "gender": "male",
+      "timbre": "high",
+      "ID": 44
+    },
+    "topic": "Family"
+  }
+]

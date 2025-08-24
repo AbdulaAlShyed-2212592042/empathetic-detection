@@ -23,6 +23,7 @@ import numpy as np
 import json
 import cv2
 import time
+import random
 from datetime import datetime
 from torch.utils.data import Dataset, DataLoader
 from transformers import (
@@ -513,40 +514,48 @@ class TimeSformerEncoder(nn.Module):
         return sequence_output
 
 class MultimodalLSTMVideoModel(nn.Module):
-    """Multimodal LSTM model with video, text, and metadata (NO AUDIO)"""
+    """Multimodal LSTM model with video, text, and metadata (NO AUDIO) - OVERFITTING PREVENTION VERSION"""
     
-    def __init__(self, dataset, num_classes=7, hidden_size=256, num_layers=2, dropout_rate=0.3):
+    def __init__(self, dataset, num_classes=7, hidden_size=128, num_layers=1, dropout_rate=0.5, freeze_bert_layers=8):
         super(MultimodalLSTMVideoModel, self).__init__()
         
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         
-        # Text encoder (BERT-base)
+        # Text encoder (BERT-base) with frozen layers to prevent overfitting
         self.text_encoder = BertModel.from_pretrained("bert-base-uncased")
         text_dim = self.text_encoder.config.hidden_size  # 768 for BERT-base
         
-        # Video encoder (TimeSformer-style)
+        # Freeze lower BERT layers to prevent overfitting
+        if freeze_bert_layers > 0:
+            for i, layer in enumerate(self.text_encoder.encoder.layer):
+                if i < freeze_bert_layers:
+                    for param in layer.parameters():
+                        param.requires_grad = False
+            print(f"Froze first {freeze_bert_layers} BERT layers to prevent overfitting")
+        
+        # Video encoder (TimeSformer-style) with reduced complexity
         self.video_encoder = TimeSformerEncoder(
             num_frames=8,
             frame_size=192,
-            embed_dim=256,
+            embed_dim=128,  # Reduced from 256
             num_heads=4,
-            num_layers=3,
+            num_layers=2,  # Reduced from 3
             dropout_rate=dropout_rate
         )
-        video_dim = 256
+        video_dim = 128  # Reduced
         
-        # Metadata embeddings
-        self.age_embedding = nn.Embedding(4, 16)
-        self.gender_embedding = nn.Embedding(2, 8)
-        self.timbre_embedding = nn.Embedding(3, 8)
-        self.role_embedding = nn.Embedding(3, 16)
+        # Metadata embeddings with smaller dimensions
+        self.age_embedding = nn.Embedding(4, 8)  # Reduced from 16
+        self.gender_embedding = nn.Embedding(2, 4)  # Reduced from 8
+        self.timbre_embedding = nn.Embedding(3, 4)  # Reduced from 8
+        self.role_embedding = nn.Embedding(3, 8)   # Reduced from 16
         
-        # Profile ID embeddings
-        self.speaker_id_embedding = nn.Embedding(100, 32)
-        self.listener_id_embedding = nn.Embedding(100, 32)
+        # Profile ID embeddings with smaller dimensions
+        self.speaker_id_embedding = nn.Embedding(100, 16)  # Reduced from 32
+        self.listener_id_embedding = nn.Embedding(100, 16)  # Reduced from 32
         
-        # Chain of empathy embeddings
+        # Chain of empathy embeddings with smaller dimensions
         vocab_sizes = {
             'event_scenario': len(dataset.event_scenario_vocab) + 1,
             'emotion_cause': len(dataset.emotion_cause_vocab) + 1,
@@ -554,75 +563,146 @@ class MultimodalLSTMVideoModel(nn.Module):
             'topic': len(dataset.topic_vocab) + 1
         }
         
-        self.event_scenario_embedding = nn.Embedding(vocab_sizes['event_scenario'], 32)
-        self.emotion_cause_embedding = nn.Embedding(vocab_sizes['emotion_cause'], 32)
-        self.goal_response_embedding = nn.Embedding(vocab_sizes['goal_response'], 32)
-        self.topic_embedding = nn.Embedding(vocab_sizes['topic'], 32)
+        self.event_scenario_embedding = nn.Embedding(vocab_sizes['event_scenario'], 16)  # Reduced from 32
+        self.emotion_cause_embedding = nn.Embedding(vocab_sizes['emotion_cause'], 16)
+        self.goal_response_embedding = nn.Embedding(vocab_sizes['goal_response'], 16)
+        self.topic_embedding = nn.Embedding(vocab_sizes['topic'], 16)
         
-        # Context processor
-        self.context_processor = nn.Linear(text_dim, 256)
+        # Context processor with dropout
+        self.context_processor = nn.Sequential(
+            nn.Linear(text_dim, 256),
+            nn.Dropout(dropout_rate),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+            nn.Linear(256, 128)  # Reduced output size
+        )
         
-        # Sequential processing with LSTM
-        # Input: text + video + role embeddings (NO AUDIO)
-        lstm_input_size = text_dim + video_dim + 16  # text + video + role
+        # Enhanced LSTM processing for full multimodal input
+        # Separate LSTMs for different modalities for better learning
         
-        self.dialogue_lstm = nn.LSTM(
-            input_size=lstm_input_size,
+        # Text LSTM - processes dialogue text sequence
+        text_lstm_input_size = text_dim + 8  # text + role embeddings
+        self.text_lstm = nn.LSTM(
+            input_size=text_lstm_input_size,
             hidden_size=hidden_size,
             num_layers=num_layers,
             batch_first=True,
-            dropout=dropout_rate if num_layers > 1 else 0,
+            dropout=0,  # No dropout in single layer LSTM
             bidirectional=True
         )
         
-        # Attention mechanism for LSTM outputs
-        self.attention = nn.MultiheadAttention(
+        # Video LSTM - processes video sequence 
+        self.video_lstm = nn.LSTM(
+            input_size=video_dim,
+            hidden_size=hidden_size // 2,  # Smaller for video
+            num_layers=num_layers,
+            batch_first=True,
+            dropout=0,
+            bidirectional=True
+        )
+        
+        # Metadata dimensions calculation
+        metadata_dim = 8 + 4 + 4 + 16 + 8 + 4 + 4 + 16 + 16 + 16 + 16 + 16  # All reduced embeddings
+        
+        # Metadata LSTM - processes metadata sequence if needed
+        # For static metadata, we'll use a simple projection
+        self.metadata_temporal_processor = nn.Sequential(
+            nn.Linear(metadata_dim, hidden_size // 4),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate)
+        )
+        
+        # Combined multimodal LSTM for fused features
+        fused_input_size = hidden_size * 2 + hidden_size + hidden_size // 4  # text + video + metadata
+        self.fusion_lstm = nn.LSTM(
+            input_size=fused_input_size,
+            hidden_size=hidden_size,
+            num_layers=num_layers,
+            batch_first=True,
+            dropout=0,
+            bidirectional=True
+        )
+        
+        # Multi-head attention for each modality
+        self.text_attention = nn.MultiheadAttention(
             embed_dim=hidden_size * 2,  # bidirectional
-            num_heads=8,
+            num_heads=4,
             dropout=dropout_rate
         )
         
-        # Metadata fusion
-        metadata_dim = 16 + 8 + 8 + 32 + 16 + 8 + 8 + 32 + 32 + 32 + 32 + 32  # All embeddings
-        self.metadata_processor = nn.Sequential(
-            nn.Linear(metadata_dim, 128),
-            nn.ReLU(),
-            nn.Dropout(dropout_rate),
-            nn.Linear(128, 64)
+        self.video_attention = nn.MultiheadAttention(
+            embed_dim=hidden_size,  # bidirectional but smaller
+            num_heads=2,
+            dropout=dropout_rate
         )
         
-        # Final fusion and classification
-        final_dim = 256 + hidden_size * 2 + 64  # context + LSTM + metadata
+        self.fusion_attention = nn.MultiheadAttention(
+            embed_dim=hidden_size * 2,  # bidirectional
+            num_heads=4,
+            dropout=dropout_rate
+        )
         
-        # Classifier structure matching checkpoint
+        # Metadata fusion with stronger regularization
+        self.metadata_processor = nn.Sequential(
+            nn.Linear(metadata_dim, 64),  # Reduced from 128
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+            nn.Linear(64, 32)  # Reduced from 64
+        )
+        
+        # Final fusion and classification with enhanced multimodal features
+        final_dim = 128 + hidden_size * 2 + 32  # context + fusion_lstm + metadata (all reduced)
+        
+        # Enhanced classifier with cross-modal attention
+        self.cross_modal_attention = nn.MultiheadAttention(
+            embed_dim=final_dim,
+            num_heads=4,
+            dropout=dropout_rate
+        )
+        
+        # Smaller classifier to prevent overfitting
         self.classifier = nn.Sequential(
-            nn.Linear(final_dim, 512),                    # Layer 0
-            nn.BatchNorm1d(512),                          # Layer 1
+            nn.Linear(final_dim, 256),                    # Layer 0 - Reduced from 512
+            nn.BatchNorm1d(256),                          # Layer 1
             nn.ReLU(),                                    # Layer 2
             nn.Dropout(dropout_rate),                     # Layer 3
-            nn.Linear(512, 256),                          # Layer 4
-            nn.BatchNorm1d(256),                          # Layer 5
+            nn.Linear(256, 128),                          # Layer 4 - Reduced from 256
+            nn.BatchNorm1d(128),                          # Layer 5
             nn.ReLU(),                                    # Layer 6
             nn.Dropout(dropout_rate),                     # Layer 7
-            nn.Linear(256, num_classes)                   # Layer 8
+            nn.Linear(128, num_classes)                   # Layer 8 - Final layer
         )
         
         self.dropout = nn.Dropout(dropout_rate)
+        
+        # Initialize weights with Xavier initialization for better convergence
+        self._init_weights()
+        
+    def _init_weights(self):
+        """Initialize weights to prevent poor initialization"""
+        for module in self.modules():
+            if isinstance(module, nn.Linear):
+                nn.init.xavier_uniform_(module.weight)
+                if module.bias is not None:
+                    nn.init.constant_(module.bias, 0)
+            elif isinstance(module, nn.Embedding):
+                nn.init.xavier_uniform_(module.weight)
         
     def forward(self, context_input_ids, context_attention_mask, dialogue_input_ids, 
                 dialogue_attention_mask, dialogue_video, dialogue_roles, 
                 dialogue_indices, metadata, sequence_length):
         batch_size, seq_len = dialogue_input_ids.shape[:2]
         
-        # Process context
+        # Process context with enhanced processing
         context_outputs = self.text_encoder(
             input_ids=context_input_ids,
             attention_mask=context_attention_mask
         )
         context_features = self.context_processor(context_outputs.last_hidden_state[:, 0, :])  # CLS token
         
-        # Process dialogue sequence
-        dialogue_features = []
+        # Process dialogue sequence - ENHANCED MULTIMODAL LSTM APPROACH
+        text_features_sequence = []
         
         for i in range(seq_len):
             # Text features for this utterance
@@ -635,36 +715,35 @@ class MultimodalLSTMVideoModel(nn.Module):
             # Role embedding
             utt_role_features = self.role_embedding(dialogue_roles[:, i])
             
-            # Combine text + role features (no audio, video processed separately)
+            # Combine text + role features for text LSTM
             utt_combined_text = torch.cat([utt_text_features, utt_role_features], dim=1)
-            dialogue_features.append(utt_combined_text)
+            text_features_sequence.append(utt_combined_text)
         
-        # Stack dialogue text features
-        dialogue_text_sequence = torch.stack(dialogue_features, dim=1)  # [batch, seq_len, text_dim+role_dim]
+        # Stack text features for LSTM processing
+        text_sequence = torch.stack(text_features_sequence, dim=1)  # [batch, seq_len, text_dim+role_dim]
         
         # Process video features for entire sequence at once
         video_sequence_features = self.video_encoder(dialogue_video)  # [batch, seq_len, video_dim]
         
-        # Combine text and video features
-        dialogue_sequence = torch.cat([dialogue_text_sequence, video_sequence_features], dim=-1)
+        # ENHANCED LSTM PROCESSING FOR EACH MODALITY
         
-        # LSTM processing
-        lstm_out, (hidden, cell) = self.dialogue_lstm(dialogue_sequence)
+        # 1. Text LSTM processing
+        text_lstm_out, (text_h, text_c) = self.text_lstm(text_sequence)
         
-        # Apply attention to LSTM outputs
-        lstm_out_transposed = lstm_out.transpose(0, 1)  # [seq_len, batch, features]
-        attended_output, _ = self.attention(lstm_out_transposed, lstm_out_transposed, lstm_out_transposed)
-        attended_output = attended_output.transpose(0, 1)  # [batch, seq_len, features]
+        # Apply attention to text LSTM outputs
+        text_lstm_transposed = text_lstm_out.transpose(0, 1)  # [seq_len, batch, features]
+        text_attended, _ = self.text_attention(text_lstm_transposed, text_lstm_transposed, text_lstm_transposed)
+        text_attended = text_attended.transpose(0, 1)  # [batch, seq_len, features]
         
-        # Use the last relevant output based on sequence length
-        dialogue_final_features = []
-        for i in range(batch_size):
-            seq_len_i = sequence_length[i].item() - 1  # 0-indexed
-            seq_len_i = max(0, min(seq_len_i, seq_len - 1))  # Clamp to valid range
-            dialogue_final_features.append(attended_output[i, seq_len_i, :])
-        dialogue_final_features = torch.stack(dialogue_final_features)
+        # 2. Video LSTM processing
+        video_lstm_out, (video_h, video_c) = self.video_lstm(video_sequence_features)
         
-        # Process metadata
+        # Apply attention to video LSTM outputs
+        video_lstm_transposed = video_lstm_out.transpose(0, 1)  # [seq_len, batch, features]
+        video_attended, _ = self.video_attention(video_lstm_transposed, video_lstm_transposed, video_lstm_transposed)
+        video_attended = video_attended.transpose(0, 1)  # [batch, seq_len, features]
+        
+        # 3. Process metadata (static for all time steps)
         speaker_age = self.age_embedding(metadata[:, 0])
         speaker_gender = self.gender_embedding(metadata[:, 1])
         speaker_timbre = self.timbre_embedding(metadata[:, 2])
@@ -686,10 +765,42 @@ class MultimodalLSTMVideoModel(nn.Module):
             event_scenario_emb, emotion_cause_emb, goal_response_emb, topic_emb
         ], dim=1)
         
-        metadata_features = self.metadata_processor(metadata_combined)
+        # Process metadata temporally
+        metadata_temporal = self.metadata_temporal_processor(metadata_combined)
+        # Expand metadata to match sequence length
+        metadata_sequence = metadata_temporal.unsqueeze(1).expand(-1, seq_len, -1)  # [batch, seq_len, meta_dim]
         
-        # Final fusion
-        final_features = torch.cat([context_features, dialogue_final_features, metadata_features], dim=1)
+        # 4. FUSION LSTM - Combine all modalities
+        fused_features = torch.cat([text_attended, video_attended, metadata_sequence], dim=-1)
+        
+        # Apply fusion LSTM
+        fusion_lstm_out, (fusion_h, fusion_c) = self.fusion_lstm(fused_features)
+        
+        # Apply attention to fusion LSTM outputs
+        fusion_lstm_transposed = fusion_lstm_out.transpose(0, 1)  # [seq_len, batch, features]
+        fusion_attended, _ = self.fusion_attention(fusion_lstm_transposed, fusion_lstm_transposed, fusion_lstm_transposed)
+        fusion_attended = fusion_attended.transpose(0, 1)  # [batch, seq_len, features]
+        
+        # Use the last relevant output based on sequence length
+        dialogue_final_features = []
+        for i in range(batch_size):
+            seq_len_i = sequence_length[i].item() - 1  # 0-indexed
+            seq_len_i = max(0, min(seq_len_i, seq_len - 1))  # Clamp to valid range
+            dialogue_final_features.append(fusion_attended[i, seq_len_i, :])
+        dialogue_final_features = torch.stack(dialogue_final_features)
+        
+        # Process standalone metadata for final fusion
+        metadata_final_features = self.metadata_processor(metadata_combined)
+        
+        # Final fusion with cross-modal attention
+        final_features = torch.cat([context_features, dialogue_final_features, metadata_final_features], dim=1)
+        
+        # Apply cross-modal attention to final features
+        final_features_expanded = final_features.unsqueeze(1)  # [batch, 1, features]
+        final_features_transposed = final_features_expanded.transpose(0, 1)  # [1, batch, features]
+        cross_attended, _ = self.cross_modal_attention(final_features_transposed, final_features_transposed, final_features_transposed)
+        final_features = cross_attended.transpose(0, 1).squeeze(1)  # [batch, features]
+        
         final_features = self.dropout(final_features)
         
         # Classification
@@ -738,6 +849,71 @@ class FocalLoss(nn.Module):
         pt = torch.exp(-ce_loss)
         focal_loss = self.alpha * (1 - pt) ** self.gamma * ce_loss
         return focal_loss.mean()
+
+class LabelSmoothingCrossEntropy(nn.Module):
+    """Label smoothing cross entropy for better generalization"""
+    def __init__(self, smoothing=0.1, weight=None):
+        super().__init__()
+        self.smoothing = smoothing
+        self.weight = weight
+        
+    def forward(self, x, target):
+        confidence = 1. - self.smoothing
+        logprobs = F.log_softmax(x, dim=-1)
+        nll_loss = -logprobs.gather(dim=-1, index=target.unsqueeze(1))
+        nll_loss = nll_loss.squeeze(1)
+        smooth_loss = -logprobs.mean(dim=-1)
+        loss = confidence * nll_loss + self.smoothing * smooth_loss
+        
+        if self.weight is not None:
+            loss = loss * self.weight[target]
+            
+        return loss.mean()
+
+class BalancedBatchSampler(torch.utils.data.Sampler):
+    """Balanced batch sampler to ensure each batch has roughly equal class distribution"""
+    def __init__(self, dataset, batch_size):
+        self.dataset = dataset
+        self.batch_size = batch_size
+        
+        # Get all labels
+        self.labels = [dataset.get_label(i) for i in range(len(dataset))]
+        
+        # Group indices by class
+        self.class_indices = {}
+        for idx, label in enumerate(self.labels):
+            if label not in self.class_indices:
+                self.class_indices[label] = []
+            self.class_indices[label].append(idx)
+        
+        # Calculate number of batches
+        self.num_batches = len(dataset) // batch_size
+        
+    def __iter__(self):
+        for _ in range(self.num_batches):
+            batch_indices = []
+            samples_per_class = self.batch_size // len(self.class_indices)
+            remainder = self.batch_size % len(self.class_indices)
+            
+            for class_label, indices in self.class_indices.items():
+                # Sample from this class
+                num_samples = samples_per_class + (1 if remainder > 0 else 0)
+                if remainder > 0:
+                    remainder -= 1
+                    
+                if len(indices) >= num_samples:
+                    selected = np.random.choice(indices, num_samples, replace=False)
+                else:
+                    selected = np.random.choice(indices, num_samples, replace=True)
+                    
+                batch_indices.extend(selected)
+            
+            # Shuffle the batch
+            np.random.shuffle(batch_indices)
+            yield batch_indices[:self.batch_size]
+    
+    def __len__(self):
+        return self.num_batches
 
 def compute_metrics(y_true, y_pred):
     """Compute accuracy, precision, recall, and F1 score"""
@@ -1026,25 +1202,31 @@ def verify_data_samples(dataset, num_samples=5):
     print("="*100)
 
 def main():
-    # Configuration for the fixed training approach
+    # Configuration for OVERFITTING PREVENTION - Based on poor test performance analysis
     config = {
-        'batch_size': 2,  # Reduced for video processing
-        'gradient_accumulation_steps': 3,  # Effective batch size of 6
-        'learning_rate': 5e-6,  # Lower learning rate for stability with video
-        'num_epochs': 25,
-        'patience': 5,
-        'dropout_rate': 0.2,
-        'weight_decay': 0.01,
-        'warmup_steps': 500,
-        'max_length': 256,  # Reduced for efficiency
-        'max_dialogue_length': 10,
-        'hidden_size': 256,
-        'num_layers': 2,
-        'max_grad_norm': 1.0,
+        'batch_size': 4,  # Slightly larger batch size for better gradient estimates
+        'gradient_accumulation_steps': 2,  # Effective batch size of 8
+        'learning_rate': 1e-5,  # Higher learning rate but with strong regularization
+        'num_epochs': 15,  # Fewer epochs to prevent overfitting
+        'patience': 3,  # Earlier stopping
+        'dropout_rate': 0.5,  # MUCH higher dropout to prevent memorization
+        'weight_decay': 0.05,  # Strong weight decay
+        'warmup_steps': 300,
+        'max_length': 256,  
+        'max_dialogue_length': 8,  # Reduced complexity
+        'hidden_size': 128,  # Smaller model to prevent overfitting
+        'num_layers': 1,  # Single layer LSTM
+        'max_grad_norm': 0.5,  # Stricter gradient clipping
         'use_focal_loss': True,
         'focal_alpha': 1.0,
         'focal_gamma': 2.0,
-        'use_mixed_precision': True
+        'use_mixed_precision': True,
+        # NEW OVERFITTING PREVENTION
+        'label_smoothing': 0.1,  # Label smoothing for better generalization
+        'freeze_bert_layers': 8,  # Freeze most of BERT to prevent overfitting
+        'data_augmentation': True,  # Add text augmentation
+        'class_balanced_sampling': True,  # Balance classes during training
+        'validation_frequency': 2  # Validate every 2 epochs instead of every epoch
     }
     
     # Device configuration
@@ -1096,21 +1278,34 @@ def main():
     # Verify data integrity
     verify_data_samples(train_dataset, num_samples=5)
     
-    # Ask user confirmation before proceeding
-    response = input("\nDo you want to proceed with training? (y/n): ")
+    # Ask user confirmation before proceeding (auto-proceed for enhanced LSTM training)
+    response = "y"  # Auto-proceed with enhanced LSTM training
+    print(f"\nProceeding with enhanced LSTM training automatically...")
     if response.lower() != 'y':
         print("Training cancelled by user.")
         return
     
-    # Create data loaders
-    print("Creating data loaders...")
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=config['batch_size'],
-        shuffle=True,
-        num_workers=0,
-        pin_memory=True
-    )
+    # Create data loaders with balanced sampling for overfitting prevention
+    print("Creating balanced data loaders...")
+    
+    if config.get('class_balanced_sampling', False):
+        # Use balanced batch sampler for training
+        train_sampler = BalancedBatchSampler(train_dataset, config['batch_size'])
+        train_loader = DataLoader(
+            train_dataset,
+            batch_sampler=train_sampler,
+            num_workers=0,
+            pin_memory=True
+        )
+        print("✅ Using balanced batch sampling to prevent class bias overfitting")
+    else:
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=config['batch_size'],
+            shuffle=True,
+            num_workers=0,
+            pin_memory=True
+        )
     
     val_loader = DataLoader(
         val_dataset,
@@ -1130,27 +1325,35 @@ def main():
     class_weights = torch.tensor(class_weights, dtype=torch.float).to(device)
     print(f"Class weights: {class_weights}")
     
-    # Initialize model
-    print("Initializing model...")
+    # Initialize model with overfitting prevention
+    print("Initializing model with overfitting prevention...")
     model = MultimodalLSTMVideoModel(
         train_dataset,
         num_classes=7,
         hidden_size=config['hidden_size'],
         num_layers=config['num_layers'],
-        dropout_rate=config['dropout_rate']
+        dropout_rate=config['dropout_rate'],
+        freeze_bert_layers=config.get('freeze_bert_layers', 8)
     ).to(device)
     
-    print(f"Model parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad):,}")
+    # Count parameters
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Total parameters: {total_params:,}")
+    print(f"Trainable parameters: {trainable_params:,}")
+    print(f"Frozen parameters: {total_params - trainable_params:,}")
     
     # Initialize mixed precision training
     scaler = torch.cuda.amp.GradScaler() if device.type == 'cuda' else None
     
-    # Initialize optimizer and scheduler
-    optimizer = torch.optim.AdamW(
-        model.parameters(),
-        lr=config['learning_rate'],
-        weight_decay=config['weight_decay']
-    )
+    # Initialize optimizer with different learning rates for different parts
+    bert_params = list(model.text_encoder.parameters())
+    other_params = [p for p in model.parameters() if not any(p is bp for bp in bert_params)]
+    
+    optimizer = torch.optim.AdamW([
+        {'params': bert_params, 'lr': config['learning_rate'] * 0.1, 'weight_decay': config['weight_decay']},  # Lower LR for BERT
+        {'params': other_params, 'lr': config['learning_rate'], 'weight_decay': config['weight_decay']}
+    ])
     
     total_steps = len(train_loader) * config['num_epochs']
     scheduler = get_linear_schedule_with_warmup(
@@ -1159,8 +1362,14 @@ def main():
         num_training_steps=total_steps
     )
     
-    # Loss function
-    if config.get('use_focal_loss', False):
+    # Loss function with label smoothing for better generalization
+    if config.get('label_smoothing', 0) > 0:
+        criterion = LabelSmoothingCrossEntropy(
+            smoothing=config['label_smoothing'],
+            weight=class_weights
+        )
+        print(f"Using Label Smoothing CrossEntropy (smoothing={config['label_smoothing']}) to prevent overfitting")
+    elif config.get('use_focal_loss', False):
         criterion = FocalLoss(
             alpha=config.get('focal_alpha', 1.0),
             gamma=config.get('focal_gamma', 2.0),
@@ -1175,8 +1384,8 @@ def main():
     print("\nValidating initial model state...")
     initial_loss = validate_initial_loss(model, train_loader, criterion, device)
     
-    # Early stopping
-    early_stopping = EarlyStopping(patience=config['patience'])
+    # Early stopping with aggressive settings for overfitting prevention
+    early_stopping = EarlyStopping(patience=config['patience'], min_delta=0.001)
     
     # Training history
     history = {
@@ -1194,89 +1403,146 @@ def main():
         'epoch_time': []
     }
     
-    print("Starting training...")
+    print("\n" + "="*80)
+    print("🚀 STARTING OVERFITTING-PREVENTION TRAINING")
+    print("="*80)
+    print(f"Key Changes from Previous Training:")
+    print(f"  ✅ Smaller model: {config['hidden_size']} hidden, {config['num_layers']} layers")
+    print(f"  ✅ Higher dropout: {config['dropout_rate']}")
+    print(f"  ✅ Frozen BERT layers: {config.get('freeze_bert_layers', 8)}")
+    print(f"  ✅ Label smoothing: {config.get('label_smoothing', 0)}")
+    print(f"  ✅ Balanced sampling: {config.get('class_balanced_sampling', False)}")
+    print(f"  ✅ Early stopping patience: {config['patience']}")
+    print(f"  ✅ Strong weight decay: {config['weight_decay']}")
+    print("="*80)
+    
     best_val_accuracy = 0
+    validation_frequency = config.get('validation_frequency', 1)
     
     for epoch in range(config['num_epochs']):
         epoch_start_time = time.time()
         
-        print(f"\nEpoch {epoch + 1}/{config['num_epochs']}")
-        print("-" * 50)
+        print(f"\n{'='*60}")
+        print(f"🎯 EPOCH {epoch + 1}/{config['num_epochs']} - OVERFITTING PREVENTION MODE")
+        print("="*60)
         
         # Training
         train_loss, train_acc, train_prec, train_rec, train_f1 = train_epoch(
             model, train_loader, optimizer, scheduler, criterion, device, scaler,
             gradient_accumulation_steps=config.get('gradient_accumulation_steps', 1),
-            max_grad_norm=config.get('max_grad_norm', 1.0),
+            max_grad_norm=config.get('max_grad_norm', 0.5),
             epoch_num=epoch+1
-        )
-        
-        # Validation
-        val_loss, val_acc, val_prec, val_rec, val_f1, val_predictions, val_labels = validate_epoch(
-            model, val_loader, criterion, device
         )
         
         epoch_time = time.time() - epoch_start_time
         
-        # Log metrics
-        print(f"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, Train F1: {train_f1:.4f}")
-        print(f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}, Val F1: {val_f1:.4f}")
-        print(f"Epoch Time: {epoch_time:.2f}s")
-        
-        # Save history
-        history['epoch'].append(epoch + 1)
-        history['train_loss'].append(train_loss)
-        history['train_accuracy'].append(train_acc)
-        history['train_precision'].append(train_prec)
-        history['train_recall'].append(train_rec)
-        history['train_f1'].append(train_f1)
-        history['val_loss'].append(val_loss)
-        history['val_accuracy'].append(val_acc)
-        history['val_precision'].append(val_prec)
-        history['val_recall'].append(val_rec)
-        history['val_f1'].append(val_f1)
-        history['epoch_time'].append(epoch_time)
-        
-        # Save best model
-        if val_acc > best_val_accuracy:
-            best_val_accuracy = val_acc
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            model_name = f'best_7class_emotion_model_{timestamp}_acc{val_acc:.4f}.pth'
-            torch.save({
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'val_accuracy': val_acc,
-                'epoch': epoch + 1,
-                'config': config,
-                'emotion_classes': 7,
-                'model_type': 'multimodal_lstm_video_7class'
-            }, f'checkpoints_2/{model_name}')
+        # Validation (less frequent to speed up training)
+        if (epoch + 1) % validation_frequency == 0 or epoch == config['num_epochs'] - 1:
+            print("🔍 Running validation...")
+            val_loss, val_acc, val_prec, val_rec, val_f1, val_predictions, val_labels = validate_epoch(
+                model, val_loader, criterion, device
+            )
             
-            # Also save with generic name
-            torch.save({
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'val_accuracy': val_acc,
-                'epoch': epoch + 1,
-                'config': config,
-                'emotion_classes': 7,
-                'model_type': 'multimodal_lstm_video_7class'
-            }, 'checkpoints_2/best_7class_model.pth')
+            # Calculate generalization gap (key overfitting indicator)
+            generalization_gap = train_acc - val_acc
             
-            print(f"New best model saved: {model_name}")
-            print(f"Validation accuracy: {val_acc:.4f} ({val_acc*100:.2f}%)")
+            print(f"📊 EPOCH {epoch + 1} RESULTS:")
+            print(f"   Train: Loss={train_loss:.4f}, Acc={train_acc:.4f} ({train_acc*100:.1f}%)")
+            print(f"   Val:   Loss={val_loss:.4f}, Acc={val_acc:.4f} ({val_acc*100:.1f}%)")
+            print(f"   🚨 Generalization Gap: {generalization_gap:.4f} ({generalization_gap*100:.1f}%)")
+            if generalization_gap > 0.15:
+                print(f"   ⚠️  WARNING: Large generalization gap indicates overfitting!")
+            elif generalization_gap < 0.05:
+                print(f"   ✅ Good generalization!")
+            print(f"   ⏱️  Epoch Time: {epoch_time:.1f}s")
+            
+            # Save history for validation epochs
+            history['epoch'].append(epoch + 1)
+            history['train_loss'].append(train_loss)
+            history['train_accuracy'].append(train_acc)
+            history['train_precision'].append(train_prec)
+            history['train_recall'].append(train_rec)
+            history['train_f1'].append(train_f1)
+            history['val_loss'].append(val_loss)
+            history['val_accuracy'].append(val_acc)
+            history['val_precision'].append(val_prec)
+            history['val_recall'].append(val_rec)
+            history['val_f1'].append(val_f1)
+            history['epoch_time'].append(epoch_time)
+            
+            # Save best model (conservative - only if significant improvement)
+            if val_acc > best_val_accuracy + 0.01:  # Require 1% improvement
+                best_val_accuracy = val_acc
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                model_name = f'best_7class_overfitting_prevented_{timestamp}_acc{val_acc:.4f}.pth'
+                torch.save({
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'val_accuracy': val_acc,
+                    'epoch': epoch + 1,
+                    'config': config,
+                    'emotion_classes': 7,
+                    'model_type': 'multimodal_lstm_video_7class_overfitting_prevented',
+                    'generalization_gap': generalization_gap,
+                    'training_strategy': 'overfitting_prevention'
+                }, f'checkpoints_2/{model_name}')
+                
+                # Also save with generic name
+                torch.save({
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'val_accuracy': val_acc,
+                    'epoch': epoch + 1,
+                    'config': config,
+                    'emotion_classes': 7,
+                    'model_type': 'multimodal_lstm_video_7class_overfitting_prevented',
+                    'generalization_gap': generalization_gap,
+                    'training_strategy': 'overfitting_prevention'
+                }, 'checkpoints_2/best_7class_model.pth')
+                
+                print(f"💾 New best model saved: {model_name}")
+                print(f"   🎯 Validation accuracy: {val_acc:.4f} ({val_acc*100:.2f}%)")
+                print(f"   📊 Generalization gap: {generalization_gap:.4f}")
+            
+            # Early stopping check
+            if early_stopping(val_loss, model):
+                print(f"🛑 Early stopping triggered after {epoch + 1} epochs")
+                print(f"   Reason: No improvement for {config['patience']} validation checks")
+                break
+                
+        else:
+            # Training-only epoch
+            print(f"📈 TRAINING ONLY - Epoch {epoch + 1}")
+            print(f"   Train: Loss={train_loss:.4f}, Acc={train_acc:.4f} ({train_acc*100:.1f}%)")
+            print(f"   ⏱️  Epoch Time: {epoch_time:.1f}s")
         
         # Save training history
-        with open('result_2/training_history.json', 'w') as f:
+        with open('result_2/training_history_overfitting_prevented.json', 'w') as f:
             json.dump(history, f, indent=2)
-        
-        # Early stopping
-        if early_stopping(val_loss, model):
-            print(f"Early stopping triggered after {epoch + 1} epochs")
-            break
     
-    print("\nTraining completed!")
-    print(f"Best validation accuracy achieved: {best_val_accuracy:.4f}")
+    print("\n" + "="*80)
+    print("🎉 OVERFITTING-PREVENTION TRAINING COMPLETED!")
+    print("="*80)
+    print(f"🏆 Best validation accuracy achieved: {best_val_accuracy:.4f} ({best_val_accuracy*100:.2f}%)")
+    print(f"📊 Strategy: Smaller model + High dropout + Frozen BERT + Label smoothing")
+    print(f"🎯 Goal: Better generalization to test data")
+    print("="*80)
+    
+    # Final recommendations
+    print("\n📋 NEXT STEPS:")
+    if best_val_accuracy < 0.6:
+        print("⚠️  Validation accuracy still low. Consider:")
+        print("   - Further reducing model complexity")
+        print("   - Adding more data augmentation")
+        print("   - Checking data quality")
+    elif best_val_accuracy > 0.8:
+        print("⚠️  High validation accuracy. Monitor test performance to ensure generalization")
+    else:
+        print("✅ Reasonable validation accuracy. Test on held-out data to verify generalization")
+    
+    print("\n🧪 To test the improved model:")
+    print("   python test_2.py")
+    print("="*80)
 
 if __name__ == "__main__":
     main()

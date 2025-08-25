@@ -497,6 +497,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### **Memory & Computational Efficiency**
 - **Training Memory**: ~10-12GB GPU memory per model
 - **Inference Speed**: ~1.4s per batch (batch_size=6)
+- **Average Epoch Time**: 
+  - Audio Model: ~40.1 minutes per epoch (2,407 seconds average)
+  - Video Model: ~85.2 minutes per epoch (5,113 seconds average)
+- **Total Training Time**: 
+  - Audio Model: ~5.4 hours (8 epochs, early stopped)
+  - Video Model: ~18.4 hours (13 epochs, early stopped)
 - **Parameter Efficiency**: Strategic freezing reduces training time by 40%
 - **Model Size**: Audio: ~440MB, Video: ~456MB on disk
 

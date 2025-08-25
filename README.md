@@ -1,4 +1,4 @@
-# 🤖 Empat### **Objective**
+# 🤖 Deep Fusion of Speech, Text, and Visual Cues for Human Emotion Recognition 
 Build a robust multimodal system that accurately detects empathetic emotions using a **two-stage fusion approach**:
 
 **🎯 Early Fusion Models:**

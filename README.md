@@ -674,11 +674,11 @@ numpy>=1.21.0          # Numerical computing
 
 
 ### **🎯 Areas for Contribution**
-- 🔄 Late fusion implementation
-- 📊 Performance optimization
-- 🎥 Video preprocessing improvements
-- 🎧 Audio augmentation techniques
-- 📝 Documentation enhancements
+ 🔄 Late fusion implementation
+ 📊 Performance optimization
+ 🎥 Video preprocessing improvements
+ 🎧 Audio augmentation techniques
+ 📝 Documentation enhancements
 
 ---
 

@@ -19,7 +19,7 @@ This project implements a comprehensive multimodal neural network system that co
 |:-----:|:----------:|:--------:|:------:|
 | **🎧 Audio Model** | 🎧📝📊 | **85.18%** | ✅ Complete |
 | **🎥 Video Model** | 🎥 | **72.81%** | ✅ Complete |
-| **🔄 Late Fusion** | 🎧🎥📝📊 | **87-90% Expected** | ✅ RTX 3060 Optimized |
+| **🔄 Late Fusion** | 🎧🎥📝📊 | **60.42%** | ✅ Trained & Tested |
 
 ---
 
@@ -94,8 +94,8 @@ python late_fusion_test.py
 - **Fusion Method**: Learnable weighted logit-level fusion
 - **Trainable Parameters**: Only 1 fusion weight parameter
 - **Memory Efficiency**: Frozen pretrained models (232M params → 1 trainable)
-- **Expected Performance**: 87-90% accuracy (complementary strengths)
-- **RTX 3060 Optimized**: Mixed precision training with only 0.93GB VRAM
+- **Actual Performance**: 60.42% accuracy (video weight: 89.5%, audio weight: 10.5%)
+- **RTX 3060 Optimized**: Mixed precision training with efficient memory usage
 
 ```
 Audio Model (85.18%) ──┐
@@ -108,7 +108,7 @@ Video Model (72.81%) ──┘     (σ(w) × video + (1-σ(w)) × audio)
 ## ⚡ RTX 3060 12GB Optimizations
 
 ✅ **Mixed Precision Training**: FP16 reduces memory by ~50%  
-✅ **Memory Usage**: Only **0.93GB VRAM** for late fusion training  
+✅ **Memory Usage**: RTX 3060 12GB optimized for efficient training  
 ✅ **Batch Optimization**: 2×2 gradient accumulation (effective batch 4)  
 ✅ **Model Freezing**: Only fusion weight trainable (1 parameter vs 114M)  
 ✅ **Speed**: 1.5-2x faster training with mixed precision  
@@ -137,9 +137,11 @@ Modalities: Video-only (pure visual)
 ```
 Status: Fully Implemented & Trained
 Architecture: Learnable weighted fusion
-Expected Accuracy: 87-90% (combining strengths)
-Memory Usage: Only 0.93GB VRAM on RTX 3060
-Training: Single parameter optimization
+Actual Accuracy: 60.42% (4,939 test samples)
+Fusion Weights: Video 89.5%, Audio 10.5%
+Memory Usage: Mixed precision training on RTX 3060
+Training: Single parameter optimization (14 epochs)
+Analysis: Individual models outperformed fusion
 ```
 
 ### Emotion Classes

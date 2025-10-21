@@ -1,151 +1,192 @@
-# 🤖 Empathetic Detection - Multimodal Emotion Recognition
+# 🎭 Empathetic Emotion Detection System
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-red.svg)](https://pytorch.org)
-[![CUDA](https://img.shields.io/badge/CUDA-11.8%2B-green.svg)](https://developer.nvidia.com/cuda-toolkit)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://python.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.4.0-red.svg)](https://pytorch.org)
+[![CUDA](https://img.shields.io/badge/CUDA-RTX3060-green.svg)](https://developer.nvidia.com/cuda-toolkit)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Advanced multimodal emotion classification system using deep learning for empathy detection**
+**Multimodal emotion recognition system combining audio, video, and text for 7-class emotion detection**
 
 ---
 
-## 🎯 Project Overview
+## 🎯 Overview
 
-This project implements a comprehensive multimodal neural network system that combines **🎧 audio, 🎥 video, 📝 text, and 📊 metadata** to recognize empathetic emotions from the **AvaMERG dataset**. We employ a sophisticated **late fusion strategy** with specialized models for optimal performance.
+This project implements three distinct emotion recognition models that process audio, video, and text modalities for empathetic emotion detection across 7 emotion classes: **neutral, joy, sadness, anger, fear, disgust, surprise**.
 
-### 🏆 Key Achievements
+### 📊 Performance Results
 
-| Model | Modalities | Accuracy | Status |
-|:-----:|:----------:|:--------:|:------:|
-| **🎧 Audio Model** | 🎧📝📊 | **85.18%** | ✅ Complete |
-| **🎥 Video Model** | 🎥 | **72.81%** | ✅ Complete |
-| **🔄 Late Fusion** | 🎧🎥📝📊 | **60.42%** | ✅ Trained & Tested |
+| Model | Test Accuracy | Test Samples | Architecture |
+|:-----:|:-------------:|:------------:|:-------------|
+| **Audio-Text** | **83.15%** | 4,939 | BERT + Wav2Vec2 + Metadata |
+| **Video** | **72.24%** | 4,939 | Video Transformer + Text |
+| **Late Fusion** | **60.42%** | 4,939 | Learnable Weighted Fusion |
 
 ---
 
-## 🚀 Quick Start
-
-### 1. Environment Setup
+## 🚀 Installation
 
 ```bash
 # Clone repository
 git clone https://github.com/AbdulaAlShyed-2212592042/empathetic-detection.git
 cd empathetic-detection
 
-# Create virtual environment
-python -m venv .venv
-.venv\Scripts\activate  # Windows
-
 # Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Data Structure
+### System Requirements
+- **GPU**: NVIDIA RTX 3060 12GB (or equivalent)
+- **Python**: 3.9+
+- **CUDA**: Compatible version for PyTorch 2.4.0
+
+---
+
+## 📁 Project Structure
 
 ```
 empathetic-detection/
+├── audio train and test/
+│   ├── train_audio_text_metadata.py    # Audio model training
+│   └── test_audio_text_metadata.py     # Audio model testing
+├── checkpoints/
+│   └── best_7class_model.pth           # Audio model checkpoint (83.15%)
+├── checkpoints_2/
+│   └── best_video_model_*.pth          # Video model checkpoint (72.24%)
+├── late_fusion_checkpoint/
+│   └── best_late_fusion_model_*.pth    # Late fusion checkpoint (60.42%)
 ├── data/
-│   ├── train_audio/audio_v5_0/     # Audio files (.wav)
-│   └── train_video/video_v5_0/     # Video files (.mp4)
+│   ├── train_audio/audio_v5_0/         # Audio files (.wav)
+│   └── train_video/video_v5_0/         # Video files (.mp4)
 ├── json/
 │   ├── mapped_train_data_video_aligned.json
 │   ├── mapped_val_data_video_aligned.json
 │   └── mapped_test_data_video_aligned.json
-├── checkpoints/                     # Audio model checkpoints
-├── checkpoints_2/                   # Video model checkpoints
-└── late_fusion_checkpoint/          # Late fusion checkpoints
+├── late_fusion.py                      # Complete fusion system
+├── late_fusion_test.py                 # Fusion testing script
+├── video_training.py                   # Video model training
+├── train_video_improved.py            # Enhanced video training
+└── requirements.txt                    # Core dependencies
 ```
 
-### 3. Testing & Training
+---
 
+## 🎯 Usage
+
+### Audio-Text Model
 ```bash
-# Test audio model (85.18% accuracy)
-cd "audio train and test"
-python test_audio_text_metadata.py
+# Training
+python "audio train and test/train_audio_text_metadata.py"
 
-# Test video model (72.81% accuracy)
-python test_2.py
+# Testing  
+python "audio train and test/test_audio_text_metadata.py"
+```
 
-# Train late fusion model (RTX 3060 optimized)
+### Video Model
+```bash
+# Training
+python train_video_improved.py
+
+# Testing
+python video_training.py --test_mode
+```
+
+### Late Fusion Model  
+```bash
+# Training
 python late_fusion.py
 
-# Memory-optimized testing
+# Testing
 python late_fusion_test.py
 ```
 
 ---
 
-## 🧠 Model Architecture
+## 🔬 Technical Implementation
 
-### Audio Model (🎧📝📊)
-- **Wav2Vec2-base**: Speech representation learning
-- **BERT-base**: Text understanding  
-- **Metadata**: Speaker profiles & empathy chains
-- **Performance**: 85.18% accuracy
+### Audio-Text Model (83.15% Accuracy)
+- **Text Processing**: BERT-base-uncased tokenization and embedding
+- **Audio Features**: Wav2Vec2-base feature extraction 
+- **Metadata Integration**: Gender, age, and speaker context features
+- **Architecture**: Multi-head attention fusion with dropout
+- **Optimization**: AdamW optimizer with warmup scheduling
 
-### Video Model (🎥)
-- **Enhanced TimeSformer**: Spatial-temporal video processing
-- **Video-only**: Pure visual emotion recognition
-- **8 frames/sequence**: Temporal dynamics capture
-- **Performance**: 72.81% accuracy
+### Video Model (72.24% Accuracy)  
+- **Video Processing**: Frame extraction and temporal encoding
+- **Text Integration**: Dialogue context through BERT embedding
+- **Architecture**: Enhanced TimeSformer for spatial-temporal processing
+- **Features**: Visual expressions and temporal dynamics (8 frames/sequence)
+- **Training**: Mixed precision with gradient accumulation
 
-### Late Fusion Model (🔄🎧🎥📝📊)
-- **Architecture**: Combines audio and video model predictions
-- **Fusion Method**: Learnable weighted logit-level fusion
-- **Trainable Parameters**: Only 1 fusion weight parameter
-- **Memory Efficiency**: Frozen pretrained models (232M params → 1 trainable)
-- **Actual Performance**: 60.42% accuracy (video weight: 89.5%, audio weight: 10.5%)
-- **RTX 3060 Optimized**: Mixed precision training with efficient memory usage
-
-```
-Audio Model (85.18%) ──┐
-                       ├── Learnable Weighted Fusion ──► Final Prediction
-Video Model (72.81%) ──┘     (σ(w) × video + (1-σ(w)) × audio)
-```
+### Late Fusion Model (60.42% Accuracy)
+- **Fusion Strategy**: Learnable weighted logit-level combination  
+- **Architecture**: Frozen pretrained models + 1 trainable fusion weight
+- **Memory Efficiency**: RTX 3060 12GB optimized with mixed precision
+- **Training Results**: Video weight 89.5%, Audio-text weight 10.5%
+- **Analysis**: Individual models outperformed fusion combination
 
 ---
 
-## ⚡ RTX 3060 12GB Optimizations
+## 📊 Detailed Performance Metrics
 
-✅ **Mixed Precision Training**: FP16 reduces memory by ~50%  
-✅ **Memory Usage**: RTX 3060 12GB optimized for efficient training  
-✅ **Batch Optimization**: 2×2 gradient accumulation (effective batch 4)  
-✅ **Model Freezing**: Only fusion weight trainable (1 parameter vs 114M)  
-✅ **Speed**: 1.5-2x faster training with mixed precision  
+## 📊 Detailed Performance Metrics
 
----
-
-## 📊 Performance Results
-
-### Audio Model Performance (🎧📝📊)
+### Audio-Text Model Results
 ```
-Overall Test Accuracy: 85.18%
-Overall Precision:     85.12%
-Overall F1-Score:      85.15%
-Modalities: Audio + Text + Metadata
+Test Accuracy: 83.15%
+Test Precision: 82.76%
+Test F1-Score: 82.37%
+Test Samples: 4,939
+Architecture: BERT + Wav2Vec2 + Metadata
+Checkpoint: checkpoints/best_7class_model.pth
 ```
 
-### Video Model Performance (🎥)
+### Video Model Results  
 ```
-Overall Test Accuracy: 72.81%
-Overall Precision:     72.45%
-Overall F1-Score:      72.63%
-Modalities: Video-only (pure visual)
+Test Accuracy: 72.24%
+Test Precision: 72.31%
+Test F1-Score: 69.84%
+Test Samples: 4,939
+Architecture: Video Transformer + Text encoding
+Checkpoint: checkpoints_2/best_video_model_*.pth
 ```
 
-### Late Fusion Model Performance (🔄🎧🎥📝📊)
+### Late Fusion Results
 ```
-Status: Fully Implemented & Trained
-Architecture: Learnable weighted fusion
-Actual Accuracy: 60.42% (4,939 test samples)
-Fusion Weights: Video 89.5%, Audio 10.5%
-Memory Usage: Mixed precision training on RTX 3060
-Training: Single parameter optimization (14 epochs)
-Analysis: Individual models outperformed fusion
+Test Accuracy: 60.42%
+Test Precision: 60.39%
+Test F1-Score: 55.98%
+Test Samples: 4,939
+Fusion Weights: Video 89.5%, Audio-Text 10.5%
+Training Epochs: 14
+Checkpoint: late_fusion_checkpoint/best_late_fusion_model_*.pth
 ```
 
 ### Emotion Classes
-**Happy**, **Surprised**, **Angry**, **Fear**, **Sad**, **Disgusted**, **Contempt**
+**7 Categories**: neutral, joy, sadness, anger, fear, disgust, surprise
+
+---
+
+## 💾 Core Dependencies
+
+From `requirements.txt`:
+```python
+torch==2.4.0                    # Deep learning framework
+transformers==4.44.2            # BERT, Wav2Vec2 models
+librosa==0.10.2                 # Audio processing
+scikit-learn==1.5.2             # Metrics and evaluation
+numpy==1.26.4                   # Numerical computing
+pandas==2.2.2                   # Data manipulation
+```
+
+---
+
+## 🔧 RTX 3060 12GB Optimizations
+
+✅ **Mixed Precision Training**: FP16 reduces memory usage by ~50%  
+✅ **Batch Processing**: Optimized batch sizes for 12GB VRAM  
+✅ **Gradient Accumulation**: Effective larger batch sizes without memory overflow  
+✅ **Model Freezing**: Reduced trainable parameters for fusion training  
+✅ **Memory Efficiency**: Optimized data loading and preprocessing
 
 ---
 
@@ -208,24 +249,54 @@ numpy>=1.21.0
 
 ---
 
-## 📚 References
+## � Results Analysis
 
-- **AvaMERG Dataset**: [Hugging Face](https://huggingface.co/datasets/ZhangHanXD/AvaMERG)
-- **TimeSformer**: "Is Space-Time Attention All You Need for Video Understanding?"
-- **Wav2Vec2**: "wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations"
-- **BERT**: "Bidirectional Encoder Representations from Transformers"
+### Model Comparison
+| Model | Accuracy | Strengths | Limitations |
+|-------|----------|-----------|-------------|
+| Audio-Text | 83.15% | Rich prosodic + linguistic features | Audio quality dependent |
+| Video | 72.24% | Visual emotion cues | Lighting/angle sensitive |
+| Late Fusion | 60.42% | Combined modalities | Underperformed individual models |
+
+### Key Findings
+- **Audio-text model** achieved highest accuracy due to rich prosodic and linguistic features
+- **Video model** showed moderate performance with visual emotion recognition  
+- **Late fusion** resulted in lower accuracy than individual models, suggesting overlapping rather than complementary feature learning
+- **Fusion weights** heavily favored video predictions (89.5%) over audio-text (10.5%)
 
 ---
 
-## 📄 License
+## 📂 Results Storage
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+- **Audio Results**: `result_1/` - Contains audio model test results and metrics
+- **Video Results**: `test_results/` - Contains video model evaluation outputs  
+- **Late Fusion Results**: `late_fusion_results/` - Contains fusion training and testing results
+
+Each folder includes:
+- Performance metrics (JSON)
+- Confusion matrices (PNG)  
+- Training histories (JSON)
+- Classification reports (TXT)
 
 ---
 
-<div align="center">
+## 🤝 Contributing
 
-**🤖 Built for advancing empathetic AI and emotion understanding**
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## � License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+*Built with PyTorch, Transformers, and modern deep learning techniques for multimodal emotion recognition.*
 
 ⭐ Star this repo if it helped you! | 🐛 Report issues | 💡 Suggest improvements
 

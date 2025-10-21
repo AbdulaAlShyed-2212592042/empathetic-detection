@@ -1,0 +1,90 @@
+
+================================================================================
+IMPROVED MULTIMODAL EMOTION DETECTION MODEL - TEST RESULTS
+================================================================================
+
+Test Information:
+-----------------
+• Model Path: checkpoints_2/best_improved_model_20251007_225253_acc0.9862.pth
+• Test Dataset: json/mapped_test_data_video_aligned.json
+• Test Date: 2025-10-08 01:06:39
+• Device: cuda
+• Results Directory: cuda
+
+Dataset Information:
+--------------------
+• Total Test Samples: 4,939
+• Number of Classes: 7
+• Emotion Classes: happy, surprised, angry, fear, sad, disgusted, contempt
+
+Overall Performance Metrics:
+----------------------------
+• Test Accuracy: 0.9860 (98.60%)
+• Weighted Precision: 0.9862
+• Weighted Recall: 0.9860
+• Weighted F1-Score: 0.9861
+• Macro Precision: 0.9702
+• Macro Recall: 0.9857
+• Macro F1-Score: 0.9778
+
+Per-Class Performance:
+----------------------
+HAPPY:
+  • Precision: 0.9851
+  • Recall: 0.9783
+  • F1-Score: 0.9817
+  • Support: 1,150
+SURPRISED:
+  • Precision: 0.9570
+  • Recall: 0.9861
+  • F1-Score: 0.9714
+  • Support: 361
+ANGRY:
+  • Precision: 0.9659
+  • Recall: 0.9925
+  • F1-Score: 0.9790
+  • Support: 399
+FEAR:
+  • Precision: 0.9767
+  • Recall: 0.9865
+  • F1-Score: 0.9816
+  • Support: 297
+SAD:
+  • Precision: 0.9976
+  • Recall: 0.9886
+  • F1-Score: 0.9931
+  • Support: 2,536
+DISGUSTED:
+  • Precision: 0.9457
+  • Recall: 0.9775
+  • F1-Score: 0.9613
+  • Support: 89
+CONTEMPT:
+  • Precision: 0.9636
+  • Recall: 0.9907
+  • F1-Score: 0.9770
+  • Support: 107
+
+Performance Analysis:
+---------------------
+• Best Performing Class: sad (F1: 0.9931)
+• Most Challenging Class: disgusted (F1: 0.9613)
+• Overall Performance Level: OUTSTANDING
+
+Generated Files:
+----------------
+• Confusion Matrix: cuda/confusion_matrix.png
+• Confusion Matrix Data: cuda/confusion_matrix_data.json
+• Per-Class Metrics Chart: cuda/per_class_metrics.png
+• Per-Class Metrics CSV: cuda/per_class_metrics.csv
+• Detailed Test Results: cuda/test_results.json
+• Summary Report: cuda/test_summary.txt
+
+Key Insights:
+-------------
+• Model demonstrates exceptional generalization capability
+• High accuracy across all emotion classes
+• Robust performance on imbalanced dataset
+• Production-ready for real-world deployment
+
+================================================================================

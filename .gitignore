@@ -1,0 +1,109 @@
+# ==========================
+# Project-specific ignores
+# ==========================
+
+# Raw data and media files
+data/
+datasets/
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.mp4
+*.avi
+*.mov
+
+# Large dataset JSON files (keep smaller config JSONs)
+json/mapped_*.json
+json/train_data.json
+json/val_data.json
+json/test_data.json
+
+# Model checkpoints and weights (too large for GitHub)
+checkpoints/
+checkpoints_1/
+checkpoints_2/
+late_fusion_checkpoint/
+*.pth
+*.pt
+*.ckpt
+last_epoch.pt
+
+# Results and outputs
+result_1/
+result_2/
+results/
+late_fusion_results/
+runs/
+wandb/
+
+# ==========================
+# Python ignores
+# ==========================
+
+# Byte-compiled / cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+*.env
+
+# ==========================
+# Build and packaging
+# ==========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ==========================
+# Notebooks and IDE ignores
+# ==========================
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode settings
+.vscode/
+*.code-workspace
+
+# PyCharm settings
+.idea/
+
+# ==========================
+# System / OS files
+# ==========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ==========================
+# Logs & temporary files
+# ==========================
+logs/
+*.log
+*.tmp
+*.bak
+*.npy
+
+# ==========================
+# Git specific
+# ==========================
+*.orig
+
+# ==========================
+# Keep essential config files
+# ==========================
+!requirements.txt
+!README.md
+!LICENSE
+!json/dataset_summary.json
+!json/full_class_summary.json

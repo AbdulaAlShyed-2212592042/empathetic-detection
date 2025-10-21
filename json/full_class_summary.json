@@ -1,0 +1,164 @@
+{
+  "train": {
+    "emotion_counts": {
+      "afraid": 306,
+      "angry": 349,
+      "annoyed": 601,
+      "anticipating": 303,
+      "anxious": 4225,
+      "apprehensive": 219,
+      "ashamed": 258,
+      "caring": 228,
+      "confident": 288,
+      "content": 288,
+      "devastated": 283,
+      "disappointed": 301,
+      "disgusted": 299,
+      "embarrassed": 251,
+      "excited": 366,
+      "faithful": 178,
+      "furious": 289,
+      "grateful": 317,
+      "guilty": 291,
+      "hopeful": 302,
+      "impressed": 273,
+      "jealous": 320,
+      "joyful": 302,
+      "lonely": 386,
+      "nostalgic": 318,
+      "prepared": 283,
+      "proud": 345,
+      "sad": 1335,
+      "sentimental": 240,
+      "surprised": 499,
+      "terrified": 325,
+      "trusting": 249,
+      "other": 0
+    },
+    "age_counts": {
+      "child": 1859,
+      "young": 7985,
+      "middle-aged": 3196,
+      "elderly": 1777
+    },
+    "gender_counts": {
+      "male": 11772,
+      "female": 3045
+    },
+    "timbre_counts": {
+      "high": 1808,
+      "mid": 9658,
+      "low": 3351
+    }
+  },
+  "test": {
+    "emotion_counts": {
+      "afraid": 111,
+      "angry": 108,
+      "annoyed": 191,
+      "anticipating": 102,
+      "anxious": 1418,
+      "apprehensive": 79,
+      "ashamed": 79,
+      "caring": 98,
+      "confident": 104,
+      "content": 94,
+      "devastated": 99,
+      "disappointed": 106,
+      "disgusted": 89,
+      "embarrassed": 98,
+      "excited": 129,
+      "faithful": 53,
+      "furious": 100,
+      "grateful": 90,
+      "guilty": 93,
+      "hopeful": 112,
+      "impressed": 102,
+      "jealous": 107,
+      "joyful": 82,
+      "lonely": 112,
+      "nostalgic": 113,
+      "prepared": 92,
+      "proud": 110,
+      "sad": 423,
+      "sentimental": 94,
+      "surprised": 160,
+      "terrified": 107,
+      "trusting": 84,
+      "other": 0
+    },
+    "age_counts": {
+      "child": 613,
+      "young": 2670,
+      "middle-aged": 1086,
+      "elderly": 570
+    },
+    "gender_counts": {
+      "male": 3920,
+      "female": 1019
+    },
+    "timbre_counts": {
+      "high": 617,
+      "mid": 3157,
+      "low": 1165
+    }
+  },
+  "val": {
+    "emotion_counts": {
+      "afraid": 124,
+      "angry": 104,
+      "annoyed": 196,
+      "anticipating": 93,
+      "anxious": 1424,
+      "apprehensive": 75,
+      "ashamed": 72,
+      "caring": 99,
+      "confident": 110,
+      "content": 86,
+      "devastated": 86,
+      "disappointed": 94,
+      "disgusted": 123,
+      "embarrassed": 94,
+      "excited": 112,
+      "faithful": 63,
+      "furious": 102,
+      "grateful": 101,
+      "guilty": 86,
+      "hopeful": 86,
+      "impressed": 107,
+      "jealous": 90,
+      "joyful": 100,
+      "lonely": 138,
+      "nostalgic": 123,
+      "prepared": 99,
+      "proud": 111,
+      "sad": 425,
+      "sentimental": 99,
+      "surprised": 154,
+      "terrified": 90,
+      "trusting": 74,
+      "other": 0
+    },
+    "age_counts": {
+      "child": 618,
+      "young": 2641,
+      "middle-aged": 1069,
+      "elderly": 612
+    },
+    "gender_counts": {
+      "male": 3950,
+      "female": 990
+    },
+    "timbre_counts": {
+      "high": 559,
+      "mid": 3248,
+      "low": 1133
+    }
+  },
+  "train_conversations": 14817,
+  "test_conversations": 4939,
+  "val_conversations": 4940,
+  "train_labeled_audio": 67937,
+  "test_labeled_audio": 22606,
+  "val_labeled_audio": 22698
+}

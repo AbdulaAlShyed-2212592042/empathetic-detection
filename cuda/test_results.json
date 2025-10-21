@@ -1,0 +1,1207 @@
+{
+  "model_info": {
+    "model_path": "checkpoints_2/best_improved_model_20251007_225253_acc0.9862.pth",
+    "test_data_path": "json/mapped_test_data_video_aligned.json",
+    "test_date": "2025-10-08T01:06:39.389913",
+    "device": "cuda",
+    "total_test_samples": 4939
+  },
+  "dataset_info": {
+    "total_samples": 4939,
+    "num_classes": 7,
+    "emotion_labels": [
+      "happy",
+      "surprised",
+      "angry",
+      "fear",
+      "sad",
+      "disgusted",
+      "contempt"
+    ],
+    "class_distribution": {
+      "happy": {
+        "count": 1150,
+        "percentage": 23.284065600323952
+      },
+      "surprised": {
+        "count": 361,
+        "percentage": 7.309171897145171
+      },
+      "angry": {
+        "count": 399,
+        "percentage": 8.078558412634136
+      },
+      "fear": {
+        "count": 297,
+        "percentage": 6.013363028953229
+      },
+      "sad": {
+        "count": 2536,
+        "percentage": 51.34642640210569
+      },
+      "disgusted": {
+        "count": 89,
+        "percentage": 1.8019842073294188
+      },
+      "contempt": {
+        "count": 107,
+        "percentage": 2.1664304515084027
+      }
+    }
+  },
+  "overall_metrics": {
+    "test_accuracy": 0.9860295606398056,
+    "precision_weighted": 0.9862354441508697,
+    "recall_weighted": 0.9860295606398056,
+    "f1_weighted": 0.9860782224487344,
+    "precision_macro": 0.9702177658401048,
+    "recall_macro": 0.9857386582652986,
+    "f1_macro": 0.9778484821937912
+  },
+  "per_class_metrics": {
+    "happy": {
+      "precision": 0.9851138353765324,
+      "recall": 0.9782608695652174,
+      "f1_score": 0.981675392670157,
+      "support": 1150
+    },
+    "surprised": {
+      "precision": 0.956989247311828,
+      "recall": 0.9861495844875346,
+      "f1_score": 0.9713506139154161,
+      "support": 361
+    },
+    "angry": {
+      "precision": 0.9658536585365853,
+      "recall": 0.9924812030075187,
+      "f1_score": 0.9789864029666254,
+      "support": 399
+    },
+    "fear": {
+      "precision": 0.9766666666666667,
+      "recall": 0.9865319865319865,
+      "f1_score": 0.981574539363484,
+      "support": 297
+    },
+    "sad": {
+      "precision": 0.9976124154397135,
+      "recall": 0.988564668769716,
+      "f1_score": 0.9930679342444049,
+      "support": 2536
+    },
+    "disgusted": {
+      "precision": 0.9456521739130435,
+      "recall": 0.9775280898876404,
+      "f1_score": 0.9613259668508287,
+      "support": 89
+    },
+    "contempt": {
+      "precision": 0.9636363636363636,
+      "recall": 0.9906542056074766,
+      "f1_score": 0.9769585253456221,
+      "support": 107
+    }
+  },
+  "sample_predictions": [
+    {
+      "batch_idx": 0,
+      "sample_idx": 0,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "02208",
+      "raw_emotion": "lonely",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 0,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "01392",
+      "raw_emotion": "sentimental",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 0,
+      "sample_idx": 2,
+      "true_label": 6,
+      "true_emotion": "contempt",
+      "conversation_id": "10701",
+      "raw_emotion": "jealous",
+      "predicted_label": 6,
+      "predicted_emotion": "contempt",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 0,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "27464",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 0,
+      "sample_idx": 4,
+      "true_label": 5,
+      "true_emotion": "disgusted",
+      "conversation_id": "07800",
+      "raw_emotion": "disgusted",
+      "predicted_label": 5,
+      "predicted_emotion": "disgusted",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 0,
+      "sample_idx": 5,
+      "true_label": 3,
+      "true_emotion": "fear",
+      "conversation_id": "17089",
+      "raw_emotion": "afraid",
+      "predicted_label": 3,
+      "predicted_emotion": "fear",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 0,
+      "sample_idx": 6,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "18826",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 0,
+      "sample_idx": 7,
+      "true_label": 1,
+      "true_emotion": "surprised",
+      "conversation_id": "11042",
+      "raw_emotion": "surprised",
+      "predicted_label": 1,
+      "predicted_emotion": "surprised",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 0,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "07849",
+      "raw_emotion": "lonely",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 1,
+      "true_label": 3,
+      "true_emotion": "fear",
+      "conversation_id": "16259",
+      "raw_emotion": "apprehensive",
+      "predicted_label": 3,
+      "predicted_emotion": "fear",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 2,
+      "true_label": 6,
+      "true_emotion": "contempt",
+      "conversation_id": "08638",
+      "raw_emotion": "jealous",
+      "predicted_label": 6,
+      "predicted_emotion": "contempt",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "27115",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "20088",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 5,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "08159",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 6,
+      "true_label": 1,
+      "true_emotion": "surprised",
+      "conversation_id": "05507",
+      "raw_emotion": "surprised",
+      "predicted_label": 1,
+      "predicted_emotion": "surprised",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 1,
+      "sample_idx": 7,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "15839",
+      "raw_emotion": "trusting",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 0,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "09083",
+      "raw_emotion": "content",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "04991",
+      "raw_emotion": "nostalgic",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 2,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "16360",
+      "raw_emotion": "content",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 3,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "05263",
+      "raw_emotion": "excited",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "17812",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 5,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "00602",
+      "raw_emotion": "guilty",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 6,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "18636",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 2,
+      "sample_idx": 7,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "22114",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 0,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "20468",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "12139",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 2,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "08242",
+      "raw_emotion": "proud",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "22777",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 4,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "06064",
+      "raw_emotion": "grateful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 5,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "24515",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 6,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "21042",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 3,
+      "sample_idx": 7,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "13414",
+      "raw_emotion": "trusting",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 0,
+      "true_label": 3,
+      "true_emotion": "fear",
+      "conversation_id": "09596",
+      "raw_emotion": "terrified",
+      "predicted_label": 3,
+      "predicted_emotion": "fear",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "25481",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 2,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "28037",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 3,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "07796",
+      "raw_emotion": "joyful",
+      "predicted_label": 1,
+      "predicted_emotion": "surprised",
+      "correct_prediction": false
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "13362",
+      "raw_emotion": "nostalgic",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 5,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "22895",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 6,
+      "true_label": 2,
+      "true_emotion": "angry",
+      "conversation_id": "20767",
+      "raw_emotion": "annoyed",
+      "predicted_label": 2,
+      "predicted_emotion": "angry",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 4,
+      "sample_idx": 7,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "24204",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 0,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "10180",
+      "raw_emotion": "hopeful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "09847",
+      "raw_emotion": "embarrassed",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 2,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "25152",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "10021",
+      "raw_emotion": "ashamed",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 4,
+      "true_label": 3,
+      "true_emotion": "fear",
+      "conversation_id": "13997",
+      "raw_emotion": "terrified",
+      "predicted_label": 3,
+      "predicted_emotion": "fear",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 5,
+      "true_label": 3,
+      "true_emotion": "fear",
+      "conversation_id": "12253",
+      "raw_emotion": "afraid",
+      "predicted_label": 3,
+      "predicted_emotion": "fear",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 6,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "16156",
+      "raw_emotion": "faithful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 5,
+      "sample_idx": 7,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "24588",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 0,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "20762",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "17632",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 2,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "04408",
+      "raw_emotion": "faithful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "21096",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "11759",
+      "raw_emotion": "disappointed",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 5,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "23009",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 6,
+      "true_label": 1,
+      "true_emotion": "surprised",
+      "conversation_id": "14652",
+      "raw_emotion": "devastated",
+      "predicted_label": 1,
+      "predicted_emotion": "surprised",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 6,
+      "sample_idx": 7,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "09389",
+      "raw_emotion": "faithful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 0,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "14548",
+      "raw_emotion": "hopeful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "23663",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 2,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "13606",
+      "raw_emotion": "ashamed",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "17964",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "17890",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 5,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "16212",
+      "raw_emotion": "grateful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 6,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "11250",
+      "raw_emotion": "lonely",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 7,
+      "sample_idx": 7,
+      "true_label": 3,
+      "true_emotion": "fear",
+      "conversation_id": "10006",
+      "raw_emotion": "apprehensive",
+      "predicted_label": 3,
+      "predicted_emotion": "fear",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 0,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "15647",
+      "raw_emotion": "faithful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "22363",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 2,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "18230",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 3,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "06256",
+      "raw_emotion": "anticipating",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 4,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "14728",
+      "raw_emotion": "caring",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 5,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "11998",
+      "raw_emotion": "grateful",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 6,
+      "true_label": 5,
+      "true_emotion": "disgusted",
+      "conversation_id": "00876",
+      "raw_emotion": "disgusted",
+      "predicted_label": 5,
+      "predicted_emotion": "disgusted",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 8,
+      "sample_idx": 7,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "02928",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 0,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "25298",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "18093",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 2,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "22781",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "19025",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "28059",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 5,
+      "true_label": 6,
+      "true_emotion": "contempt",
+      "conversation_id": "15696",
+      "raw_emotion": "jealous",
+      "predicted_label": 6,
+      "predicted_emotion": "contempt",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 6,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "04764",
+      "raw_emotion": "trusting",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 9,
+      "sample_idx": 7,
+      "true_label": 3,
+      "true_emotion": "fear",
+      "conversation_id": "11303",
+      "raw_emotion": "terrified",
+      "predicted_label": 3,
+      "predicted_emotion": "fear",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 0,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "26509",
+      "raw_emotion": "lonely",
+      "predicted_label": 2,
+      "predicted_emotion": "angry",
+      "correct_prediction": false
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 1,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "20524",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 2,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "20998",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "18464",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "23235",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 5,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "08713",
+      "raw_emotion": "content",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 6,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "02524",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 10,
+      "sample_idx": 7,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "23115",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 0,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "07802",
+      "raw_emotion": "excited",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 1,
+      "true_label": 2,
+      "true_emotion": "angry",
+      "conversation_id": "20942",
+      "raw_emotion": "annoyed",
+      "predicted_label": 2,
+      "predicted_emotion": "angry",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 2,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "07867",
+      "raw_emotion": "ashamed",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "10404",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 4,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "20240",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 5,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "04773",
+      "raw_emotion": "ashamed",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 6,
+      "true_label": 2,
+      "true_emotion": "angry",
+      "conversation_id": "21385",
+      "raw_emotion": "annoyed",
+      "predicted_label": 2,
+      "predicted_emotion": "angry",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 11,
+      "sample_idx": 7,
+      "true_label": 2,
+      "true_emotion": "angry",
+      "conversation_id": "02149",
+      "raw_emotion": "angry",
+      "predicted_label": 2,
+      "predicted_emotion": "angry",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 12,
+      "sample_idx": 0,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "25719",
+      "raw_emotion": "sad",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 12,
+      "sample_idx": 1,
+      "true_label": 0,
+      "true_emotion": "happy",
+      "conversation_id": "02374",
+      "raw_emotion": "excited",
+      "predicted_label": 0,
+      "predicted_emotion": "happy",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 12,
+      "sample_idx": 2,
+      "true_label": 2,
+      "true_emotion": "angry",
+      "conversation_id": "01947",
+      "raw_emotion": "angry",
+      "predicted_label": 2,
+      "predicted_emotion": "angry",
+      "correct_prediction": true
+    },
+    {
+      "batch_idx": 12,
+      "sample_idx": 3,
+      "true_label": 4,
+      "true_emotion": "sad",
+      "conversation_id": "19179",
+      "raw_emotion": "anxious",
+      "predicted_label": 4,
+      "predicted_emotion": "sad",
+      "correct_prediction": true
+    }
+  ]
+}

@@ -64,7 +64,6 @@ empathetic-detection/
 ├── late_fusion.py                      # Complete fusion system
 ├── late_fusion_test.py                 # Fusion testing script
 ├── video_training.py                   # Video model training
-├── train_video_improved.py            # Enhanced video training
 └── requirements.txt                    # Core dependencies
 ```
 
@@ -83,11 +82,8 @@ python "audio train and test/test_audio_text_metadata.py"
 
 ### Video Model
 ```bash
-# Training
-python train_video_improved.py
-
-# Testing
-python video_training.py --test_mode
+# Training/Testing
+python video_training.py
 ```
 
 ### Late Fusion Model  
@@ -197,7 +193,6 @@ pandas==2.2.2                   # Data manipulation
 | `late_fusion.py` | Complete late fusion system | 🎧🎥📝📊 |
 | `late_fusion_test.py` | Memory-optimized testing | 🎧🎥📝📊 |
 | `video_training.py` | Video-only model implementation | 🎥 |
-| `train_video_improved.py` | Enhanced video-only training | 🎥 |
 | `audio train and test/train_audio_text_metadata.py` | Audio model training | 🎧📝📊 |
 | `audio train and test/test_audio_text_metadata.py` | Audio model testing | 🎧📝📊 |
 

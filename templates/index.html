@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎭 Real-time Emotion Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-section, .results-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .input-method {
+            margin-bottom: 25px;
+        }
+
+        .method-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px dashed transparent;
+        }
+
+        .file-input-label:hover {
+            background: linear-gradient(135deg, #3182ce, #2c5282);
+            transform: translateY(-2px);
+        }
+
+        .webcam-section {
+            text-align: center;
+        }
+
+        #webcam-video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+        }
+
+        .webcam-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #38a169, #2f855a);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #dd6b20, #c05621);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c53030, #9c2626);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-container {
+            min-height: 300px;
+        }
+
+        .prediction-card {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .emotion-result {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .emotion-label {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+        }
+
+        .confidence-score {
+            font-size: 1.2rem;
+            color: #4a5568;
+        }
+
+        .emotion-neutral { color: #718096; }
+        .emotion-joy { color: #f6ad55; }
+        .emotion-sadness { color: #4299e1; }
+        .emotion-anger { color: #e53e3e; }
+        .emotion-fear { color: #805ad5; }
+        .emotion-disgust { color: #38a169; }
+        .emotion-surprise { color: #ed8936; }
+
+        .probabilities {
+            margin-bottom: 20px;
+        }
+
+        .prob-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .prob-bar {
+            width: 60%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .prob-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4299e1, #3182ce);
+            transition: width 0.5s ease;
+        }
+
+        .fusion-weights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .weight-card {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .weight-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .weight-label {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .transcription {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #38a169;
+            margin-bottom: 20px;
+        }
+
+        .transcription-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .transcription-text {
+            color: #4a5568;
+            font-style: italic;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .spinner {
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #4299e1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .fusion-weights {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 Real-time Emotion Detection</h1>
+            <p>Advanced multimodal AI system using video, audio, and text analysis</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2 class="section-title">📹 Input Methods</h2>
+                
+                <!-- File Upload -->
+                <div class="input-method">
+                    <h3 class="method-title">Upload Video File</h3>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="video-file" class="file-input" accept="video/*">
+                        <label for="video-file" class="file-input-label">
+                            📁 Choose Video File (MP4, WebM, AVI)
+                        </label>
+                    </div>
+                    <button id="upload-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;" disabled>
+                        🚀 Analyze Emotion
+                    </button>
+                </div>
+
+                <!-- Live Camera -->
+                <div class="input-method">
+                    <h3 class="method-title">Live Camera Feed</h3>
+                    <div class="webcam-section">
+                        <video id="webcam-video" autoplay muted></video>
+                        <div class="webcam-controls">
+                            <button id="start-webcam" class="btn btn-primary">📹 Start Camera</button>
+                            <button id="record-btn" class="btn btn-secondary" disabled>🔴 Start Recording</button>
+                            <button id="stop-webcam" class="btn btn-danger" disabled>⏹️ Stop Camera</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <h2 class="section-title">📊 Analysis Results</h2>
+                <div class="results-container" id="results-container">
+                    <div class="loading" style="display: none;" id="loading">
+                        <div class="spinner"></div>
+                        <p>Analyzing emotion... Please wait</p>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 40px; color: #718096;">
+                        <p>🎯 Upload a video or use live camera to start emotion analysis</p>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">
+                            The AI will analyze facial expressions, voice tone, and transcribed speech to detect emotions
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+        let webcamStream = null;
+
+        // File upload handling
+        const videoFileInput = document.getElementById('video-file');
+        const uploadBtn = document.getElementById('upload-btn');
+
+        videoFileInput.addEventListener('change', function() {
+            uploadBtn.disabled = !this.files.length;
+            if (this.files.length) {
+                uploadBtn.textContent = `🚀 Analyze "${this.files[0].name}"`;
+            }
+        });
+
+        uploadBtn.addEventListener('click', function() {
+            if (videoFileInput.files.length) {
+                analyzeVideoFile(videoFileInput.files[0]);
+            }
+        });
+
+        // Webcam handling
+        const webcamVideo = document.getElementById('webcam-video');
+        const startWebcamBtn = document.getElementById('start-webcam');
+        const recordBtn = document.getElementById('record-btn');
+        const stopWebcamBtn = document.getElementById('stop-webcam');
+
+        startWebcamBtn.addEventListener('click', startWebcam);
+        recordBtn.addEventListener('click', toggleRecording);
+        stopWebcamBtn.addEventListener('click', stopWebcam);
+
+        async function startWebcam() {
+            try {
+                webcamStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: true 
+                });
+                webcamVideo.srcObject = webcamStream;
+                
+                startWebcamBtn.disabled = true;
+                recordBtn.disabled = false;
+                stopWebcamBtn.disabled = false;
+            } catch (err) {
+                alert('Error accessing webcam: ' + err.message);
+            }
+        }
+
+        function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        function startRecording() {
+            recordedChunks = [];
+            mediaRecorder = new MediaRecorder(webcamStream);
+            
+            mediaRecorder.ondataavailable = function(event) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = function() {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                analyzeVideoBlob(blob);
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            recordBtn.textContent = '⏸️ Stop Recording';
+            recordBtn.classList.remove('btn-secondary');
+            recordBtn.classList.add('btn-danger');
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                recordBtn.textContent = '🔴 Start Recording';
+                recordBtn.classList.remove('btn-danger');
+                recordBtn.classList.add('btn-secondary');
+            }
+        }
+
+        function stopWebcam() {
+            if (webcamStream) {
+                webcamStream.getTracks().forEach(track => track.stop());
+                webcamVideo.srcObject = null;
+                webcamStream = null;
+            }
+            
+            startWebcamBtn.disabled = false;
+            recordBtn.disabled = true;
+            stopWebcamBtn.disabled = true;
+            
+            if (isRecording) {
+                stopRecording();
+            }
+        }
+
+        // Analysis functions
+        async function analyzeVideoFile(file) {
+            const formData = new FormData();
+            formData.append('video', file);
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // Validate result structure
+                if (!result || typeof result !== 'object') {
+                    throw new Error('Invalid response format');
+                }
+                
+                displayResults(result);
+            } catch (error) {
+                console.error('Analysis error:', error);
+                displayError('Error analyzing video: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function analyzeVideoBlob(blob) {
+            const formData = new FormData();
+            formData.append('video', blob, 'recording.webm');
+            
+            showLoading();
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // Validate result structure
+                if (!result || typeof result !== 'object') {
+                    throw new Error('Invalid response format');
+                }
+                
+                displayResults(result);
+            } catch (error) {
+                console.error('Analysis error:', error);
+                displayError('Error analyzing recording: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results-container').innerHTML = '<div class="loading" id="loading"><div class="spinner"></div><p>Analyzing emotion... Please wait</p></div>';
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) loading.style.display = 'none';
+        }
+
+        function displayResults(result) {
+            const container = document.getElementById('results-container');
+            
+            if (result.error) {
+                container.innerHTML = `<div class="error">❌ Error: ${result.error}</div>`;
+                return;
+            }
+
+            // Safe access to result properties with fallbacks
+            const emotion = result.predicted_emotion || 'unknown';
+            const confidence = result.confidence ? (result.confidence * 100).toFixed(1) : '0.0';
+            const fusionWeights = result.fusion_weights || {video_weight: 0.5, audio_text_weight: 0.5};
+            const transcription = result.transcribed_text || 'No speech detected';
+
+            let html = `
+                <div class="prediction-card">
+                    <div class="emotion-result">
+                        <div class="emotion-label emotion-${emotion}">
+                            ${getEmotionEmoji(emotion)} ${emotion.toUpperCase()}
+                        </div>
+                        <div class="confidence-score">
+                            Confidence: ${confidence}%
+                        </div>
+                    </div>
+
+                    <div class="transcription">
+                        <div class="transcription-label">🎤 Transcribed Speech:</div>
+                        <div class="transcription-text">"${transcription}"</div>
+                    </div>
+
+                    <div class="fusion-weights">
+                        <div class="weight-card">
+                            <div class="weight-value">${(fusionWeights.video_weight * 100).toFixed(1)}%</div>
+                            <div class="weight-label">📹 Video Weight</div>
+                        </div>
+                        <div class="weight-card">
+                            <div class="weight-value">${(fusionWeights.audio_text_weight * 100).toFixed(1)}%</div>
+                            <div class="weight-label">🎧 Audio-Text Weight</div>
+                        </div>
+                    </div>
+
+                    <div class="probabilities">
+                        <h4 style="margin-bottom: 15px; color: #2d3748;">📈 All Emotion Probabilities:</h4>
+            `;
+
+            // Add probability bars with safety checks
+            const probabilities = result.all_probabilities || {};
+            Object.entries(probabilities)
+                .sort(([,a], [,b]) => b - a)
+                .forEach(([emotion, prob]) => {
+                    if (emotion && prob !== undefined) {
+                        const percentage = (prob * 100).toFixed(1);
+                        html += `
+                            <div class="prob-item">
+                                <span>${getEmotionEmoji(emotion)} ${emotion}</span>
+                                <div class="prob-bar">
+                                    <div class="prob-fill" style="width: ${percentage}%"></div>
+                                </div>
+                                <span>${percentage}%</span>
+                            </div>
+                        `;
+                    }
+                });
+
+            html += `
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px; padding: 15px; background: #e6fffa; border-radius: 8px;">
+                        <strong>🎯 Dominant Modality: ${result.dominant_modality || 'N/A'}</strong>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function displayError(message) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = `<div class="error">❌ ${message}</div>`;
+        }
+
+        function getEmotionEmoji(emotion) {
+            if (!emotion) return '❓';  // Handle undefined/null emotion
+            
+            const emojis = {
+                'neutral': '😐',
+                'joy': '😊',
+                'sadness': '😢', 
+                'anger': '😠',
+                'fear': '😨',
+                'disgust': '🤢',
+                'surprise': '😲',
+                'unknown': '❓'
+            };
+            return emojis[emotion.toLowerCase()] || '❓';
+        }
+    </script>
+</body>
+</html>

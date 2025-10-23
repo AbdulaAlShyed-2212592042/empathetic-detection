@@ -63,6 +63,9 @@ empathetic-detection/
 │   └── mapped_test_data_video_aligned.json
 ├── late_fusion.py                      # Complete fusion system
 ├── late_fusion_test.py                 # Fusion testing script
+├── app.py                              # Web application for real-time detection
+├── templates/index.html                # Web interface
+├── run_webapp.bat/.sh                  # Web app startup scripts
 ├── video_training.py                   # Video model training
 └── requirements.txt                    # Core dependencies
 ```
@@ -93,6 +96,18 @@ python late_fusion.py
 
 # Testing
 python late_fusion_test.py
+```
+
+### Web Application 🌐
+```bash
+# Start the emotion detection web app
+python app.py
+
+# Or use startup scripts:
+# Windows: run_webapp.bat
+# Linux/Mac: ./run_webapp.sh
+
+# Access at: http://localhost:5000
 ```
 
 ---
@@ -244,7 +259,38 @@ numpy>=1.21.0
 
 ---
 
-## � Results Analysis
+## 🌐 Web Application
+
+A real-time emotion detection web interface that uses your trained late fusion model:
+
+### Features
+- 📹 **Video Upload**: Analyze emotion from uploaded video files
+- 📷 **Live Camera**: Real-time webcam emotion detection  
+- 🎤 **Audio Transcription**: Automatic speech-to-text using Whisper
+- 📊 **Detailed Results**: Emotion predictions with confidence and fusion weights
+- 🎯 **Multimodal Analysis**: Combines video, audio, and transcribed text
+
+### Quick Start
+```bash
+# Start web application
+python app.py
+
+# Or use startup scripts:
+run_webapp.bat    # Windows
+./run_webapp.sh   # Linux/Mac
+
+# Access at: http://localhost:5000
+```
+
+### Model Integration
+- Uses your trained checkpoint: `late_fusion_checkpoint/best_late_fusion_model_20251021_010240_acc59.6154.pth`
+- Real-time Whisper transcription for audio processing
+- Video frame extraction and processing
+- Live fusion weight visualization
+
+---
+
+## 📈 Results Analysis
 
 ### Model Comparison
 | Model | Accuracy | Strengths | Limitations |

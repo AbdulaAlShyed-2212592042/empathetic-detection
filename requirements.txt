@@ -18,6 +18,10 @@ sentence-transformers==3.0.1   # Added for text embedding support
 # Whisper (transcription)
 openai-whisper==20231117       # Whisper package (works with transformers>=4.30)
 
+# Web application
+flask==3.0.0                   # Web framework
+opencv-python==4.10.0.84       # Video processing
+
 # Metrics and utilities
 scikit-learn==1.5.2
 numpy==1.26.4

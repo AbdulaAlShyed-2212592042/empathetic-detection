@@ -1,0 +1,10 @@
+{
+  "best_value": 0.0,
+  "best_params": {
+    "learning_rate": 0.0009973033208914308,
+    "batch_size": 4,
+    "mimamo_weight": 0.5691413258178973
+  },
+  "n_trials": 30,
+  "study_name": "late_fusion_optimization_20251101_185531"
+}

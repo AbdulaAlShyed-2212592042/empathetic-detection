@@ -1571,13 +1571,9 @@ def main():
         mimamo_weight = best_params.get('mimamo_weight', 0.58)
         initial_weights = [mimamo_weight, 1.0 - mimamo_weight]
         dropout_rate = 0.3
-        hidden_dim = 256
-        fusion_dim = 512
     else:
         initial_weights = None
         dropout_rate = best_params.get('dropout_rate', 0.3)
-        hidden_dim = best_params.get('hidden_dim', 256)
-        fusion_dim = best_params.get('fusion_dim', 512)
     
     fusion_model = EnhancedLateFusionModel(
         mimamo_model=mimamo_model,
@@ -1585,9 +1581,7 @@ def main():
         num_classes=7,
         fusion_method=fusion_method,
         initial_weights=initial_weights,
-        dropout_rate=dropout_rate,
-        hidden_dim=hidden_dim,
-        fusion_dim=fusion_dim
+        dropout_rate=dropout_rate
     ).to(device)
     
     print(f"Enhanced late fusion model created")
@@ -2263,17 +2257,14 @@ def main():
     print("="*60)
     print(f"📊 Using parameters: {best_params}")
     
-    # Create final model with ADVANCED settings for best performance
+    # Create final model with optimal settings
     fusion_model = EnhancedLateFusionModel(
         mimamo_model=mimamo_model,
         multimodal_lstm_model=multimodal_model,
         num_classes=7,
         fusion_method=best_params.get('fusion_method', 'weighted'),
         initial_weights=[best_params.get('mimamo_weight', 0.6), 1.0 - best_params.get('mimamo_weight', 0.6)] if best_params.get('fusion_method') == 'weighted' else None,
-        dropout_rate=best_params.get('dropout_rate', 0.3),
-        hidden_dim=best_params.get('hidden_dim', 512),  # 🔥 Increased default
-        fusion_dim=best_params.get('fusion_dim', 1024),  # 🔥 Increased default
-        use_advanced_fusion=True  # 🔥 ALWAYS use advanced fusion for final training
+        dropout_rate=best_params.get('dropout_rate', 0.3)
     ).to(device)
     
     # Create final data loaders

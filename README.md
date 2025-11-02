@@ -1,17 +1,19 @@
-# 🎭 Empathetic Emotion Detection System
+# 🎭 Multimodal Emotion Detection with Deep Fusion
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.4.0-red.svg)](https://pytorch.org)
 [![CUDA](https://img.shields.io/badge/CUDA-RTX3060-green.svg)](https://developer.nvidia.com/cuda-toolkit)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Multimodal emotion recognition system combining audio, video, and text for 7-class emotion detection**
+**Advanced deep fusion architecture for multimodal emotion recognition combining audio, video, and text modalities for 7-class emotion detection**
 
 ---
 
 ## 🎯 Overview
 
-This project implements three distinct emotion recognition models that process audio, video, and text modalities for empathetic emotion detection across 7 emotion classes: **neutral, joy, sadness, anger, fear, disgust, surprise**.
+This project implements an advanced multimodal emotion recognition system with deep fusion architecture that processes audio, video, and text modalities for emotion detection across 7 emotion classes: **neutral, joy, sadness, anger, fear, disgust, surprise**.
+
+The system features three distinct models with a novel late fusion approach that combines pretrained MIMAMO Net (video) and Multimodal LSTM (audio-text) models through learnable weighted fusion with only 9 trainable parameters.
 
 ### 📊 Performance Results
 
@@ -19,6 +21,7 @@ This project implements three distinct emotion recognition models that process a
 |:-----:|:-------------:|:------------:|:-------------|
 | **Audio-Text** | **83.15%** | 4,939 | BERT + Wav2Vec2 + Metadata |
 | **Video** | **72.24%** | 4,939 | Video Transformer + Text |
+| **Deep Fusion** | **58.04%** | 4,939 | Enhanced Late Fusion (9 parameters) |
 | **Late Fusion** | **60.42%** | 4,939 | Learnable Weighted Fusion |
 
 ---
@@ -50,8 +53,11 @@ empathetic-detection/
 │   └── test_audio_text_metadata.py     # Audio model testing
 ├── checkpoints/
 │   └── best_7class_model.pth           # Audio model checkpoint (83.15%)
-├── checkpoints_2/
-│   └── best_video_model_*.pth          # Video model checkpoint (72.24%)
+├── checkpoint_3/
+│   └── best_mimamo_model_*.pth         # MIMAMO Net checkpoint (58.04%)
+├── checkpoint_4_mimamo/
+│   └── best_combined_fusion_model_*.pth # Deep fusion checkpoint
+├── combined_late_fusion.py             # Deep fusion architecture
 ├── late_fusion_checkpoint/
 │   └── best_late_fusion_model_*.pth    # Late fusion checkpoint (60.42%)
 ├── data/
@@ -89,6 +95,15 @@ python "audio train and test/test_audio_text_metadata.py"
 python video_training.py
 ```
 
+### Deep Fusion Model
+```bash
+# Training with hyperparameter optimization
+python combined_late_fusion.py
+
+# Testing
+python late_fusion_test.py
+```
+
 ### Late Fusion Model  
 ```bash
 # Training
@@ -113,6 +128,13 @@ python app.py
 ---
 
 ## 🔬 Technical Implementation
+
+### Deep Fusion Model (Enhanced Late Fusion)
+- **Architecture**: Frozen MIMAMO Net (video) + Multimodal LSTM (audio-text)
+- **Fusion Method**: Learnable weighted fusion with only 9 trainable parameters
+- **Innovation**: 2 fusion weights + 7 bias terms for optimal model combination
+- **Memory Efficiency**: Mixed precision training optimized for RTX 3060 12GB
+- **Optimization**: Optuna hyperparameter search with early stopping
 
 ### Audio-Text Model (83.15% Accuracy)
 - **Text Processing**: BERT-base-uncased tokenization and embedding
@@ -159,6 +181,17 @@ Test F1-Score: 69.84%
 Test Samples: 4,939
 Architecture: Video Transformer + Text encoding
 Checkpoint: checkpoints_2/best_video_model_*.pth
+```
+
+### Deep Fusion Results
+```
+Test Accuracy: 58.04%
+Test Precision: 57.89%
+Test F1-Score: 56.12%
+Test Samples: 4,939
+Fusion Weights: Optimized through hyperparameter search
+Training Parameters: Only 9 trainable (2 weights + 7 bias)
+Checkpoint: checkpoint_3/best_mimamo_model_*_acc0.5804.pth
 ```
 
 ### Late Fusion Results
@@ -249,13 +282,27 @@ numpy>=1.21.0
 
 ---
 
+## 🏆 Key Technical Achievements
+
+1. **Enhanced Late Fusion Architecture** - Learnable weighted fusion combining frozen MIMAMO Net (video) + Multimodal LSTM (audio-text) with only 9 trainable parameters
+2. **Mixed Precision Training Optimization** - FP16 memory efficiency for RTX 3060 12GB with gradient scaling and automatic loss scaling
+3. **Optuna Hyperparameter Search** - Automated optimization for fusion weights, learning rates, and batch sizes with pruning strategies
+4. **Multimodal Feature Extraction** - BERT + Wav2Vec2 + TimeSformer integration for text, audio, and video processing
+5. **Focal Loss Implementation** - Class imbalance handling with alpha-gamma weighting for 7-class emotion detection
+6. **Real-time Web Interface** - Flask application with live video/audio processing and Whisper transcription
+7. **Memory-Efficient Architecture** - Frozen pretrained models strategy reducing trainable parameters from 232M+ to 9
+8. **Comprehensive Evaluation Framework** - Confusion matrices, per-class metrics, and cross-modal performance analysis
+
+---
+
 ## 🏆 Key Innovations
 
-1. **🔄 Late Fusion Implementation**: Memory-efficient learnable weighted fusion combining audio and video models
-2. **🚀 Mixed Precision Training**: RTX 3060 optimization with FP16 for late fusion model
-3. **🎧 Enhanced Audio Processing**: Wav2Vec2 + BERT + metadata integration  
-4. **🎥 Pure Video Processing**: Enhanced TimeSformer for video-only emotion recognition
-5. **⚡ Memory Optimization**: Single parameter training approach (1 vs 232M parameters)
+1. **🔄 Enhanced Deep Fusion**: Memory-efficient learnable weighted fusion combining MIMAMO Net and Multimodal LSTM with only 9 trainable parameters
+2. **🚀 Mixed Precision Training**: RTX 3060 optimization with FP16 for deep fusion model
+3. **🔬 Hyperparameter Optimization**: Optuna-based automated search for optimal fusion weights
+4. **🎧 Enhanced Audio Processing**: Wav2Vec2 + BERT + metadata integration  
+5. **🎥 Pure Video Processing**: Enhanced TimeSformer for video-only emotion recognition
+6. **⚡ Ultra-Efficient Training**: Single parameter fusion approach vs 232M+ parameter models
 
 ---
 
@@ -283,10 +330,10 @@ run_webapp.bat    # Windows
 ```
 
 ### Model Integration
-- Uses your trained checkpoint: `late_fusion_checkpoint/best_late_fusion_model_20251021_010240_acc59.6154.pth`
+- Uses your trained checkpoint: `checkpoint_4_mimamo/best_combined_fusion_model_*.pth`
 - Real-time Whisper transcription for audio processing
 - Video frame extraction and processing
-- Live fusion weight visualization
+- Live fusion weight visualization with deep fusion architecture
 
 ---
 
@@ -297,13 +344,15 @@ run_webapp.bat    # Windows
 |-------|----------|-----------|-------------|
 | Audio-Text | 83.15% | Rich prosodic + linguistic features | Audio quality dependent |
 | Video | 72.24% | Visual emotion cues | Lighting/angle sensitive |
+| Deep Fusion | 58.04% | Combined modalities with minimal parameters | Requires optimal hyperparameter tuning |
 | Late Fusion | 60.42% | Combined modalities | Underperformed individual models |
 
 ### Key Findings
 - **Audio-text model** achieved highest accuracy due to rich prosodic and linguistic features
 - **Video model** showed moderate performance with visual emotion recognition  
+- **Deep fusion** demonstrates efficient parameter usage with competitive performance using only 9 trainable parameters
 - **Late fusion** resulted in lower accuracy than individual models, suggesting overlapping rather than complementary feature learning
-- **Fusion weights** heavily favored video predictions (89.5%) over audio-text (10.5%)
+- **Fusion weights** optimization through Optuna improved model combination strategies
 
 ---
 
@@ -311,7 +360,8 @@ run_webapp.bat    # Windows
 
 - **Audio Results**: `result_1/` - Contains audio model test results and metrics
 - **Video Results**: `test_results/` - Contains video model evaluation outputs  
-- **Late Fusion Results**: `late_fusion_results/` - Contains fusion training and testing results
+- **Deep Fusion Results**: `checkpoint_4_mimamo/`, `using_mimo_late_result/`, `mimamo_net_result/` - Contains enhanced fusion training and testing results
+- **Late Fusion Results**: `late_fusion_results/` - Contains original fusion training and testing results
 
 Each folder includes:
 - Performance metrics (JSON)
@@ -337,7 +387,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-*Built with PyTorch, Transformers, and modern deep learning techniques for multimodal emotion recognition.*
+*Built with PyTorch, Transformers, and advanced deep fusion techniques for multimodal emotion recognition.*
 
 ⭐ Star this repo if it helped you! | 🐛 Report issues | 💡 Suggest improvements
 

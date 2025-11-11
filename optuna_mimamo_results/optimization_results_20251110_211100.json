@@ -1,0 +1,22 @@
+{
+  "study_name": "mimamo_optimization_20251110_201853",
+  "best_trial": 0,
+  "best_value": 0.5068825910931174,
+  "best_params": {
+    "learning_rate": 5.6115164153345e-05,
+    "batch_size": 4,
+    "embed_dim": 512,
+    "num_heads": 12,
+    "num_mimamo_blocks": 6,
+    "dropout": 0.18493564427131048,
+    "hidden_size": 512,
+    "weight_decay": 0.00037520558551242813,
+    "focal_alpha": 1.1479175279631737,
+    "focal_gamma": 1.5824582803960838,
+    "warmup_ratio": 0.22237057894447587
+  },
+  "n_trials": 1,
+  "completed_trials": 1,
+  "pruned_trials": 0,
+  "failed_trials": 0
+}

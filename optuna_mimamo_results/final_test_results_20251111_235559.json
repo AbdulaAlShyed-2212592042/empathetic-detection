@@ -1,0 +1,22 @@
+{
+  "test_accuracy": 0.6272524802591618,
+  "test_loss": 1.045929890386911,
+  "test_precision": 0.6453874814361449,
+  "test_recall": 0.6272524802591618,
+  "test_f1": 0.6214693363249264,
+  "best_val_accuracy": 0.622672064777328,
+  "best_hyperparameters": {
+    "learning_rate": 5.6115164153345e-05,
+    "batch_size": 4,
+    "embed_dim": 504,
+    "num_heads": 12,
+    "num_mimamo_blocks": 6,
+    "dropout": 0.18493564427131048,
+    "hidden_size": 512,
+    "weight_decay": 0.00037520558551242813,
+    "focal_alpha": 1.1479175279631737,
+    "focal_gamma": 1.5824582803960838,
+    "warmup_ratio": 0.22237057894447587
+  },
+  "model_path": "optuna_mimamo_checkpoints/best_optuna_mimamo_model_20251111_164755_acc0.6227.pth"
+}

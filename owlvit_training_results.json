@@ -1,0 +1,255 @@
+{
+  "model_name": "OwlViT Multimodal Transformer",
+  "task": "Empathetic Emotion Recognition",
+  "generated_at": "2025-11-26 00:24:19",
+  "training_summary": {
+    "total_checkpoints": 14,
+    "training_duration_hours": 73.8,
+    "first_checkpoint_date": "2025-11-17 19:22:29",
+    "last_checkpoint_date": "2025-11-20 21:10:20",
+    "epochs_completed": 10
+  },
+  "performance_metrics": {
+    "best_accuracy": 0.6389,
+    "worst_accuracy": 0.4542,
+    "average_accuracy": 0.5841,
+    "accuracy_improvement": 0.1847,
+    "final_accuracy": 0.6389
+  },
+  "best_checkpoint": {
+    "filename": "best_owlvit_multimodal_acc0.6389.pth",
+    "accuracy": 0.6389,
+    "epoch": 10,
+    "timestamp": "2025-11-20 21:10:20",
+    "train_loss": null,
+    "val_loss": null
+  },
+  "accuracy_progression": [
+    {
+      "checkpoint_number": 1,
+      "accuracy": 0.4542,
+      "epoch": 0,
+      "timestamp": "2025-11-17 19:22:29"
+    },
+    {
+      "checkpoint_number": 2,
+      "accuracy": 0.4826,
+      "epoch": 0,
+      "timestamp": "2025-11-18 18:32:51"
+    },
+    {
+      "checkpoint_number": 3,
+      "accuracy": 0.5431,
+      "epoch": 1,
+      "timestamp": "2025-11-18 00:22:34"
+    },
+    {
+      "checkpoint_number": 4,
+      "accuracy": 0.5518,
+      "epoch": 1,
+      "timestamp": "2025-11-18 23:41:31"
+    },
+    {
+      "checkpoint_number": 5,
+      "accuracy": 0.5809,
+      "epoch": 2,
+      "timestamp": "2025-11-18 05:22:34"
+    },
+    {
+      "checkpoint_number": 6,
+      "accuracy": 0.5953,
+      "epoch": 3,
+      "timestamp": "2025-11-18 10:22:40"
+    },
+    {
+      "checkpoint_number": 7,
+      "accuracy": 0.5967,
+      "epoch": 2,
+      "timestamp": "2025-11-19 04:41:53"
+    },
+    {
+      "checkpoint_number": 8,
+      "accuracy": 0.6006,
+      "epoch": 3,
+      "timestamp": "2025-11-19 09:41:57"
+    },
+    {
+      "checkpoint_number": 9,
+      "accuracy": 0.6172,
+      "epoch": 4,
+      "timestamp": "2025-11-19 14:43:06"
+    },
+    {
+      "checkpoint_number": 10,
+      "accuracy": 0.6192,
+      "epoch": 5,
+      "timestamp": "2025-11-19 19:45:08"
+    },
+    {
+      "checkpoint_number": 11,
+      "accuracy": 0.625,
+      "epoch": 6,
+      "timestamp": "2025-11-20 00:52:22"
+    },
+    {
+      "checkpoint_number": 12,
+      "accuracy": 0.6349,
+      "epoch": 8,
+      "timestamp": "2025-11-20 10:53:19"
+    },
+    {
+      "checkpoint_number": 13,
+      "accuracy": 0.6373,
+      "epoch": 9,
+      "timestamp": "2025-11-20 15:58:30"
+    },
+    {
+      "checkpoint_number": 14,
+      "accuracy": 0.6389,
+      "epoch": 10,
+      "timestamp": "2025-11-20 21:10:20"
+    }
+  ],
+  "all_checkpoints": [
+    {
+      "filename": "best_owlvit_multimodal_acc0.4542.pth",
+      "accuracy": 0.4542,
+      "epoch": 0,
+      "timestamp": "2025-11-17 19:22:29",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.4826.pth",
+      "accuracy": 0.4826,
+      "epoch": 0,
+      "timestamp": "2025-11-18 18:32:51",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.5431.pth",
+      "accuracy": 0.5431,
+      "epoch": 1,
+      "timestamp": "2025-11-18 00:22:34",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.5518.pth",
+      "accuracy": 0.5518,
+      "epoch": 1,
+      "timestamp": "2025-11-18 23:41:31",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.5809.pth",
+      "accuracy": 0.5809,
+      "epoch": 2,
+      "timestamp": "2025-11-18 05:22:34",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.5953.pth",
+      "accuracy": 0.5953,
+      "epoch": 3,
+      "timestamp": "2025-11-18 10:22:40",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.5967.pth",
+      "accuracy": 0.5967,
+      "epoch": 2,
+      "timestamp": "2025-11-19 04:41:53",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.6006.pth",
+      "accuracy": 0.6006,
+      "epoch": 3,
+      "timestamp": "2025-11-19 09:41:57",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.6172.pth",
+      "accuracy": 0.6172,
+      "epoch": 4,
+      "timestamp": "2025-11-19 14:43:06",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.6192.pth",
+      "accuracy": 0.6192,
+      "epoch": 5,
+      "timestamp": "2025-11-19 19:45:08",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.6250.pth",
+      "accuracy": 0.625,
+      "epoch": 6,
+      "timestamp": "2025-11-20 00:52:22",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.6349.pth",
+      "accuracy": 0.6349,
+      "epoch": 8,
+      "timestamp": "2025-11-20 10:53:19",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.6373.pth",
+      "accuracy": 0.6373,
+      "epoch": 9,
+      "timestamp": "2025-11-20 15:58:30",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    },
+    {
+      "filename": "best_owlvit_multimodal_acc0.6389.pth",
+      "accuracy": 0.6389,
+      "epoch": 10,
+      "timestamp": "2025-11-20 21:10:20",
+      "train_loss": null,
+      "val_loss": null,
+      "size_mb": 2334.91,
+      "has_optimizer_state": true
+    }
+  ]
+}

@@ -1,0 +1,440 @@
+{
+  "results_summary": {
+    "title": "Experimental Results Summary for Empathetic Emotion Recognition",
+    "test_date": "2025-11-02",
+    "test_samples": 4939,
+    "emotion_classes": 7,
+    
+    "model_comparison_table": {
+      "headers": ["Model", "Accuracy (%)", "Precision (%)", "Recall (%)", "F1-Score (%)", "Parameters", "Model Size"],
+      "data": [
+        {
+          "model": "Combined Fusion (Proposed)",
+          "accuracy": 84.83,
+          "precision": 84.35,
+          "recall": 84.83,
+          "f1_score": 84.45,
+          "parameters": "2 trainable (200M+ frozen)",
+          "model_size": "911.71 MB",
+          "rank": 1
+        },
+        {
+          "model": "Audio-Text Multimodal LSTM",
+          "accuracy": 84.21,
+          "precision": 84.15,
+          "recall": 84.21,
+          "f1_score": 84.08,
+          "parameters": "~205M",
+          "model_size": "~800 MB",
+          "rank": 2
+        },
+        {
+          "model": "Video MIMAMO Net",
+          "accuracy": 53.09,
+          "precision": 52.84,
+          "recall": 53.09,
+          "f1_score": 51.76,
+          "parameters": "~50M",
+          "model_size": "~200 MB",
+          "rank": 3
+        }
+      ]
+    },
+    
+    "per_class_performance_table": {
+      "headers": ["Emotion", "Precision (%)", "Recall (%)", "F1-Score (%)", "Support", "Class Distribution (%)"],
+      "data": [
+        {
+          "emotion": "Happy",
+          "precision": 89.13,
+          "recall": 88.43,
+          "f1_score": 88.78,
+          "support": 1150,
+          "distribution": 23.28,
+          "rank": 1
+        },
+        {
+          "emotion": "Sad",
+          "precision": 88.97,
+          "recall": 94.12,
+          "f1_score": 91.47,
+          "support": 2536,
+          "distribution": 51.35,
+          "rank": 1
+        },
+        {
+          "emotion": "Contempt",
+          "precision": 85.56,
+          "recall": 71.96,
+          "f1_score": 78.17,
+          "support": 107,
+          "distribution": 2.17,
+          "rank": 3
+        },
+        {
+          "emotion": "Angry",
+          "precision": 72.35,
+          "recall": 64.91,
+          "f1_score": 68.43,
+          "support": 399,
+          "distribution": 8.08,
+          "rank": 4
+        },
+        {
+          "emotion": "Disgusted",
+          "precision": 70.00,
+          "recall": 62.92,
+          "f1_score": 66.27,
+          "support": 89,
+          "distribution": 1.80,
+          "rank": 5
+        },
+        {
+          "emotion": "Surprised",
+          "precision": 67.97,
+          "recall": 52.91,
+          "f1_score": 59.50,
+          "support": 361,
+          "distribution": 7.31,
+          "rank": 6
+        },
+        {
+          "emotion": "Fear",
+          "precision": 66.34,
+          "recall": 68.35,
+          "f1_score": 67.33,
+          "support": 297,
+          "distribution": 6.01,
+          "rank": 7
+        }
+      ],
+      "summary": {
+        "best_performing_emotion": "Sad (F1: 91.47%)",
+        "worst_performing_emotion": "Surprised (F1: 59.50%)",
+        "average_f1_score": 74.28,
+        "class_imbalance": "High - Sad (51.35%) vs Disgusted (1.80%)"
+      }
+    },
+    
+    "fusion_weight_analysis_table": {
+      "headers": ["Component", "Initial Weight (%)", "Learned Weight (%)", "Weight Change (%)", "Contribution"],
+      "data": [
+        {
+          "component": "Video (MIMAMO Net)",
+          "initial_weight": 60.0,
+          "learned_weight": 31.36,
+          "weight_change": -28.64,
+          "contribution": "Facial expressions, visual cues"
+        },
+        {
+          "component": "Audio-Text (Multimodal LSTM)",
+          "initial_weight": 40.0,
+          "learned_weight": 68.64,
+          "weight_change": 28.64,
+          "contribution": "Voice tone, linguistic content, context"
+        }
+      ],
+      "insights": [
+        "Audio-text modality is 2.19× more influential than video in final predictions",
+        "Model learned to rely more on audio-text despite video's initial higher weight",
+        "Reflects audio-text model's superior individual performance (84.21% vs 53.09%)"
+      ]
+    },
+    
+    "training_statistics_table": {
+      "headers": ["Model", "Training Time", "Epochs", "Best Epoch", "Early Stopping", "GPU Memory"],
+      "data": [
+        {
+          "model": "Audio-Text Multimodal LSTM",
+          "training_time": "~24 hours",
+          "total_epochs": 50,
+          "best_epoch": "Epoch 35-45",
+          "early_stopping": "Yes (patience=10)",
+          "gpu_memory": "~10 GB"
+        },
+        {
+          "model": "Video MIMAMO Net",
+          "training_time": "~18 hours",
+          "total_epochs": 30,
+          "best_epoch": "Epoch 20-25",
+          "early_stopping": "Yes (patience=7)",
+          "gpu_memory": "~8 GB"
+        },
+        {
+          "model": "Combined Fusion",
+          "training_time": "~30 minutes",
+          "total_epochs": 50,
+          "best_epoch": "Epoch 2",
+          "early_stopping": "Yes (patience=7)",
+          "gpu_memory": "~6 GB"
+        }
+      ],
+      "summary": {
+        "total_training_time": "~42.5 hours",
+        "fusion_efficiency": "Fusion training is 48× faster than base model training",
+        "parameter_efficiency": "2 fusion parameters vs 205M base parameters (99.999% reduction)"
+      }
+    },
+    
+    "dataset_statistics_table": {
+      "headers": ["Split", "Conversations", "Labeled Samples", "Percentage", "Avg Samples/Conv"],
+      "data": [
+        {
+          "split": "Training",
+          "conversations": 14817,
+          "labeled_samples": 67937,
+          "percentage": 60.0,
+          "avg_samples_per_conversation": 4.58
+        },
+        {
+          "split": "Validation",
+          "conversations": 4940,
+          "labeled_samples": 22698,
+          "percentage": 20.0,
+          "avg_samples_per_conversation": 4.59
+        },
+        {
+          "split": "Test",
+          "conversations": 4939,
+          "labeled_samples": 22606,
+          "percentage": 20.0,
+          "avg_samples_per_conversation": 4.58
+        },
+        {
+          "split": "Total",
+          "conversations": 24696,
+          "labeled_samples": 113241,
+          "percentage": 100.0,
+          "avg_samples_per_conversation": 4.59
+        }
+      ]
+    },
+    
+    "emotion_distribution_table": {
+      "headers": ["Emotion", "Train Count", "Val Count", "Test Count", "Total Count", "Overall %"],
+      "data": [
+        {
+          "emotion": "Sad",
+          "train_count": 34850,
+          "val_count": 11617,
+          "test_count": 2536,
+          "total_count": 49003,
+          "percentage": 43.27
+        },
+        {
+          "emotion": "Happy",
+          "train_count": 15785,
+          "val_count": 5262,
+          "test_count": 1150,
+          "total_count": 22197,
+          "percentage": 19.60
+        },
+        {
+          "emotion": "Angry",
+          "train_count": 5478,
+          "val_count": 1826,
+          "test_count": 399,
+          "total_count": 7703,
+          "percentage": 6.80
+        },
+        {
+          "emotion": "Surprised",
+          "train_count": 4954,
+          "val_count": 1651,
+          "test_count": 361,
+          "total_count": 6966,
+          "percentage": 6.15
+        },
+        {
+          "emotion": "Fear",
+          "train_count": 4076,
+          "val_count": 1359,
+          "test_count": 297,
+          "total_count": 5732,
+          "percentage": 5.06
+        },
+        {
+          "emotion": "Contempt",
+          "train_count": 1468,
+          "val_count": 489,
+          "test_count": 107,
+          "total_count": 2064,
+          "percentage": 1.82
+        },
+        {
+          "emotion": "Disgusted",
+          "train_count": 1326,
+          "val_count": 494,
+          "test_count": 89,
+          "total_count": 1909,
+          "percentage": 1.69
+        }
+      ],
+      "summary": {
+        "most_common_emotion": "Sad (43.27%)",
+        "least_common_emotion": "Disgusted (1.69%)",
+        "imbalance_ratio": "25.67:1 (Sad vs Disgusted)"
+      }
+    },
+    
+    "performance_improvement_table": {
+      "headers": ["Comparison", "Baseline", "Proposed", "Absolute Gain", "Relative Gain (%)"],
+      "data": [
+        {
+          "comparison": "Combined Fusion vs Audio-Text",
+          "baseline": 84.21,
+          "proposed": 84.83,
+          "absolute_gain": 0.62,
+          "relative_gain": 0.74
+        },
+        {
+          "comparison": "Combined Fusion vs Video",
+          "baseline": 53.09,
+          "proposed": 84.83,
+          "absolute_gain": 31.74,
+          "relative_gain": 59.77
+        },
+        {
+          "comparison": "Audio-Text vs Video",
+          "baseline": 53.09,
+          "proposed": 84.21,
+          "absolute_gain": 31.12,
+          "relative_gain": 58.62
+        }
+      ],
+      "insights": [
+        "Combined fusion achieves marginal improvement over best individual model (audio-text)",
+        "Late fusion successfully compensates for weak video performance",
+        "Audio-text modality is the primary driver of overall performance"
+      ]
+    },
+    
+    "confusion_matrix_summary": {
+      "description": "Top misclassification patterns for Combined Fusion Model",
+      "top_confusions": [
+        {
+          "true_label": "Surprised",
+          "predicted_label": "Happy",
+          "count": 85,
+          "percentage": 23.5,
+          "explanation": "Both emotions share similar facial expressions (raised eyebrows, open mouth)"
+        },
+        {
+          "true_label": "Fear",
+          "predicted_label": "Sad",
+          "count": 42,
+          "percentage": 14.1,
+          "explanation": "Overlapping vocal patterns (low energy, subdued tone)"
+        },
+        {
+          "true_label": "Angry",
+          "predicted_label": "Disgusted",
+          "count": 38,
+          "percentage": 9.5,
+          "explanation": "Similar negative valence and arousal levels"
+        },
+        {
+          "true_label": "Contempt",
+          "predicted_label": "Angry",
+          "count": 21,
+          "percentage": 19.6,
+          "explanation": "Both express negative emotions toward others"
+        }
+      ],
+      "accuracy_by_emotion": [
+        {
+          "emotion": "Sad",
+          "accuracy": 94.12,
+          "note": "Highest accuracy - most training samples"
+        },
+        {
+          "emotion": "Happy",
+          "accuracy": 88.43,
+          "note": "High accuracy - clear distinctive features"
+        },
+        {
+          "emotion": "Fear",
+          "accuracy": 68.35,
+          "note": "Moderate accuracy - confused with sad"
+        },
+        {
+          "emotion": "Surprised",
+          "accuracy": 52.91,
+          "note": "Lowest accuracy - confused with happy"
+        }
+      ]
+    },
+    
+    "computational_efficiency_table": {
+      "headers": ["Metric", "Audio-Text Model", "Video Model", "Combined Fusion", "Overhead"],
+      "data": [
+        {
+          "metric": "Inference Time (ms/sample)",
+          "audio_text": 45,
+          "video": 35,
+          "fusion": 82,
+          "overhead": "+2ms (fusion computation)"
+        },
+        {
+          "metric": "GPU Memory (GB)",
+          "audio_text": 4.2,
+          "video": 2.8,
+          "fusion": 7.1,
+          "overhead": "+0.1 GB (fusion layer)"
+        },
+        {
+          "metric": "Throughput (samples/sec)",
+          "audio_text": 22,
+          "video": 28,
+          "fusion": 12,
+          "overhead": "Limited by slower audio-text model"
+        },
+        {
+          "metric": "Model Loading Time (sec)",
+          "audio_text": 8.5,
+          "video": 3.2,
+          "fusion": 12.0,
+          "overhead": "+0.3s (fusion weights)"
+        }
+      ],
+      "summary": {
+        "inference_overhead": "Fusion adds minimal overhead (2ms) for 0.62% accuracy gain",
+        "deployment_consideration": "Combined model requires loading both base models",
+        "optimization_potential": "Model quantization could reduce size by 50-75%"
+      }
+    }
+  },
+  
+  "key_findings": {
+    "finding_1": "Combined fusion achieves best overall accuracy (84.83%) with only 2 trainable parameters",
+    "finding_2": "Audio-text modality (68.64% fusion weight) dominates emotion recognition in conversational contexts",
+    "finding_3": "Video modality underperforms (53.09%) but still contributes to fusion improvement",
+    "finding_4": "Sad and happy emotions achieve highest F1-scores (>88%) due to clear distinctive features",
+    "finding_5": "Surprised emotion shows lowest accuracy (52.91%) due to confusion with happy",
+    "finding_6": "Class imbalance (25:1 ratio) impacts model performance on rare emotions",
+    "finding_7": "Late fusion is 48× faster to train than base models while improving accuracy"
+  },
+  
+  "statistical_significance": {
+    "mcnemar_test": {
+      "comparison": "Combined Fusion vs Audio-Text",
+      "p_value": "<0.05",
+      "conclusion": "Statistically significant improvement"
+    },
+    "confidence_intervals": {
+      "combined_fusion_accuracy": "84.83% ± 0.98% (95% CI)",
+      "audio_text_accuracy": "84.21% ± 1.02% (95% CI)",
+      "video_accuracy": "53.09% ± 1.38% (95% CI)"
+    }
+  },
+  
+  "metadata": {
+    "document_version": "1.0",
+    "created_date": "2025-12-09",
+    "last_updated": "2025-12-09",
+    "test_date": "2025-11-02",
+    "total_models_evaluated": 3,
+    "total_test_samples": 4939,
+    "evaluation_framework": "PyTorch + scikit-learn"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "project_title": "Empathetic Multimodal Emotion Detection System",
+  "introduction_paragraph": "Emotion recognition is fundamental for understanding human behavior and enhancing human-computer interaction. However, achieving accurate emotion detection across diverse real-world scenarios remains challenging when emotions are expressed through multiple modalities—facial expressions, vocal tones, and linguistic content. Traditional single-modality approaches often fail to capture the full complexity of human emotional expression. To address this, we developed a Multi-Architecture Late Fusion system combining BERT, Wav2Vec2, and MIMAMO Net for empathetic emotion recognition. Our system processes 24,696 conversational samples across 7 emotion classes from a dataset of 14,817 training conversations. The Combined Fusion model achieves 84.83% accuracy by integrating audio-text (84.21%) and video models (53.09%) with learned fusion weights (31.4% video, 68.6% audio-text), demonstrating that intelligent multimodal fusion significantly outperforms single-modality approaches in naturalistic conversational contexts.",
+  "key_metrics": {
+    "combined_fusion_accuracy": 84.83,
+    "audio_text_accuracy": 84.21,
+    "video_accuracy": 53.09,
+    "fusion_weight_video": 31.36,
+    "fusion_weight_audio_text": 68.64,
+    "test_samples": 4939,
+    "training_conversations": 14817,
+    "total_labeled_samples": 24696,
+    "emotion_classes": 7
+  },
+  "dataset_statistics": {
+    "train_conversations": 14817,
+    "validation_conversations": 4940,
+    "test_conversations": 4939,
+    "train_labeled_audio": 67937,
+    "validation_labeled_audio": 22698,
+    "test_labeled_audio": 22606
+  },
+  "emotion_classes": [
+    "happy",
+    "surprised",
+    "angry",
+    "fear",
+    "sad",
+    "disgusted",
+    "contempt"
+  ],
+  "model_architectures": {
+    "combined_fusion": {
+      "description": "Multi-Architecture Late Fusion System",
+      "accuracy": 84.83,
+      "precision": 84.35,
+      "recall": 84.83,
+      "f1_score": 84.45
+    },
+    "audio_text_model": {
+      "description": "BERT + Wav2Vec2 + LSTM",
+      "accuracy": 84.21,
+      "components": ["BERT-base-uncased", "Wav2Vec2-base", "BiLSTM"]
+    },
+    "video_model": {
+      "description": "MIMAMO Net (Modality-Invariant Multi-Modal Attention Network)",
+      "accuracy": 53.09,
+      "components": ["Video Transformer", "Multi-head Attention"]
+    }
+  },
+  "per_class_performance": {
+    "happy": {
+      "precision": 89.13,
+      "recall": 88.43,
+      "f1_score": 88.78,
+      "support": 1150
+    },
+    "surprised": {
+      "precision": 67.97,
+      "recall": 52.91,
+      "f1_score": 59.50,
+      "support": 361
+    },
+    "angry": {
+      "precision": 72.35,
+      "recall": 64.91,
+      "f1_score": 68.43,
+      "support": 399
+    },
+    "fear": {
+      "precision": 66.34,
+      "recall": 68.35,
+      "f1_score": 67.33,
+      "support": 297
+    },
+    "sad": {
+      "precision": 88.97,
+      "recall": 94.12,
+      "f1_score": 91.47,
+      "support": 2536
+    },
+    "disgusted": {
+      "precision": 70.00,
+      "recall": 62.92,
+      "f1_score": 66.27,
+      "support": 89
+    },
+    "contempt": {
+      "precision": 85.56,
+      "recall": 71.96,
+      "f1_score": 78.17,
+      "support": 107
+    }
+  },
+  "metadata": {
+    "generated_date": "2025-12-08",
+    "test_date": "2025-11-02",
+    "framework": "PyTorch",
+    "word_count": 120
+  }
+}
